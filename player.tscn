@@ -394,8 +394,9 @@ sprite_frames = SubResource("SpriteFrames_rlmro")
 animation = &"walk_up"
 autoplay = "idle_down"
 frame_progress = 0.228336
+offset = Vector2(0, -16)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 13)
+position = Vector2(0, -2.555)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_iojcp")
