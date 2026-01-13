@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://b3rvqc6qwyowr"]
+
+[ext_resource type="Script" path="res://Scripts/quest_Objects.gd" id="1_5re5u"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n12k0"]
+radius = 22.0227
+
+[sub_resource type="LabelSettings" id="LabelSettings_udh02"]
+
+[node name="Area2D" type="Area2D"]
+script = ExtResource("1_5re5u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")

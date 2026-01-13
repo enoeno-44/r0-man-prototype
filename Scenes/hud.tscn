@@ -1,0 +1,125 @@
+[gd_scene load_steps=3 format=3 uid="uid://bagbrbx1xqfam"]
+
+[ext_resource type="Script" path="res://Scripts/quest_panel.gd" id="1_w7ej2"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ykcb2"]
+font_size = 18
+font_color = Color(1, 0.833333, 0, 1)
+
+[node name="HUD" type="CanvasLayer"]
+
+[node name="TopRight" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TopRight"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -162.0
+offset_top = 32.0
+offset_right = -24.0
+offset_bottom = 109.0
+grow_horizontal = 0
+
+[node name="DateLabel" type="Label" parent="TopRight/VBoxContainer"]
+layout_mode = 2
+text = "วันที่ 26 / 10 / 2064"
+horizontal_alignment = 2
+
+[node name="TimeLabel" type="Label" parent="TopRight/VBoxContainer"]
+layout_mode = 2
+text = "18:45"
+horizontal_alignment = 2
+
+[node name="TempLabel" type="Label" parent="TopRight/VBoxContainer"]
+layout_mode = 2
+text = "27°C"
+horizontal_alignment = 2
+
+[node name="RightCenter" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -20.0
+offset_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="HBoxContainer" type="VBoxContainer" parent="RightCenter"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -134.0
+offset_right = -24.0
+offset_bottom = 134.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 1
+
+[node name="Panel" type="Panel" parent="RightCenter/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Panel2" type="Panel" parent="RightCenter/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Panel3" type="Panel" parent="RightCenter/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Panel4" type="Panel" parent="RightCenter/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="QuestPanel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(128, 0)
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 20.0
+offset_top = -132.0
+offset_right = 148.0
+offset_bottom = -67.0
+grow_vertical = 2
+script = ExtResource("1_w7ej2")
+
+[node name="MarginContainer" type="MarginContainer" parent="QuestPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="QuestPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="QuestPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "ภารกิจวันนี้:"
+label_settings = SubResource("LabelSettings_ykcb2")
+vertical_alignment = 1
+
+[node name="questlist" type="RichTextLabel" parent="QuestPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "ภารกงภารกิจ"
+fit_content = true
+scroll_active = false
+
+[node name="Control4" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0

@@ -1,11 +1,20 @@
 extends CharacterBody2D
 
 @export var speed := 120
+var can_move: bool = true
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var last_direction := Vector2.DOWN
+
+func _ready():
+	add_to_group("player")
+
 func _physics_process(delta):
+	if not can_move:
+		velocity = Vector2.ZERO  # หยุดนิ่ง
+		move_and_slide()
+		return
 	var direction := Vector2.ZERO
 
 	direction.x = Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
@@ -43,3 +52,6 @@ func play_idle_animation():
 			sprite.play("idle_down")
 		else:
 			sprite.play("idle_up")
+			
+func set_can_move(value: bool):
+	can_move = value
