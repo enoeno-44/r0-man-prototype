@@ -230,6 +230,13 @@ func _set_progress_text(current: int, required: int):
 func reset_progress(object_id: String):
 	if object_id in qte_progress:
 		qte_progress[object_id].current = 0
+		print("[QTEManager] Reset progress สำหรับ %s" % object_id)
+
+func reset_all_progress():
+	"""รีเซ็ต QTE progress ทั้งหมด"""
+	for obj_id in qte_progress.keys():
+		qte_progress[obj_id].current = 0
+	print("[QTEManager] Reset progress ทั้งหมด")
 
 func get_save_data() -> Dictionary:
 	return { "qte_progress": qte_progress }

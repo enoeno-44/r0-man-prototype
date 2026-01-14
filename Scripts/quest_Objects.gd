@@ -15,6 +15,9 @@ func _ready():
 	# เพิ่มเข้า group เพื่อให้ลูกศรหาเจอ
 	add_to_group("quest_area")
 	
+	# ตรวจสอบว่า quest นี้เป็นของวันนี้หรือไม่
+	_check_if_active_today()
+	
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	
@@ -90,3 +93,15 @@ func _mark_as_completed():
 		
 	if object_sprite and completed_texture:
 		object_sprite.texture = completed_texture
+
+func _check_if_active_today():
+	"""ตรวจสอบว่า quest นี้เป็นของวันนี้หรือไม่"""
+	var today_quests = DayManager.get_daily_quests()
+	
+	if quest_index not in today_quests:
+		# ถ้าไม่ใช่ quest ของวันนี้ ให้ซ่อน
+		visible = false
+		set_process(false)
+	else:
+		visible = true
+		set_process(true)
