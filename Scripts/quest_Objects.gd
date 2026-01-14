@@ -24,7 +24,6 @@ func _ready():
 	label.hide()
 	_update_progress_display()
 	
-	# ถ้าทำครบแล้ว
 	if QTEManager.is_fully_completed(object_id):
 		_mark_as_completed()
 
@@ -57,14 +56,16 @@ func _on_qte_success(completed_id: String, current: int, required: int):
 		
 		if current < required and player_in_range:
 			await get_tree().create_timer(0.5).timeout
-			label.show()
+			if player_in_range and not QTEManager.is_fully_completed(object_id) and not QTEManager.is_active():
+				label.show()
 
 func _on_qte_failed(failed_id: String, current: int, required: int):
 	if failed_id == object_id:
 		print("ล้มเหลว! ลองใหม่ (%d/%d)" % [current, required])
 		if player_in_range:
 			await get_tree().create_timer(0.5).timeout
-			label.show()
+			if player_in_range and not QTEManager.is_fully_completed(object_id) and not QTEManager.is_active():
+				label.show()
 
 func _on_qte_fully_completed(completed_id: String):
 	if completed_id == object_id:
@@ -79,7 +80,10 @@ func _update_progress_display():
 func _mark_as_completed():
 	modulate = Color(1, 1, 1)
 	label.text = "เสร็จสิ้น!"
+	label.hide() 
+	
 	if progress_label:
 		progress_label.text = "เสร็จสิ้น!"
+		
 	if object_sprite and completed_texture:
 		object_sprite.texture = completed_texture

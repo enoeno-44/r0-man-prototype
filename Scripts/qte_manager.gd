@@ -30,6 +30,9 @@ func is_fully_completed(object_id: String) -> bool:
 	var data = qte_progress[object_id]
 	return data.current >= data.required
 
+func is_active() -> bool:
+	return is_qte_active
+
 func get_progress(object_id: String) -> Dictionary:
 	if object_id in qte_progress:
 		return qte_progress[object_id]
