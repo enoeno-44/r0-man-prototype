@@ -12,6 +12,9 @@ extends Area2D
 var player_in_range: bool = false
 
 func _ready():
+	# เพิ่มเข้า group เพื่อให้ลูกศรหาเจอ
+	add_to_group("quest_area")
+	
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	
