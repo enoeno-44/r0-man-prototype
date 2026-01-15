@@ -10,9 +10,9 @@ var last_direction := Vector2.DOWN
 func _ready():
 	add_to_group("player")
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if not can_move:
-		velocity = Vector2.ZERO  # หยุดนิ่ง
+		velocity = Vector2.ZERO
 		move_and_slide()
 		return
 	var direction := Vector2.ZERO

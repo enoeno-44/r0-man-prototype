@@ -22,6 +22,7 @@ QTEManager="*res://Scripts/qte_manager.gd"
 QuestManager="*res://Scripts/quest_manager.gd"
 TimeManager="*res://Scripts/time_manager.gd"
 DayManager="*res://Scripts/day_manager.gd"
+TransitionManager="*res://Scripts/transition_manager.gd"
 
 [editor_plugins]
 

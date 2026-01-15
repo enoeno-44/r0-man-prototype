@@ -3,9 +3,8 @@ extends Node
 var hour: float = 6
 var minute: float = 0
 
-@export var time_scale := 0.2
+@export var time_scale := 0.5
 
-signal time_changed(hour: int, minute: int)
 
 func _process(delta):
 	advance_time(delta)

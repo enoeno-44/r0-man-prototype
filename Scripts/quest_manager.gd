@@ -1,10 +1,7 @@
 extends Node
 
 signal quest_completed(quest_id: String)
-signal quest_started(quest_id: String)
 
-# เก็บข้อมูล quest แบบ Dictionary
-# quest_id -> { "name": String, "done": bool, "day": int }
 var quests: Dictionary = {}
 
 func _ready():
@@ -15,14 +12,11 @@ func _initialize_quests():
 	# วันที่ 1
 	register_quest("trash_a", "เก็บขยะ จุด A", 1)
 	register_quest("trash_b", "เก็บขยะ จุด B", 1)
-	
 	# วันที่ 2
-	register_quest("sign_repair", "ซ่อมป้าย จุด A", 2)	
+	register_quest("sign_repair", "ซ่อมป้าย จุด A", 2)
 	# วันที่ 3
 	register_quest("fence_repair", "ซ่อมรั้ว", 3)
 	
-	# เพิ่มวันอื่นๆได้ตามต้องการ
-
 func register_quest(quest_id: String, quest_name: String, day: int):
 	"""ลงทะเบียน quest"""
 	quests[quest_id] = {

@@ -61,17 +61,14 @@ func _process(delta):
 		visible = false
 		return
 	
-	# ซ่อนถ้าทำภารกิจครบแล้ว
 	if DayManager.can_advance_day():
 		visible = false
 		return
 	
-	# ซ่อนถ้าไม่มีเป้าหมาย
 	if not current_target:
 		visible = false
 		return
 	
-	# ซ่อนถ้าผู้เล่นเข้าไปใน ArrowHideArea
 	var hide_area = current_target.get_node_or_null("ArrowHideArea")
 	if hide_area and hide_area is Area2D:
 		var overlapping = hide_area.get_overlapping_bodies()
@@ -105,7 +102,9 @@ func _register_quest_areas():
 	quest_areas.clear()
 	var all_areas = get_tree().get_nodes_in_group("quest_area")
 	
-	print("[QuestArrow] พบ quest_area nodes: %d" % all_areas.size())
+	print("[QuestArrow] ===== ลงทะเบียน Quest Areas =====")
+	print("[QuestArrow] พบ quest_area nodes ทั้งหมด: %d" % all_areas.size())
+	print("[QuestArrow] วันปัจจุบัน: %d" % DayManager.get_current_day())
 	
 	if all_areas.is_empty():
 		push_warning("[QuestArrow] ไม่พบ quest_area ในฉาก")
@@ -116,20 +115,24 @@ func _register_quest_areas():
 	# เก็บเฉพาะ quest ของวันนี้
 	for area in all_areas:
 		if area is Area2D and area.has_method("_is_active"):
+			print("[QuestArrow] ตรวจสอบ: %s (วันที่ %d)" % [area.quest_id, area.quest_day])
 			if area.quest_day == current_day:
 				quest_areas.append(area)
-				print("[QuestArrow] ลงทะเบียน: %s (วันที่ %d)" % [area.quest_id, area.quest_day])
+				print("[QuestArrow] ✓ ลงทะเบียน: %s" % area.quest_id)
+			else:
+				print("[QuestArrow] ✗ ข้าม: %s (ไม่ใช่วันนี้)" % area.quest_id)
 	
-	print("[QuestArrow] ลงทะเบียนสำเร็จ: %d quest" % quest_areas.size())
+	print("[QuestArrow] ลงทะเบียนสำเร็จ: %d quest สำหรับวันที่ %d" % [quest_areas.size(), current_day])
+	print("[QuestArrow] =====================================")
 
 func _update_target():
 	"""อัปเดตเป้าหมายไปยัง quest ถัดไปที่ยังไม่เสร็จ"""
 	current_target = null
 	
-	print("[QuestArrow] กำลังค้นหา quest ถัดไป")
+	print("[QuestArrow] ===== กำลังค้นหา Quest ถัดไป =====")
 	
 	if DayManager.can_advance_day():
-		print("[QuestArrow] ภารกิจครบแล้ว - ซ่อนลูกศร")
+		print("[QuestArrow] ภารกิจครบแล้ว")
 		visible = false
 		return
 	
@@ -139,16 +142,19 @@ func _update_target():
 		
 		if not is_done:
 			current_target = area
-			print("[QuestArrow] ชี้ไปที่: %s" % area.quest_id)
+			print("[QuestArrow] ✓ ชี้ไปที่: %s" % area.quest_id)
 			visible = true
 			break
 	
 	if not current_target:
 		print("[QuestArrow] ไม่มี quest ที่ต้องทำ")
 		visible = false
+	
+	print("[QuestArrow] ===================================")
 
 func _on_quest_completed(_quest_id: String):
 	"""เมื่อทำ quest เสร็จ"""
+	print("[QuestArrow] Quest เสร็จ: %s" % _quest_id)
 	await get_tree().create_timer(0.5).timeout
 	_update_target()
 
@@ -158,10 +164,10 @@ func _on_all_quests_completed():
 	visible = false
 	current_target = null
 
-func _on_day_changed(_new_day: int):
+func _on_day_changed(_new_day: int, _date_text: String):
 	"""เมื่อเปลี่ยนวัน"""
-	print("[QuestArrow] เปลี่ยนวัน - ลงทะเบียนใหม่")
-	await get_tree().create_timer(0.5).timeout
+	print("[QuestArrow] ได้รับสัญญาณเปลี่ยนวัน: %d (%s)" % [_new_day, _date_text])
+	await get_tree().create_timer(0.3).timeout
 	_register_quest_areas()
 	_update_target()
 

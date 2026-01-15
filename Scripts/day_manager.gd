@@ -1,11 +1,20 @@
 extends Node
 
-signal day_completed
-signal day_changed(new_day: int)
+signal day_changed(new_day: int, date_text: String)
 signal all_quests_completed
+signal day_transition_started
 
 var current_day: int = 1
 var all_quests_done: bool = false
+
+# กำหนดวันที่แต่ละวัน (ปรับได้ตามใจชอบ)
+var day_dates: Array[String] = [
+	"27/10/2056",  # วันที่ 1
+	"28/10/2056",  # วันที่ 2
+	"2/11/2056",   # วันที่ 3 (ข้ามไปเลย)
+	"3/11/2056",   # วันที่ 4
+	"4/11/2056",   # วันที่ 5
+]
 
 func _ready():
 	QuestManager.quest_completed.connect(_on_quest_completed)
@@ -41,25 +50,42 @@ func advance_to_next_day():
 		print("[DayManager] ยังทำภารกิจไม่ครบ")
 		return false
 	
+	print("[DayManager] ===== เริ่มเปลี่ยนวัน =====")
+	print("[DayManager] วันเก่า: %d" % current_day)
+	
+	# ส่งสัญญาณให้ TransitionManager เริ่มทำ transition
+	day_transition_started.emit()
+	
 	current_day += 1
 	all_quests_done = false
 	
-	print("[DayManager] เข้าสู่วันที่ %d" % current_day)
+	var date_text = get_current_date_text()
+	print("[DayManager] วันใหม่: %d (%s)" % [current_day, date_text])
 	
-	# รีเซ็ตเวลา
+	# รอ transition จบ (2 วินาที ตาม TransitionManager)
+	await get_tree().create_timer(2.0).timeout
+	
 	TimeManager.hour = 6
 	TimeManager.minute = 0
 	
-	# ส่ง signal ก่อนเพื่อให้ระบบอื่นอัปเดต
-	day_changed.emit(current_day)
+	print("[DayManager] ส่งสัญญาณ day_changed")
+	day_changed.emit(current_day, date_text)
 	
 	await get_tree().create_timer(0.5).timeout
 	_check_daily_progress()
 	
+	print("[DayManager] ===== เปลี่ยนวันเสร็จสิ้น =====")
 	return true
 
 func get_current_day() -> int:
 	return current_day
+
+func get_current_date_text() -> String:
+	"""ดึงวันที่ของวันปัจจุบัน"""
+	var index = current_day - 1
+	if index >= 0 and index < day_dates.size():
+		return day_dates[index]
+	return "??/??/????"
 
 func get_completed_count() -> int:
 	"""นับว่าทำภารกิจวันนี้ไปกี่อันแล้ว"""

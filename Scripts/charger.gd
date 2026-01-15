@@ -1,7 +1,7 @@
 extends Area2D
 
 @onready var label = $Label
-@onready var sprite = $Sprite2D  # optional: icon เตียงนอน/ประตู
+@onready var sprite = $Sprite2D  # optional
 
 var player_in_range: bool = false
 
@@ -56,7 +56,7 @@ func _on_all_quests_completed():
 	if player_in_range:
 		label.show()
 
-func _on_day_changed(new_day: int):
+func _on_day_changed(new_day: int, _date_text: String):
 	"""เมื่อเปลี่ยนวัน"""
 	print("[DayTransition] เข้าสู่วันที่ %d" % new_day)
 	_update_label()
