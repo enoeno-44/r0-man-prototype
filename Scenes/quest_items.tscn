@@ -1,14 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3rvqc6qwyowr"]
+[gd_scene load_steps=5 format=3 uid="uid://b3rvqc6qwyowr"]
 
 [ext_resource type="Script" path="res://Scripts/quest_Objects.gd" id="1_5re5u"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_gemwu"]
+radius = 34.5254
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_n12k0"]
-radius = 22.0227
+radius = 17.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_udh02"]
 
 [node name="Area2D" type="Area2D"]
 script = ExtResource("1_5re5u")
+
+[node name="ArrowHideArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 
