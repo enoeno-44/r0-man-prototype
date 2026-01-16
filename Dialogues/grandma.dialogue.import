@@ -1,0 +1,15 @@
+[remap]
+
+importer="dialogue_manager_compiler_13"
+type="Resource"
+uid="uid://w8khoprgxlvn"
+path="res://.godot/imported/grandma.dialogue-2da79413688fdc800f44ae762821d8c4.tres"
+
+[deps]
+
+source_file="res://Dialogues/grandma.dialogue"
+dest_files=["res://.godot/imported/grandma.dialogue-2da79413688fdc800f44ae762821d8c4.tres"]
+
+[params]
+
+defaults=true

@@ -21,12 +21,16 @@ func _initialize_quests():
 	# วันที่ 3
 	register_quest("fence_repair", "ซ่อมรั้ว", 3)
 	
-func register_quest(quest_id: String, quest_name: String, day: int):
-	"""ลงทะเบียน quest"""
+	# เควสต์ NPCs
+	register_quest("npc_grandma_day1", "คุยกับยายละไม", 1, "hidden")
+	
+func register_quest(quest_id: String, quest_name: String, day: int, quest_type: String = "normal"):
+	"""ลงทะเบียน quest quest_type: 'normal' = แสดงใน panel, 'hidden' = ไม่แสดง"""
 	quests[quest_id] = {
 		"name": quest_name,
 		"done": false,
-		"day": day
+		"day": day,
+		"type": quest_type  # ← เพิ่มฟิลด์นี้
 	}
 
 func complete_quest(quest_id: String):
@@ -49,15 +53,19 @@ func is_quest_done(quest_id: String) -> bool:
 		return quests[quest_id].done
 	return false
 
-func get_quests_for_day(day: int) -> Array:
-	"""ดึง quest ทั้งหมดของวันที่กำหนด"""
+func get_quests_for_day(day: int, include_hidden: bool = false) -> Array:
+	"""ดึง quest ของวันนี้ include_hidden: false = ไม่เอาแบบ hidden มาด้วย"""
 	var day_quests = []
 	for quest_id in quests.keys():
-		if quests[quest_id].day == day:
+		var quest = quests[quest_id]
+		if quest.day == day:
+			if not include_hidden and quest.type == "hidden":
+				continue
 			day_quests.append({
 				"id": quest_id,
-				"name": quests[quest_id].name,
-				"done": quests[quest_id].done
+				"name": quest.name,
+				"done": quest.done,
+				"type": quest.type
 			})
 	return day_quests
 
@@ -69,15 +77,16 @@ func reset_quests_for_day(day: int):
 			print("[QuestManager] รีเซ็ต quest: %s" % quest_id)
 
 func get_completed_count_for_day(day: int) -> int:
-	"""นับว่าวันนี้ทำไปกี่ quest แล้ว"""
+	"""นับที่เสร็จแล้ว (รวม hidden)"""
 	var count = 0
 	for quest_id in quests.keys():
-		if quests[quest_id].day == day and quests[quest_id].done:
+		var quest = quests[quest_id]
+		if quest.day == day and quest.done:
 			count += 1
 	return count
 
 func get_total_quests_for_day(day: int) -> int:
-	"""นับว่าวันนี้มี quest ทั้งหมดกี่อัน"""
+	"""นับ quest ทั้งหมด (รวม hidden)"""
 	var count = 0
 	for quest_id in quests.keys():
 		if quests[quest_id].day == day:

@@ -1,0 +1,104 @@
+[gd_scene load_steps=14 format=3 uid="uid://e4lme64rd44a"]
+
+[ext_resource type="Texture2D" uid="uid://5wgxjyqwiksv" path="res://Sprites/Beach_Concert_Singer_3_16x16.png" id="1_geosr"]
+[ext_resource type="Script" path="res://Scripts/quest_NPCs.gd" id="1_xycyx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ik8oa"]
+atlas = ExtResource("1_geosr")
+region = Rect2(0, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gj8de"]
+atlas = ExtResource("1_geosr")
+region = Rect2(16, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yi2nh"]
+atlas = ExtResource("1_geosr")
+region = Rect2(32, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eiao7"]
+atlas = ExtResource("1_geosr")
+region = Rect2(48, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a7o2k"]
+atlas = ExtResource("1_geosr")
+region = Rect2(64, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cvpwp"]
+atlas = ExtResource("1_geosr")
+region = Rect2(80, 0, 16, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_brlht"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ik8oa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gj8de")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yi2nh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eiao7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a7o2k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cvpwp")
+}],
+"loop": true,
+"name": &"npcs",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_asfjg"]
+radius = 3.0
+height = 10.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gemwu"]
+radius = 93.5361
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n12k0"]
+radius = 17.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_udh02"]
+
+[node name="Quest" type="Area2D"]
+script = ExtResource("1_xycyx")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(0, 8)
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="CharacterBody2D"]
+y_sort_enabled = true
+sprite_frames = SubResource("SpriteFrames_brlht")
+animation = &"npcs"
+autoplay = "npcs"
+frame_progress = 0.679366
+offset = Vector2(0, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(0, -1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_asfjg")
+debug_color = Color(0.980586, 0.123826, 0.154359, 0.42)
+
+[node name="ArrowHideArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.32584, 0.557191, 0.759582, 0.42)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")

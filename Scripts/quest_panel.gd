@@ -10,9 +10,8 @@ func _ready():
 
 func update_quest_ui():
 	quest_list.clear()
-	
 	var current_day = DayManager.get_current_day()
-	var day_quests = QuestManager.get_quests_for_day(current_day)
+	var day_quests = QuestManager.get_quests_for_day(current_day, false)
 	
 	for quest_data in day_quests:
 		if quest_data.done:
@@ -21,9 +20,9 @@ func update_quest_ui():
 			quest_list.append_text("• %s\n" % quest_data.name)
 	
 	if day_label:
-		var completed = DayManager.get_completed_count()
-		var total = DayManager.get_total_quests_today()
-		day_label.text = "วันที่ %d - ภารกิจ: %d/%d" % [current_day, completed, total]
+		var visible_quests = day_quests.size()
+		var visible_completed = day_quests.filter(func(q): return q.done).size()
+		day_label.text = "วันที่ %d - ภารกิจ: %d/%d" % [current_day, visible_completed, visible_quests]
 
 func _on_quest_completed(_quest_id: String):
 	update_quest_ui()
