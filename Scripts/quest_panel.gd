@@ -1,3 +1,4 @@
+# UI Panel แสดงรายการ quest
 extends Control
 
 @onready var quest_list := $MarginContainer/VBoxContainer/questlist
@@ -19,14 +20,14 @@ func update_quest_ui():
 		else:
 			quest_list.append_text("• %s\n" % quest_data.name)
 	
+	# อัปเดต label วัน
 	if day_label:
-		var visible_quests = day_quests.size()
-		var visible_completed = day_quests.filter(func(q): return q.done).size()
-		day_label.text = "วันที่ %d - ภารกิจ: %d/%d" % [current_day, visible_completed, visible_quests]
+		var completed = day_quests.filter(func(q): return q.done).size()
+		var total = day_quests.size()
+		day_label.text = "วันที่ %d - ภารกิจ: %d/%d" % [current_day, completed, total]
 
 func _on_quest_completed(_quest_id: String):
 	update_quest_ui()
 
 func _on_day_changed(_new_day: int, _date_text: String):
-	print("[QuestPanel] อัปเดต UI")
 	update_quest_ui()

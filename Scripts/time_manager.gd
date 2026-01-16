@@ -1,23 +1,25 @@
+# AutoLoad: TimeManager
+# จัดการเวลาในเกม
 extends Node
 
-var hour: float = 6
-var minute: float = 0
+signal time_changed(hour: int, minute: int)
+
+var hour: float = 6.0
+var minute: float = 0.0
 
 @export var time_scale := 0.5
 
-
 func _process(delta):
-	advance_time(delta)
-
-func advance_time(delta):
 	minute += delta * time_scale
-
+	
 	if minute >= 60:
-		hour += int(minute / 60)
+		var hours_passed = int(minute / 60)
+		hour += hours_passed
 		minute = int(minute) % 60
-
+		
+		# หยุดที่ 20:00
 		if hour > 20:
 			hour = 20
 			minute = 0
-
-		emit_signal("time_changed", hour, minute)
+		
+		time_changed.emit(int(hour), int(minute))

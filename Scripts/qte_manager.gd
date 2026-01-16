@@ -1,3 +1,5 @@
+# AutoLoad: QTEManager
+# จัดการระบบ Quick Time Event
 extends Node
 
 signal qte_success(object_id: String, current_count: int, required_count: int)
@@ -9,7 +11,7 @@ var is_qte_active: bool = false
 var current_object_id: String = ""
 
 # UI Components
-var qte_ui: CanvasLayer = null
+var qte_ui: CanvasLayer
 var timing_bar: ProgressBar
 var hit_zone: ColorRect
 var indicator: ColorRect
@@ -38,6 +40,7 @@ func _process(delta):
 	if not is_playing:
 		return
 	
+	# เคลื่อน indicator
 	indicator_position += qte_speed * direction * delta
 	
 	if indicator_position >= 100:
@@ -50,11 +53,11 @@ func _process(delta):
 	timing_bar.value = indicator_position
 	_update_indicator_position()
 	
+	# ตรวจสอบการกด
 	if Input.is_action_just_pressed("ui_accept") and not has_pressed:
 		has_pressed = true
 		_check_success()
 
-# ==================== UI Creation ====================
 func _create_ui():
 	qte_ui = CanvasLayer.new()
 	add_child(qte_ui)
@@ -64,34 +67,37 @@ func _create_ui():
 	panel.position = Vector2(460, 275)
 	qte_ui.add_child(panel)
 	
+	# Progress Bar
 	timing_bar = ProgressBar.new()
 	timing_bar.position = Vector2(50, 50)
 	timing_bar.size = Vector2(300, 20)
 	timing_bar.max_value = 100
 	timing_bar.value = 0
 	timing_bar.show_percentage = false
-	var style_empty = StyleBoxEmpty.new()
-	timing_bar.add_theme_stylebox_override("fill", style_empty)
+	timing_bar.add_theme_stylebox_override("fill", StyleBoxEmpty.new())
 	panel.add_child(timing_bar)
 	
+	# Hit Zone
 	hit_zone = ColorRect.new()
-	hit_zone.color = Color(100, 100, 70)
+	hit_zone.color = Color(0.4, 0.4, 0.3)
 	hit_zone.size = Vector2(30, 20)
 	hit_zone.position.y = 40
 	panel.add_child(hit_zone)
 	
+	# Indicator
 	indicator = ColorRect.new()
 	indicator.color = Color(1, 0, 0, 0.8)
 	indicator.size = Vector2(5, 25)
 	indicator.position.y = timing_bar.position.y - 2.5
 	panel.add_child(indicator)
 	
+	# Labels
 	instruction_label = Label.new()
 	instruction_label.text = "Press SPACE!"
-	instruction_label.custom_minimum_size.x = 400 
-	instruction_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER 
+	instruction_label.custom_minimum_size.x = 400
+	instruction_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	instruction_label.position.y = 15
-	panel.add_child(instruction_label) 
+	panel.add_child(instruction_label)
 	
 	progress_label = Label.new()
 	progress_label.custom_minimum_size.x = 400
@@ -99,10 +105,8 @@ func _create_ui():
 	progress_label.position.y = 95
 	panel.add_child(progress_label)
 	
-	
 	qte_ui.hide()
 
-# ==================== QTE Management ====================
 func register_qte(object_id: String, required_count: int):
 	if object_id not in qte_progress:
 		qte_progress[object_id] = {
@@ -122,20 +126,18 @@ func is_active() -> bool:
 func get_progress(object_id: String) -> Dictionary:
 	if object_id in qte_progress:
 		return qte_progress[object_id]
-	return { "current": 0, "required": 0 }
+	return {"current": 0, "required": 0}
 
 func start_qte(object_id: String):
-	if not object_id in qte_progress:
-		push_error("Object ID '%s' ยังไม่ได้ลงทะเบียน!" % object_id)
+	if object_id not in qte_progress:
+		push_error("[QTEManager] ไม่พบ object_id: " + object_id)
 		return
 	
 	if is_fully_completed(object_id):
-		print("QTE นี้ทำครบแล้ว!")
 		qte_fully_completed.emit(object_id)
 		return
 	
 	if is_qte_active:
-		print("QTE กำลังเล่นอยู่")
 		return
 	
 	is_qte_active = true
@@ -143,7 +145,7 @@ func start_qte(object_id: String):
 	freeze_player(true)
 	
 	var progress = get_progress(object_id)
-	_set_progress_text(progress.current, progress.required)
+	progress_label.text = "สำเร็จ: %d/%d" % [progress.current, progress.required]
 	_start_qte_round()
 
 func _start_qte_round():
@@ -164,16 +166,13 @@ func _randomize_speed():
 
 func _randomize_hit_zone():
 	var zone_size = randf_range(min_hit_zone_size, max_hit_zone_size)
-	var min_start = 10.0
 	var max_start = 90.0 - zone_size
 	
-	hit_zone_start = randf_range(min_start, max_start)
+	hit_zone_start = randf_range(10.0, max_start)
 	hit_zone_end = hit_zone_start + zone_size
 	
 	await get_tree().process_frame
-	_update_hit_zone_ui(zone_size)
-
-func _update_hit_zone_ui(zone_size: float):
+	
 	var bar_width = timing_bar.size.x
 	if bar_width > 0:
 		hit_zone.position.x = timing_bar.position.x + (bar_width * hit_zone_start / 100.0)
@@ -196,9 +195,9 @@ func _check_success():
 		instruction_label.modulate = Color.RED
 	
 	await get_tree().create_timer(0.5).timeout
-	_on_qte_completed(success)
+	_handle_qte_result(success)
 
-func _on_qte_completed(success: bool):
+func _handle_qte_result(success: bool):
 	var progress = get_progress(current_object_id)
 	
 	if success:
@@ -223,23 +222,16 @@ func _on_qte_completed(success: bool):
 		is_qte_active = false
 		current_object_id = ""
 
-func _set_progress_text(current: int, required: int):
-	if progress_label:
-		progress_label.text = "สำเร็จ: %d/%d" % [current, required]
-
 func reset_progress(object_id: String):
 	if object_id in qte_progress:
 		qte_progress[object_id].current = 0
-		print("[QTEManager] Reset progress สำหรับ %s" % object_id)
 
 func reset_all_progress():
-	"""รีเซ็ต QTE progress ทั้งหมด"""
 	for obj_id in qte_progress.keys():
 		qte_progress[obj_id].current = 0
-	print("[QTEManager] Reset progress ทั้งหมด")
 
 func get_save_data() -> Dictionary:
-	return { "qte_progress": qte_progress }
+	return {"qte_progress": qte_progress}
 
 func load_save_data(data: Dictionary):
 	if "qte_progress" in data:

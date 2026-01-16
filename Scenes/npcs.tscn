@@ -76,7 +76,7 @@ y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_brlht")
 animation = &"npcs"
 autoplay = "npcs"
-frame_progress = 0.679366
+frame_progress = 0.837651
 offset = Vector2(0, -16)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
@@ -96,6 +96,7 @@ shape = SubResource("CircleShape2D_n12k0")
 debug_color = Color(0.32584, 0.557191, 0.759582, 0.42)
 
 [node name="Label" type="Label" parent="."]
+z_index = 100
 offset_left = 12.0
 offset_top = -33.0
 offset_right = 52.0

@@ -1,3 +1,4 @@
+# ลูกศรชี้ไปยัง quest ถัดไปที่ยังไม่เสร็จ
 extends Node2D
 
 @export var arrow_distance: float = 60.0
@@ -13,19 +14,6 @@ var quest_areas: Array[Area2D] = []
 
 var time: float = 0.0
 
-func _get_or_create_arrow() -> Polygon2D:
-	"""ค้นหา Arrow node หรือสร้างใหม่ถ้าไม่มี"""
-	var arrow = get_node_or_null("Arrow")
-	
-	if not arrow:
-		print("[QuestArrow] ไม่พบ Arrow node, กำลังสร้างใหม่")
-		arrow = Polygon2D.new()
-		arrow.name = "Arrow"
-		add_child(arrow)
-		print("[QuestArrow] สร้าง Arrow node สำเร็จ")
-	
-	return arrow
-
 func _ready():
 	z_index = 100
 	
@@ -36,8 +24,6 @@ func _ready():
 	_create_arrow_shape()
 	arrow_sprite.color = arrow_color
 	
-	print("[QuestArrow] เริ่มต้น")
-	
 	await get_tree().process_frame
 	
 	player = get_tree().get_first_node_in_group("player")
@@ -45,19 +31,15 @@ func _ready():
 		push_error("[QuestArrow] ไม่พบ Player")
 		return
 	
-	print("[QuestArrow] พบ Player: %s" % player.name)
-	
 	_register_quest_areas()
 	_update_target()
 	
 	QuestManager.quest_completed.connect(_on_quest_completed)
 	DayManager.all_quests_completed.connect(_on_all_quests_completed)
 	DayManager.day_changed.connect(_on_day_changed)
-	
-	print("[QuestArrow] พร้อมใช้งาน")
 
 func _process(delta):
-	if not player:
+	if not player or not current_target:
 		visible = false
 		return
 	
@@ -65,14 +47,10 @@ func _process(delta):
 		visible = false
 		return
 	
-	if not current_target:
-		visible = false
-		return
-	
+	# ซ่อนถ้าอยู่ใกล้เป้าหมาย
 	var hide_area = current_target.get_node_or_null("ArrowHideArea")
 	if hide_area and hide_area is Area2D:
-		var overlapping = hide_area.get_overlapping_bodies()
-		if player in overlapping:
+		if player in hide_area.get_overlapping_bodies():
 			visible = false
 			return
 	
@@ -87,8 +65,18 @@ func _process(delta):
 	var pulse = 1.0 + sin(time * pulse_speed) * pulse_scale
 	scale = Vector2(pulse, pulse)
 
+func _get_or_create_arrow() -> Polygon2D:
+	var arrow = get_node_or_null("Arrow")
+	
+	if not arrow:
+		arrow = Polygon2D.new()
+		arrow.name = "Arrow"
+		add_child(arrow)
+		print("[QuestArrow] สร้าง Arrow node")
+	
+	return arrow
+
 func _create_arrow_shape():
-	"""สร้างรูปลูกศร"""
 	var points = PackedVector2Array([
 		Vector2(arrow_distance + 15, 0),
 		Vector2(arrow_distance, -8),
@@ -98,85 +86,55 @@ func _create_arrow_shape():
 	arrow_sprite.polygon = points
 
 func _register_quest_areas():
-	"""ค้นหาและลงทะเบียน quest areas ของวันนี้"""
 	quest_areas.clear()
 	var all_areas = get_tree().get_nodes_in_group("quest_area")
-	
-	print("[QuestArrow] ===== ลงทะเบียน Quest Areas =====")
-	print("[QuestArrow] พบ quest_area nodes ทั้งหมด: %d" % all_areas.size())
-	print("[QuestArrow] วันปัจจุบัน: %d" % DayManager.get_current_day())
-	
-	if all_areas.is_empty():
-		push_warning("[QuestArrow] ไม่พบ quest_area ในฉาก")
-		return
-	
 	var current_day = DayManager.get_current_day()
 	
-	for area in all_areas:
-		if area is Area2D and area.has_method("_is_active"):
-			print("[QuestArrow] ตรวจสอบ: %s (วันที่ %d)" % [area.quest_id, area.quest_day])
-			if area.quest_day == current_day:
-				quest_areas.append(area)
-				print("[QuestArrow] ✓ ลงทะเบียน: %s" % area.quest_id)
-			else:
-				print("[QuestArrow] ✗ ข้าม: %s (ไม่ใช่วันนี้)" % area.quest_id)
+	print("[QuestArrow] ลงทะเบียน quest วันที่ %d" % current_day)
 	
-	print("[QuestArrow] ลงทะเบียนสำเร็จ: %d quest สำหรับวันที่ %d" % [quest_areas.size(), current_day])
-	print("[QuestArrow] =====================================")
+	for area in all_areas:
+		if area is Area2D and area.has_method("_is_active") and area.quest_day == current_day:
+			quest_areas.append(area)
+			print("[QuestArrow] ลงทะเบียน: " + area.quest_id)
+	
+	print("[QuestArrow] รวม %d quest" % quest_areas.size())
 
 func _update_target():
-	"""อัปเดตเป้าหมายไปยัง quest ถัดไปที่ยังไม่เสร็จ"""
 	current_target = null
 	
-	print("[QuestArrow] ===== กำลังค้นหา Quest ถัดไป =====")
-	
 	if DayManager.can_advance_day():
-		print("[QuestArrow] ภารกิจครบแล้ว")
 		visible = false
 		return
 	
 	for area in quest_areas:
-		var is_done = QuestManager.is_quest_done(area.quest_id)
-		print("[QuestArrow] %s: %s" % [area.quest_id, "เสร็จแล้ว" if is_done else "ยังไม่เสร็จ"])
-		
-		if not is_done:
+		if not QuestManager.is_quest_done(area.quest_id):
 			current_target = area
-			print("[QuestArrow] ✓ ชี้ไปที่: %s" % area.quest_id)
 			visible = true
-			break
+			print("[QuestArrow] ชี้ไปที่: " + area.quest_id)
+			return
 	
-	if not current_target:
-		print("[QuestArrow] ไม่มี quest ที่ต้องทำ")
-		visible = false
-	
-	print("[QuestArrow] ===================================")
+	visible = false
+	print("[QuestArrow] ไม่มี quest ที่ต้องทำ")
 
 func _on_quest_completed(_quest_id: String):
-	"""เมื่อทำ quest เสร็จ"""
-	print("[QuestArrow] Quest เสร็จ: %s" % _quest_id)
 	await get_tree().create_timer(0.5).timeout
 	_update_target()
 
 func _on_all_quests_completed():
-	"""เมื่อทำภารกิจครบ"""
-	print("[QuestArrow] ภารกิจครบแล้ว - ซ่อนลูกศร")
 	visible = false
 	current_target = null
+	print("[QuestArrow] ภารกิจครบ - ซ่อนลูกศร")
 
 func _on_day_changed(_new_day: int, _date_text: String):
-	"""เมื่อเปลี่ยนวัน"""
-	print("[QuestArrow] ได้รับสัญญาณเปลี่ยนวัน: %d (%s)" % [_new_day, _date_text])
 	await get_tree().create_timer(0.3).timeout
 	_register_quest_areas()
 	_update_target()
 
 func set_arrow_color(color: Color):
-	"""เปลี่ยนสีลูกศร"""
 	arrow_color = color
 	if arrow_sprite:
 		arrow_sprite.color = color
 
 func set_arrow_distance(distance: float):
-	"""เปลี่ยนระยะห่างของลูกศร"""
 	arrow_distance = distance
 	_create_arrow_shape()
