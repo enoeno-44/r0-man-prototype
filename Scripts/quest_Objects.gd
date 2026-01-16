@@ -25,7 +25,6 @@ func _ready():
 	
 	label.hide()
 	
-	# รอให้ทุกอย่างพร้อมก่อน
 	await get_tree().process_frame
 	_check_if_active_today()
 

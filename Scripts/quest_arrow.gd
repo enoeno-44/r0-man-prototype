@@ -112,7 +112,6 @@ func _register_quest_areas():
 	
 	var current_day = DayManager.get_current_day()
 	
-	# เก็บเฉพาะ quest ของวันนี้
 	for area in all_areas:
 		if area is Area2D and area.has_method("_is_active"):
 			print("[QuestArrow] ตรวจสอบ: %s (วันที่ %d)" % [area.quest_id, area.quest_day])

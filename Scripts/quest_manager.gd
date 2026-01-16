@@ -10,10 +10,14 @@ func _ready():
 func _initialize_quests():
 	"""กำหนด quest ทั้งหมด"""
 	# วันที่ 1
-	register_quest("trash_a", "เก็บขยะ จุด A", 1)
-	register_quest("trash_b", "เก็บขยะ จุด B", 1)
+	register_quest("trashbin_a", "ทำลายขยะ จุด A", 1)
+	register_quest("trashcan_a", "ทำลายขยะ จุด B", 1)
+	register_quest("trashcan_b", "ทำลายขยะ จุด C", 1)
+	register_quest("trash_a", "เก็บขยะ จุด D", 1)
 	# วันที่ 2
-	register_quest("sign_repair", "ซ่อมป้าย จุด A", 2)
+	register_quest("trashcan_c", "ทำลายขยะ จุด E", 2)
+	register_quest("trashbin_b", "ทำลายขยะ จุด F", 2)
+	register_quest("trash_b", "เก็บขยะ จุด G", 2)
 	# วันที่ 3
 	register_quest("fence_repair", "ซ่อมรั้ว", 3)
 	

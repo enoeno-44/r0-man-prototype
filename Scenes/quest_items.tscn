@@ -10,7 +10,7 @@ radius = 17.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_udh02"]
 
-[node name="Area2D" type="Area2D"]
+[node name="Quest" type="Area2D"]
 script = ExtResource("1_5re5u")
 
 [node name="ArrowHideArea" type="Area2D" parent="."]

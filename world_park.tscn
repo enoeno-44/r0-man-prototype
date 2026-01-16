@@ -66,7 +66,7 @@ texture = ExtResource("3_pnxr6")
 22:66/size_in_atlas = Vector2i(5, 4)
 22:66/0 = 0
 22:66/0/texture_origin = Vector2i(0, 28)
-22:66/0/y_sort_origin = -13
+22:66/0/y_sort_origin = -14
 22:66/0/physics_layer_0/polygon_0/points = PackedVector2Array(-10.8571, -14.2857, 0.571429, -14.2857, 1.71429, -9.71429, 6.28572, -6.28571, 0.571429, -2.85714, -5.14286, -5.14286, -10.8571, -2.85714, -17.7143, -5.14286, -12, -9.71429)
 22:64/size_in_atlas = Vector2i(4, 2)
 22:64/0 = 0
@@ -86,7 +86,7 @@ texture = ExtResource("3_pnxr6")
 0:63/size_in_atlas = Vector2i(4, 4)
 0:63/0 = 0
 0:63/0/texture_origin = Vector2i(0, 28)
-0:63/0/y_sort_origin = -15
+0:63/0/y_sort_origin = -12
 0:63/0/physics_layer_0/polygon_0/points = PackedVector2Array(-6.28571, -13.1429, 6.28572, -13.1429, 6.28572, -8.57143, 10.8571, -5.14286, 6.28572, -5.14286, 7.42857, -0.571428, 0.571429, -4, -5.14286, -0.571428, -6.28571, -5.14286, -13.1429, -4, -7.42857, -8.57143)
 4:55/size_in_atlas = Vector2i(4, 4)
 4:55/0 = 0
@@ -101,12 +101,12 @@ texture = ExtResource("3_pnxr6")
 14:72/size_in_atlas = Vector2i(3, 3)
 14:72/0 = 0
 14:72/0/texture_origin = Vector2i(0, 20)
-14:72/0/y_sort_origin = -8
+14:72/0/y_sort_origin = -9
 14:72/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5.14286, -9.71429, 6.28572, -9.71429, 12, -5.14286, 8.57143, -0.571428, 2.85714, -2.85714, -5.14286, 0.571429, -12, -4, -7.42857, -7.42857)
 17:72/size_in_atlas = Vector2i(2, 3)
 17:72/0 = 0
 17:72/0/texture_origin = Vector2i(0, 20)
-17:72/0/y_sort_origin = -8
+17:72/0/y_sort_origin = -9
 17:72/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5.14286, -9.71429, 5.14286, -9.71429, 10.8571, -5.14286, 5.14286, 0.571429, -0.571428, -1.71429, -6.28571, -0.571428, -12, -4, -7.42857, -7.42857)
 19:77/0 = 0
 20:77/0 = 0
@@ -185,7 +185,7 @@ texture = ExtResource("3_pnxr6")
 19:72/size_in_atlas = Vector2i(3, 3)
 19:72/0 = 0
 19:72/0/texture_origin = Vector2i(0, 20)
-19:72/0/y_sort_origin = -8
+19:72/0/y_sort_origin = -9
 19:72/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5.14286, -9.71429, 5.14286, -9.71429, 10.8571, -5.14286, 5.14286, 0.571429, -1.71429, -4, -5.14286, -0.571428, -14.2857, -4, -7.42857, -8.57143)
 
 [sub_resource type="TileSet" id="TileSet_jorat"]
@@ -294,36 +294,121 @@ offset_bottom = -154.0
 text = "TEXT"
 label_settings = SubResource("LabelSettings_4g22t")
 
-[node name="Enviroment Manager" type="Node2D" parent="." node_paths=PackedStringArray("day1_node", "day2_node", "day3_node")]
+[node name="Enviroment Manager" type="Node2D" parent="." node_paths=PackedStringArray("day1_node", "day2_node", "day3_node", "day4_node", "day5_node")]
 position = Vector2(282, -149)
 script = ExtResource("11_xci1g")
 day1_node = NodePath("Day_1")
 day2_node = NodePath("Day_2")
 day3_node = NodePath("Day_3")
+day4_node = NodePath("Day_4")
+day5_node = NodePath("Day_5")
 
 [node name="Day_1" type="Node2D" parent="Enviroment Manager"]
 
 [node name="Quest_1" parent="Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
-position = Vector2(44, -36)
-required_qte_count = 2
+position = Vector2(-502, 8)
+quest_id = "trashcan_a"
+required_qte_count = 1
 
 [node name="Quest_2" parent="Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
-position = Vector2(-30, 46)
-quest_id = "trash_b"
+position = Vector2(-615, 450)
+quest_id = "trashbin_a"
+required_qte_count = 2
+
+[node name="Quest_3" parent="Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
+position = Vector2(-316, 786)
+required_qte_count = 1
+
+[node name="Quest_4" parent="Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
+position = Vector2(176, 288)
+quest_id = "trashcan_b"
 required_qte_count = 1
 
 [node name="Day_2" type="Node2D" parent="Enviroment Manager"]
 
-[node name="Quest_3" parent="Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
-position = Vector2(64, 27)
-quest_id = "sign_repair"
+[node name="Quest_5" parent="Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
+position = Vector2(1189, 561)
+quest_id = "trashcan_c"
 quest_day = 2
-required_qte_count = 2
+required_qte_count = 1
+
+[node name="Quest_6" parent="Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
+position = Vector2(458, 692)
+quest_id = "trashbin_b"
+quest_day = 2
+required_qte_count = 1
+
+[node name="Quest_7" parent="Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
+position = Vector2(364, 280)
+quest_id = "trash_b"
+quest_day = 2
+required_qte_count = 1
 
 [node name="Day_3" type="Node2D" parent="Enviroment Manager"]
+visible = false
 
-[node name="Quest_4" parent="Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
-position = Vector2(-82, -15)
-quest_id = "fence_repair"
+[node name="Quest_8" parent="Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
+position = Vector2(677, 85)
+quest_id = "trash_d"
 quest_day = 3
-required_qte_count = 2
+required_qte_count = 1
+
+[node name="Quest_9" parent="Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
+position = Vector2(437, -9)
+quest_id = "trashbin_c"
+quest_day = 3
+required_qte_count = 1
+
+[node name="Quest_10" parent="Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
+position = Vector2(135, 604)
+quest_id = "trash_d"
+quest_day = 3
+required_qte_count = 1
+
+[node name="Day_4" type="Node2D" parent="Enviroment Manager"]
+visible = false
+
+[node name="Quest_11" parent="Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+position = Vector2(-301, 165)
+quest_id = "trash_e"
+quest_day = 11
+required_qte_count = 1
+
+[node name="Quest_12" parent="Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+position = Vector2(870, 613)
+quest_id = "trash_f"
+quest_day = 12
+required_qte_count = 1
+
+[node name="Quest_13" parent="Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+position = Vector2(707, 663)
+quest_id = "trash_t"
+required_qte_count = 1
+
+[node name="Quest_14" parent="Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+position = Vector2(-725, 646)
+quest_id = "trash_b"
+required_qte_count = 1
+
+[node name="Day_5" type="Node2D" parent="Enviroment Manager"]
+visible = false
+
+[node name="Quest_15" parent="Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+position = Vector2(1112, 150)
+quest_id = "trash_b"
+required_qte_count = 1
+
+[node name="Quest_16" parent="Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+position = Vector2(116, 194)
+quest_id = "trash_b"
+required_qte_count = 1
+
+[node name="Quest_17" parent="Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+position = Vector2(-151, 184)
+quest_id = "trash_b"
+required_qte_count = 1
+
+[node name="Quest_18" parent="Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+position = Vector2(-32, 159)
+quest_id = "trash_b"
+required_qte_count = 1

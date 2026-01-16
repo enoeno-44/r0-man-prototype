@@ -7,7 +7,6 @@ signal day_transition_started
 var current_day: int = 1
 var all_quests_done: bool = false
 
-# กำหนดวันที่แต่ละวัน (ปรับได้ตามใจชอบ)
 var day_dates: Array[String] = [
 	"27/10/2056",  # วันที่ 1
 	"28/10/2056",  # วันที่ 2

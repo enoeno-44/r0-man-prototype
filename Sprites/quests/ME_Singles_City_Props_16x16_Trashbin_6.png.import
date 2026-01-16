@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://crq5t2vm24r5u"
-path="res://.godot/imported/ME_Singles_Garage_Sales_16x16_Box_4.png-e626b5f8f48f19d45a65518dd60da79c.ctex"
+uid="uid://dk3iint52htdg"
+path="res://.godot/imported/ME_Singles_City_Props_16x16_Trashbin_6.png-b576d50ad43d4337ebfcccc4f1b8e521.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/ME_Singles_Garage_Sales_16x16_Box_4.png"
-dest_files=["res://.godot/imported/ME_Singles_Garage_Sales_16x16_Box_4.png-e626b5f8f48f19d45a65518dd60da79c.ctex"]
+source_file="res://Sprites/quests/ME_Singles_City_Props_16x16_Trashbin_6.png"
+dest_files=["res://.godot/imported/ME_Singles_City_Props_16x16_Trashbin_6.png-b576d50ad43d4337ebfcccc4f1b8e521.ctex"]
 
 [params]
 
