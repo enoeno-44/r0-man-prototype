@@ -6,6 +6,7 @@ extends Node2D
 @export var day3_node: Node2D
 @export var day4_node: Node2D
 @export var day5_node: Node2D
+@export var day6_node: Node2D
 
 var day_nodes: Dictionary = {}
 
@@ -15,6 +16,7 @@ func _ready():
 	day_nodes[3] = day3_node
 	day_nodes[4] = day4_node
 	day_nodes[5] = day5_node
+	day_nodes[6] = day6_node
 	
 	DayManager.day_changed.connect(_on_day_changed)
 	_update_environment(DayManager.get_current_day())

@@ -12,6 +12,7 @@ extends CanvasLayer
 var item_slots: Array = []
 
 func _ready():
+	add_to_group("hud")
 	DayManager.day_changed.connect(_on_day_changed)
 	_update_date_label()
 	

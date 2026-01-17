@@ -414,7 +414,7 @@ position = Vector2(-238, 513)
 [node name="Player" parent="Y-sort" instance=ExtResource("2_8gqyu")]
 y_sort_enabled = true
 position = Vector2(293, -173)
-speed = 150
+speed = 300
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/Player"]
 zoom = Vector2(2, 2)

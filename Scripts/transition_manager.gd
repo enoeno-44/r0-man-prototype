@@ -68,10 +68,45 @@ func opening_fade_in():
 	print("[TransitionManager] Opening fade in")
 	fade_rect.modulate.a = 1.0
 	
+	# ========== ซ่อน HUD และหยุดผู้เล่นทันที ==========
+	_hide_hud()
+	_freeze_player(true)
+	print("[TransitionManager] ซ่อน HUD และหยุดผู้เล่น")
+	
 	var tween = create_tween()
 	tween.tween_property(fade_rect, "modulate:a", 0.0, 1.5)
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	await tween.finished
+	
+	# แสดง System Dialogue วันแรก
+	if has_node("/root/SystemDialogueManager"):
+		await get_tree().create_timer(0.5).timeout
+		var day = DayManager.get_current_day()
+		var lines = SystemDialogueManager._get_dialogue_for_day(day)
+		SystemDialogueManager.show_dialogue(lines)
+		
+		# รอให้ System Dialogue จบ
+		await SystemDialogueManager.dialogue_finished
+		print("[TransitionManager] System Dialogue จบ - ปลดล็อคผู้เล่น")
+		
+		# ปลดล็อคผู้เล่นหลัง System Dialogue จบ
+		_freeze_player(false)
+
+func _hide_hud():
+	"""ซ่อน HUD"""
+	var hud_nodes = get_tree().get_nodes_in_group("hud")
+	for hud in hud_nodes:
+		hud.hide()
+	print("[TransitionManager] ซ่อน HUD (%d nodes)" % hud_nodes.size())
+
+func _freeze_player(freeze: bool):
+	"""หยุด/ปลดล็อคผู้เล่น"""
+	var player = get_tree().get_first_node_in_group("player")
+	if player:
+		player.set_physics_process(not freeze)
+		if player.has_method("set_can_move"):
+			player.set_can_move(not freeze)
+	print("[TransitionManager] ผู้เล่น %s" % ("หยุด" if freeze else "ปลดล็อค"))
 
 func _on_day_transition_started():
 	if is_transitioning:
