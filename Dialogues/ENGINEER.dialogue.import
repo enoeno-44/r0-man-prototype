@@ -1,0 +1,15 @@
+[remap]
+
+importer="dialogue_manager_compiler_13"
+type="Resource"
+uid="uid://c65e72vjibp0i"
+path="res://.godot/imported/ENGINEER.dialogue-3a2b69703c43c8716dd1b229f47027a9.tres"
+
+[deps]
+
+source_file="res://Dialogues/ENGINEER.dialogue"
+dest_files=["res://.godot/imported/ENGINEER.dialogue-3a2b69703c43c8716dd1b229f47027a9.tres"]
+
+[params]
+
+defaults=true

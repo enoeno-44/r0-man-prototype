@@ -1,0 +1,15 @@
+[remap]
+
+importer="dialogue_manager_compiler_13"
+type="Resource"
+uid="uid://wbk5hqshqpl4"
+path="res://.godot/imported/STREET_MUSICIAN.dialogue-f6d8ff993aae87fd6ecdd40cc3109120.tres"
+
+[deps]
+
+source_file="res://Dialogues/STREET_MUSICIAN.dialogue"
+dest_files=["res://.godot/imported/STREET_MUSICIAN.dialogue-f6d8ff993aae87fd6ecdd40cc3109120.tres"]
+
+[params]
+
+defaults=true

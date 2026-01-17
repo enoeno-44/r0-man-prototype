@@ -10,22 +10,45 @@ func _ready():
 	_initialize_quests()
 
 func _initialize_quests():
+	
 	# วันที่ 1
-	register_quest("trashbin_a", "ทำลายขยะ จุด A", 1)
-	register_quest("trashcan_a", "ทำลายขยะ จุด B", 1)
-	register_quest("trashcan_b", "ทำลายขยะ จุด C", 1)
-	register_quest("trash_a", "เก็บขยะ จุด D", 1)
+	register_quest("trash_1", "ทำลายขยะ โซน A", 1)
+	register_quest("trash_2", "ทำลายขยะ โซน C", 1)
+	register_quest("trash_3", "ทำลายขยะ โซน D", 1)
 	
 	# วันที่ 2
-	register_quest("trashcan_c", "ทำลายขยะ จุด E", 2)
-	register_quest("trashbin_b", "ทำลายขยะ จุด F", 2)
-	register_quest("trash_b", "เก็บขยะ จุด G", 2)
+	register_quest("trash_4", "ทำลายขยะ โซน A", 2)
+	register_quest("trash_5", "ทำลายขยะ โซน C", 2)
+	register_quest("npc_1_day2", "คุยกับnpc1", 2, "hidden")
+	register_quest("trash_6", "ทำลายขยะ โซน B", 2)
+	register_quest("npc_2_day2", "คุยกับnpc2", 2, "hidden")
 	
 	# วันที่ 3
-	register_quest("fence_repair", "ซ่อมรั้ว", 3)
+	register_quest("trash_7", "ทำลายขยะ โซน C", 3)
+	register_quest("npc_3_day3", "คุยกับnpc3", 3, "hidden")
+	register_quest("trash_8", "ทำลายขยะ โซน D", 3)
+	register_quest("npc_4_day3", "คุยกับnpc4", 3, "hidden")
+	register_quest("trash_9", "ทำลายขยะ โซน D", 3)
 	
-	# Quest ของ NPC (hidden = ไม่แสดงใน panel)
-	register_quest("npc_grandma_day1", "คุยกับยายละไม", 1, "hidden")
+	# วันที่ 4
+	register_quest("trash_10", "ทำลายขยะ โซน B", 4)
+	register_quest("npc_5_day4", "คุยกับnpc5", 4, "hidden")
+	register_quest("trash_11", "ทำลายขยะ โซน B", 4)
+	register_quest("npc_6_day4", "คุยกับnpc6", 4, "hidden")
+	register_quest("trash_12", "ทำลายขยะ โซน D", 4)
+	
+	# วันที่ 5
+	register_quest("trash_13", "ทำลายขยะ โซน B", 5)
+	register_quest("trash_14", "ทำลายขยะ โซน C", 5)
+	register_quest("npc_7_day5", "คุยกับnpc7", 5, "hidden")
+	register_quest("trash_15", "ทำลายขยะ โซน A", 5)
+	register_quest("npc_8_day5", "คุยกับnpc8", 5, "hidden")
+	
+	# วันที่ 6
+	register_quest("trash_16", "ทำลายขยะ โซน B", 6)
+	register_quest("trash_17", "ทำลายขยะ โซน B", 6)
+	register_quest("unknown_npc", "iknowyou?", 6, "hidden")
+
 
 func register_quest(quest_id: String, quest_name: String, day: int, quest_type: String = "normal"):
 	quests[quest_id] = {

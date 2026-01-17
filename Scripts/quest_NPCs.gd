@@ -1,14 +1,21 @@
-# สคริปต์สำหรับ NPC quest ที่มีบทสนทนาและมินิเกม
+# สคริปต์สำหรับ NPC quest ที่มีบทสนทนา (รองรับทั้งแบบมี/ไม่มีมินิเกม)
 extends Area2D
 
 @export var quest_id: String = "npc_grandma_day1"
 @export var quest_day: int = 1
 @export var dialogue_resource: String = "res://dialogues/grandma_day1.dialogue"
 @export var dialogue_start: String = "start"
+
+# มินิเกม (optional)
 @export var minigame_scene: PackedScene
+@export var has_minigame: bool = true
+
+# ไอเทม (optional)
+@export var reward_item_name: String = ""
+@export var reward_item_icon: Texture2D
 
 @onready var label = $Label
-@onready var npc_sprite = $Sprite2D
+@onready var npc_sprite = $CharacterBody2D/Sprite2D
 
 var player_in_range: bool = false
 var is_talking: bool = false
@@ -51,78 +58,115 @@ func _try_interact():
 	
 	label.hide()
 	is_talking = true
-	_start_dialogue()
+	_start_dialogue_flow()
 
-func _start_dialogue():
-	print("[NPCQuest] เริ่มบทสนทนา: " + dialogue_resource)
+func _start_dialogue_flow():
+	"""เริ่มขั้นตอนการสนทนาทั้งหมด"""
+	print("[NPCQuest] === เริ่ม Dialogue Flow ===")
 	
-	# หยุดผู้เล่น
-	var player = get_tree().get_first_node_in_group("player")
-	if player:
-		player.set_physics_process(false)
-		if player.has_method("set_can_move"):
-			player.set_can_move(false)
+	_freeze_player(true)
 	
-	if not DialogueManager.passed_title.is_connected(_on_dialogue_reached_node):
-		DialogueManager.passed_title.connect(_on_dialogue_reached_node)
+	# 1. เล่นบทสนทนาส่วนแรก
+	print("[NPCQuest] เล่นบทสนทนาส่วนแรก")
+	await _play_dialogue(dialogue_start)
+	print("[NPCQuest] บทสนทนาส่วนแรกจบ")
 	
-	DialogueManager.show_dialogue_balloon(load(dialogue_resource), dialogue_start)
+	# 2. ถ้ามีมินิเกม
+	if has_minigame:
+		print("[NPCQuest] เริ่มมินิเกม...")
+		await _handle_minigame()
+		print("[NPCQuest] มินิเกมจบ")
+		
+		# 3. เล่นบทสนทนาส่วนท้าย
+		print("[NPCQuest] เล่นบทสนทนาหลังมินิเกม")
+		await _play_dialogue("after_minigame")
+		print("[NPCQuest] บทสนทนาหลังมินิเกมจบ")
+	
+	# 4. จบ quest
+	_complete_quest()
 
-func _on_dialogue_reached_node(title: String):
-	print("[NPCQuest] ไปถึง node: " + title)
+func _play_dialogue(start_title: String):
+	"""เล่น dialogue และรอจนจบ"""
+	print("[NPCQuest] กำลังเล่น dialogue: " + start_title)
 	
-	if title == "minigame":
-		print("[NPCQuest] เริ่มมินิเกม")
-		await get_tree().create_timer(0.3).timeout
-		_start_minigame()
+	var dialogue_resource_loaded = load(dialogue_resource)
+	DialogueManager.show_dialogue_balloon(dialogue_resource_loaded, start_title)
+	
+	# รอให้ dialogue จบ
+	await DialogueManager.dialogue_ended
+	print("[NPCQuest] ✓ Dialogue '%s' จบแล้ว" % start_title)
+	
+	await get_tree().create_timer(0.3).timeout
 
-func _start_minigame():
+func _handle_minigame():
+	"""จัดการมินิเกม"""
 	if not minigame_scene:
 		push_error("[NPCQuest] ไม่ได้กำหนด minigame_scene")
-		_continue_dialogue_after_minigame()
 		return
 	
+	print("[NPCQuest] === เริ่มมินิเกม ===")
+	
+	# รอให้ dialogue ปิดสนิท
+	await get_tree().create_timer(0.5).timeout
+	
+	# สร้างมินิเกม
 	minigame_instance = minigame_scene.instantiate()
 	get_tree().root.add_child(minigame_instance)
 	
+	# เริ่มมินิเกม
 	if minigame_instance.has_method("start_minigame"):
 		minigame_instance.start_minigame()
 	
-	await minigame_instance.completed
+	# รอให้มินิเกมจบ
+	if minigame_instance.has_signal("completed"):
+		await minigame_instance.completed
+		print("[NPCQuest] ✓ มินิเกมเสร็จสมบูรณ์")
+	else:
+		push_error("[NPCQuest] มินิเกมไม่มี signal 'completed'")
+		await get_tree().create_timer(3.0).timeout
 	
-	print("[NPCQuest] มินิเกมเสร็จแล้ว")
+	# ลบมินิเกม
+	if minigame_instance:
+		minigame_instance.queue_free()
+		minigame_instance = null
 	
-	minigame_instance.queue_free()
-	minigame_instance = null
-	
-	_continue_dialogue_after_minigame()
+	await get_tree().create_timer(0.3).timeout
 
-func _continue_dialogue_after_minigame():
-	print("[NPCQuest] เล่นบทสนทนาต่อ...")
+func _complete_quest():
+	"""จบ quest"""
+	print("[NPCQuest] === Quest เสร็จสิ้น ===")
 	
-	DialogueManager.show_dialogue_balloon(load(dialogue_resource), "end")
-	
-	await DialogueManager.dialogue_ended
-	
-	print("[NPCQuest] บทสนทนาจบสมบูรณ์")
-	_on_dialogue_finished()
-
-func _on_dialogue_finished():
 	# ปลดล็อคผู้เล่น
-	var player = get_tree().get_first_node_in_group("player")
-	if player:
-		player.set_physics_process(true)
-		if player.has_method("set_can_move"):
-			player.set_can_move(true)
+	_freeze_player(false)
 	
-	if DialogueManager.passed_title.is_connected(_on_dialogue_reached_node):
-		DialogueManager.passed_title.disconnect(_on_dialogue_reached_node)
+	# ให้ไอเทม (ถ้ามี)
+	if reward_item_name != "":
+		_give_reward_item()
 	
+	# เสร็จสิ้น quest
 	_mark_as_completed()
 	is_talking = false
 	QuestManager.complete_quest(quest_id)
 
+func _give_reward_item():
+	"""ให้ไอเทม"""
+	print("[NPCQuest] ได้รับไอเทม: " + reward_item_name)
+	
+	if has_node("/root/ItemManager"):
+		ItemManager.add_item(reward_item_name, reward_item_icon)
+	else:
+		print("[NPCQuest] ไม่พบ ItemManager!")
+
+func _freeze_player(freeze: bool):
+	"""หยุด/ปลดล็อคผู้เล่น"""
+	var player = get_tree().get_first_node_in_group("player")
+	if player:
+		player.set_physics_process(not freeze)
+		if player.has_method("set_can_move"):
+			player.set_can_move(not freeze)
+
 func _mark_as_completed():
+	"""ทำเครื่องหมายว่าเสร็จแล้ว"""
 	modulate = Color(0.7, 0.7, 0.7)
 	label.text = "เสร็จสิ้น"
 	label.hide()

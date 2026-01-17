@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3rvqc6qwyowr"]
+[gd_scene load_steps=6 format=3 uid="uid://b3rvqc6qwyowr"]
 
 [ext_resource type="Script" path="res://Scripts/quest_Objects.gd" id="1_5re5u"]
+[ext_resource type="Texture2D" uid="uid://bwvfarypnkb0h" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Small_Trash_Pile_1.png" id="2_g7741"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gemwu"]
 radius = 34.5254
@@ -20,8 +21,10 @@ shape = SubResource("CircleShape2D_gemwu")
 debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_g7741")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4.45)
 shape = SubResource("CircleShape2D_n12k0")
 debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
 

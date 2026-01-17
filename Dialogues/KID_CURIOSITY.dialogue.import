@@ -1,0 +1,15 @@
+[remap]
+
+importer="dialogue_manager_compiler_13"
+type="Resource"
+uid="uid://dfe5bpsi8r21x"
+path="res://.godot/imported/KID_CURIOSITY.dialogue-c5cd53ec3a4b3adcab380b3a5c99287e.tres"
+
+[deps]
+
+source_file="res://Dialogues/KID_CURIOSITY.dialogue"
+dest_files=["res://.godot/imported/KID_CURIOSITY.dialogue-c5cd53ec3a4b3adcab380b3a5c99287e.tres"]
+
+[params]
+
+defaults=true

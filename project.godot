@@ -23,6 +23,7 @@ QuestManager="*res://Scripts/quest_manager.gd"
 TimeManager="*res://Scripts/time_manager.gd"
 DayManager="*res://Scripts/day_manager.gd"
 TransitionManager="*res://Scripts/transition_manager.gd"
+ItemManager="*res://Scripts/items_manager.gd"
 
 [editor_plugins]
 
@@ -58,7 +59,7 @@ interact={
 
 [internationalization]
 
-locale/translations_pot_files=PackedStringArray("res://Dialogues/grandma.dialogue")
+locale/translations_pot_files=PackedStringArray("res://Dialogues/KID_CURIOSITY.dialogue", "res://Dialogues/KID_SECRET.dialogue", "res://Dialogues/KID_GIFT.dialogue", "res://Dialogues/OLD_LADY.dialogue", "res://Dialogues/STREET_MUSICIAN.dialogue", "res://Dialogues/DAYDREAMER.dialogue", "res://Dialogues/ENGINEER.dialogue", "res://Dialogues/OLD_MAN.dialogue")
 
 [rendering]
 

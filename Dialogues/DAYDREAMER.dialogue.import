@@ -1,0 +1,15 @@
+[remap]
+
+importer="dialogue_manager_compiler_13"
+type="Resource"
+uid="uid://cltmx5g1l63mm"
+path="res://.godot/imported/DAYDREAMER.dialogue-4beabb34f58d607d7452e1449e474307.tres"
+
+[deps]
+
+source_file="res://Dialogues/DAYDREAMER.dialogue"
+dest_files=["res://.godot/imported/DAYDREAMER.dialogue-4beabb34f58d607d7452e1449e474307.tres"]
+
+[params]
+
+defaults=true

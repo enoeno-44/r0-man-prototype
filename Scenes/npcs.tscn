@@ -65,7 +65,7 @@ radius = 17.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_udh02"]
 
-[node name="Quest" type="Area2D"]
+[node name="NPC" type="Area2D"]
 script = ExtResource("1_xycyx")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
@@ -80,7 +80,7 @@ frame_progress = 0.837651
 offset = Vector2(0, -16)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-position = Vector2(0, -1)
+position = Vector2(0, -2.8)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_asfjg")
 debug_color = Color(0.980586, 0.123826, 0.154359, 0.42)
