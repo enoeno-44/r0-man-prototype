@@ -1,5 +1,5 @@
-# AutoLoad: TimeManager
-# จัดการเวลาในเกม
+# AutoLoad: time_manager
+# time_manager.gd
 extends Node
 
 signal time_changed(hour: int, minute: int)
@@ -17,7 +17,6 @@ func _process(delta):
 		hour += hours_passed
 		minute = int(minute) % 60
 		
-		# หยุดที่ 20:00
 		if hour > 20:
 			hour = 20
 			minute = 0

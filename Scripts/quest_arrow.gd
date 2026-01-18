@@ -1,4 +1,4 @@
-# ลูกศรชี้ไปยัง quest ถัดไปที่ยังไม่เสร็จ
+# quest_arrow.gd
 extends Node2D
 
 @export var arrow_distance: float = 60.0
@@ -22,8 +22,8 @@ func _ready():
 	z_index = 100
 	wasd_label.visible = true
 	_start_blink_effect()
+	
 	if not arrow_sprite:
-		push_error("[QuestArrow] ไม่พบ Arrow node")
 		return
 	
 	_create_arrow_shape()
@@ -33,7 +33,6 @@ func _ready():
 	
 	player = get_tree().get_first_node_in_group("player")
 	if not player:
-		push_error("[QuestArrow] ไม่พบ Player")
 		return
 	
 	_register_quest_areas()
@@ -52,7 +51,6 @@ func _process(delta):
 		visible = false
 		return
 	
-	# ซ่อนถ้าอยู่ใกล้เป้าหมาย
 	var hide_area = current_target.get_node_or_null("ArrowHideArea")
 	if hide_area and hide_area is Area2D:
 		if player in hide_area.get_overlapping_bodies():
@@ -77,7 +75,6 @@ func _get_or_create_arrow() -> Polygon2D:
 		arrow = Polygon2D.new()
 		arrow.name = "Arrow"
 		add_child(arrow)
-		print("[QuestArrow] สร้าง Arrow node")
 	
 	return arrow
 
@@ -95,14 +92,9 @@ func _register_quest_areas():
 	var all_areas = get_tree().get_nodes_in_group("quest_area")
 	var current_day = DayManager.get_current_day()
 	
-	print("[QuestArrow] ลงทะเบียน quest วันที่ %d" % current_day)
-	
 	for area in all_areas:
 		if area is Area2D and area.has_method("_is_active") and area.quest_day == current_day:
 			quest_areas.append(area)
-			print("[QuestArrow] ลงทะเบียน: " + area.quest_id)
-	
-	print("[QuestArrow] รวม %d quest" % quest_areas.size())
 
 func _update_target():
 	current_target = null
@@ -115,11 +107,9 @@ func _update_target():
 		if not QuestManager.is_quest_done(area.quest_id):
 			current_target = area
 			visible = true
-			print("[QuestArrow] ชี้ไปที่: " + area.quest_id)
 			return
 	
 	visible = false
-	print("[QuestArrow] ไม่มี quest ที่ต้องทำ")
 
 func _on_quest_completed(_quest_id: String):
 	await get_tree().create_timer(0.5).timeout
@@ -131,7 +121,6 @@ func _on_quest_completed(_quest_id: String):
 func _on_all_quests_completed():
 	visible = false
 	current_target = null
-	print("[QuestArrow] ภารกิจครบ - ซ่อนลูกศร")
 	if completion_label:
 		completion_label.text = completion_text
 		completion_label.visible = true

@@ -249,7 +249,7 @@ y_sort_enabled = true
 y_sort_enabled = true
 position = Vector2(281, -171)
 collision_layer = 3
-speed = 300
+speed = 70
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/Player"]
 zoom = Vector2(3.5, 3.5)

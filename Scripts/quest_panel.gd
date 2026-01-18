@@ -1,4 +1,4 @@
-# UI Panel แสดงรายการ quest
+# quest_panel.gd
 extends Control
 
 @onready var quest_list := $MarginContainer/VBoxContainer/questlist

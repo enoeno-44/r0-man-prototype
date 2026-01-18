@@ -1,4 +1,4 @@
-# แสดงเวลา วันที่ และไอเทมบน HUD
+# hud_manager.gd
 extends CanvasLayer
 
 @onready var time_label = $TopRight/VBoxContainer/TimeLabel
@@ -39,32 +39,23 @@ func _on_day_changed(_new_day: int, _date_text: String):
 	_update_date_label()
 
 func _on_item_added(item_name: String, icon: Texture2D):
-	"""เมื่อได้รับไอเทมใหม่"""
-	print("[HUD] แสดงไอเทม: " + item_name)
 	_refresh_items()
 
 func _refresh_items():
-	"""อัปเดตการแสดงไอเทมทั้งหมด"""
 	var items = ItemManager.get_items()
 	
-	# ซ่อนทุก slot ก่อน
 	for slot in item_slots:
 		if slot:
 			slot.hide()
 	
-	# แสดงไอเทมที่มี (สูงสุด 3 ชิ้น)
 	for i in range(min(items.size(), item_slots.size())):
 		var slot = item_slots[i]
 		var item_data = items[i]
 		
 		if slot:
-			# ถ้ามี icon ให้แสดง
 			if item_data.icon and slot is TextureRect:
 				slot.texture = item_data.icon
 				slot.show()
-			# ถ้าไม่มี icon แต่เป็น Label
 			elif slot is Label:
 				slot.text = item_data.name
 				slot.show()
-			else:
-				print("[HUD] Slot %d ไม่ใช่ TextureRect หรือ Label" % i)

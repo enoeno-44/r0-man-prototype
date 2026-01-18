@@ -1,4 +1,4 @@
-# จัดการแสงสว่างตามเวลา
+# daynight_manager.gd
 extends Node2D
 
 @onready var day_night = $DayNight

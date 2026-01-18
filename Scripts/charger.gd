@@ -1,4 +1,4 @@
-# สคริปต์สำหรับ Charger (จุดเปลี่ยนวัน)
+# charger.gd
 extends Area2D
 
 @onready var label = $Label

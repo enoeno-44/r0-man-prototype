@@ -1,5 +1,5 @@
 # AutoLoad: TransitionManager
-# จัดการ transition effect เมื่อเปลี่ยนวัน
+# transition_manager.gd
 extends CanvasLayer
 
 @onready var fade_rect: ColorRect
@@ -13,24 +13,19 @@ var is_transitioning: bool = false
 
 func _ready():
 	layer = 90
-	
 	_create_ui()
-	
 	call_deferred("_connect_signals")
 	
-	# Fade in เมื่อเริ่มเกม
 	await get_tree().process_frame
 	opening_fade_in()
 
 func _create_ui():
-	# ColorRect สำหรับ fade
 	fade_rect = ColorRect.new()
 	fade_rect.name = "FadeRect"
 	fade_rect.color = Color.BLACK
 	fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fade_rect)
 	
-	# Label สำหรับแสดงวันที่
 	transition_label = Label.new()
 	transition_label.name = "TransitionLabel"
 	transition_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -46,9 +41,6 @@ func _create_ui():
 func _connect_signals():
 	if DayManager:
 		DayManager.day_transition_started.connect(_on_day_transition_started)
-		print("[TransitionManager] เชื่อมสัญญาณสำเร็จ")
-	else:
-		push_error("[TransitionManager] ไม่พบ DayManager")
 
 func _on_viewport_size_changed():
 	var viewport_size = get_viewport().get_visible_rect().size
@@ -65,82 +57,60 @@ func _on_viewport_size_changed():
 		transition_label.add_theme_font_size_override("font_size", font_size)
 
 func opening_fade_in():
-	print("[TransitionManager] Opening fade in")
-	
-	# เริ่มจากจอดำ
 	fade_rect.modulate.a = 1.0
 	
-	# ซ่อน HUD และหยุดผู้เล่นทันที
 	_hide_hud()
 	_freeze_player(true)
-	print("[TransitionManager] ซ่อน HUD และหยุดผู้เล่น")
 	
-	# === เพิ่ม: แสดงวันที่ในวันแรก ===
 	await _show_date_text_for_opening()
 	
-	# แสดง System Dialogue วันแรก
 	if has_node("/root/SystemDialogueManager"):
 		var day = DayManager.get_current_day()
 		var lines = SystemDialogueManager._get_dialogue_for_day(day)
 		SystemDialogueManager.show_dialogue(lines)
 		
-		# รอให้ System Dialogue จบ (จอยังดำอยู่)
 		await SystemDialogueManager.dialogue_finished
-		print("[TransitionManager] System Dialogue จบ - กำลัง fade out")
 		
-		# Fade out หลัง dialogue จบ
 		var tween = create_tween()
 		tween.tween_property(fade_rect, "modulate:a", 0.0, 1.5)
 		tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 		await tween.finished
 		
-		# ปลดล็อคผู้เล่น
 		_freeze_player(false)
-		print("[TransitionManager] ปลดล็อคผู้เล่น")
 
 func _show_date_text_for_opening():
-	"""แสดงวันที่สำหรับวันแรก"""
 	if not DayManager:
 		return
 	
 	transition_label.text = DayManager.get_current_date_text()
-	print("[TransitionManager] แสดงวันที่: " + transition_label.text)
 	
-	# Fade in text
 	var tween = create_tween()
 	tween.tween_property(transition_label, "modulate:a", 1.0, text_fade_duration)
 	await tween.finished
 	
-	# แสดงวันที่ชั่วขณะ
 	await get_tree().create_timer(text_display_duration).timeout
 	
-	# Fade out text
 	tween = create_tween()
 	tween.tween_property(transition_label, "modulate:a", 0.0, text_fade_duration)
 	await tween.finished
 
 func _hide_hud():
-	"""ซ่อน HUD"""
 	var hud_nodes = get_tree().get_nodes_in_group("hud")
 	for hud in hud_nodes:
 		hud.hide()
-	print("[TransitionManager] ซ่อน HUD (%d nodes)" % hud_nodes.size())
 
 func _freeze_player(freeze: bool):
-	"""หยุด/ปลดล็อคผู้เล่น"""
 	var player = get_tree().get_first_node_in_group("player")
 	if player:
 		player.set_physics_process(not freeze)
 		if player.has_method("set_can_move"):
 			player.set_can_move(not freeze)
-	print("[TransitionManager] ผู้เล่น %s" % ("หยุด" if freeze else "ปลดล็อค"))
 
 func _on_day_transition_started():
 	if is_transitioning:
 		return
 	
 	is_transitioning = true
-	print("[TransitionManager] เริ่ม day transition")
 	
 	await _fade_out()
 	await _show_date_text()
@@ -151,12 +121,9 @@ func _on_day_transition_started():
 		SystemDialogueManager.show_dialogue(lines)
 		
 		await SystemDialogueManager.dialogue_finished
-		print("[TransitionManager] System Dialogue จบ - กำลัง fade in")
 	
 	await _fade_in()
-	
 	is_transitioning = false
-	print("[TransitionManager] Day transition เสร็จสิ้น")
 
 func _fade_out():
 	var tween = create_tween()
@@ -170,14 +137,12 @@ func _show_date_text():
 	
 	transition_label.text = DayManager.get_current_date_text()
 	
-	# Fade in text
 	var tween = create_tween()
 	tween.tween_property(transition_label, "modulate:a", 1.0, text_fade_duration)
 	await tween.finished
 	
 	await get_tree().create_timer(text_display_duration).timeout
 	
-	# Fade out text
 	tween = create_tween()
 	tween.tween_property(transition_label, "modulate:a", 0.0, text_fade_duration)
 	await tween.finished

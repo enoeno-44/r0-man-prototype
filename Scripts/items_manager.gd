@@ -1,4 +1,5 @@
-# AutoLoad: ItemManager
+# AutoLoad: time_manager
+# items_manager.gd
 extends Node
 
 signal item_added(item_name: String, icon: Texture2D)
@@ -6,9 +7,6 @@ signal item_added(item_name: String, icon: Texture2D)
 var items: Array = []
 
 func add_item(item_name: String, icon: Texture2D = null):
-	"""เพิ่มไอเทมและแสดงที่ HUD"""
-	print("[ItemManager] ได้รับไอเทม: " + item_name)
-	
 	items.append({
 		"name": item_name,
 		"icon": icon
@@ -17,11 +15,9 @@ func add_item(item_name: String, icon: Texture2D = null):
 	item_added.emit(item_name, icon)
 
 func get_items() -> Array:
-	"""ดูไอเทมทั้งหมด"""
 	return items
 
 func has_item(item_name: String) -> bool:
-	"""เช็คว่ามีไอเทมหรือไม่"""
 	for item in items:
 		if item.name == item_name:
 			return true
@@ -33,6 +29,5 @@ func get_save_data() -> Dictionary:
 func load_save_data(data: Dictionary):
 	if "items" in data:
 		items = data.items
-		# Refresh HUD
 		for item in items:
 			item_added.emit(item.name, item.icon)

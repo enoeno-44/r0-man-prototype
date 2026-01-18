@@ -1,3 +1,4 @@
+# simple_minigame.gd
 extends CanvasLayer
 
 signal completed  # สัญญาณเมื่อเล่นจบ
