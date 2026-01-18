@@ -28,6 +28,10 @@ SystemDialogueManager="*res://Scripts/system_dialogue_manager.gd"
 GlitchManager="*res://Scripts/glitch_manager.gd"
 EndGameManager="*res://Scripts/end_game_manager.gd"
 
+[display]
+
+window/size/mode=3
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg")

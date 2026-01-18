@@ -144,6 +144,15 @@ func _on_day_transition_started():
 	
 	await _fade_out()
 	await _show_date_text()
+	
+	if has_node("/root/SystemDialogueManager"):
+		var day = DayManager.get_current_day()
+		var lines = SystemDialogueManager._get_dialogue_for_day(day)
+		SystemDialogueManager.show_dialogue(lines)
+		
+		await SystemDialogueManager.dialogue_finished
+		print("[TransitionManager] System Dialogue จบ - กำลัง fade in")
+	
 	await _fade_in()
 	
 	is_transitioning = false

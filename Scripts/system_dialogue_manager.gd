@@ -31,9 +31,6 @@ func _ready():
 	layer = 99
 	_create_ui()
 	hide_dialogue()
-	
-	if DayManager:
-		DayManager.day_changed.connect(_on_day_changed)
 
 func _create_ui():
 	# MarginContainer สำหรับจัดตำแหน่ง
@@ -267,12 +264,6 @@ func _show_hud(show_it: bool):
 				hud.show()
 			else:
 				hud.hide()
-
-func _on_day_changed(new_day: int, _date_text: String):
-	await get_tree().create_timer(2.5).timeout
-	
-	var lines = _get_dialogue_for_day(new_day)
-	show_dialogue(lines)
 
 # ========================================
 # ฟังก์ชันช่วยสร้างข้อความ (ใช้งานง่าย)

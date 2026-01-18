@@ -7,7 +7,7 @@ signal time_changed(hour: int, minute: int)
 var hour: float = 6.0
 var minute: float = 0.0
 
-@export var time_scale := 0.5
+@export var time_scale := 1.2
 
 func _process(delta):
 	minute += delta * time_scale

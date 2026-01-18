@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://cqgbie6savpmh"]
+[gd_scene load_steps=20 format=4 uid="uid://cqgbie6savpmh"]
 
 [ext_resource type="Script" path="res://Scripts/daynight_manager.gd" id="1_7hc8a"]
 [ext_resource type="TileSet" uid="uid://dwjv1k2o1gmr2" path="res://world_1.tres" id="1_x5tmx"]
@@ -14,6 +14,9 @@
 [ext_resource type="PackedScene" uid="uid://e4lme64rd44a" path="res://Scenes/npcs.tscn" id="11_a06rh"]
 [ext_resource type="PackedScene" uid="uid://d3fyx8psdeiew" path="res://Scenes/simple_minigame.tscn" id="11_bdg8k"]
 [ext_resource type="Script" path="res://Scripts/enviroment_manager.gd" id="11_xci1g"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_fitt0"]
+font_size = 32
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b7d7d"]
 texture = ExtResource("3_pnxr6")
@@ -228,12 +231,14 @@ y_sort_enabled = true
 tile_map_data = PackedByteArray("AAD4//P/BQAQACIAAABAAB4ABQAPAGMAAAA=")
 tile_set = ExtResource("1_x5tmx")
 
-[node name="QuestNavigation" type="Node2D" parent="."]
+[node name="QuestNavigation" type="Node2D" parent="." node_paths=PackedStringArray("completion_label", "wasd_label")]
 script = ExtResource("2_smrkw")
 arrow_distance = 10.0
 arrow_color = Color(1, 0.683333, 0, 0.784314)
 pulse_speed = 3.0
 pulse_scale = 0.1
+completion_label = NodePath("../HUD/back to charger")
+wasd_label = NodePath("../Y-sort/Enviroment Manager/Day_1/wasd")
 
 [node name="Arrow" type="Polygon2D" parent="QuestNavigation"]
 
@@ -247,7 +252,7 @@ collision_layer = 3
 speed = 300
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/Player"]
-zoom = Vector2(2, 2)
+zoom = Vector2(3.5, 3.5)
 process_callback = 0
 limit_left = -820
 limit_top = -330
@@ -273,6 +278,24 @@ day6_node = NodePath("Day_6")
 
 [node name="Day_1" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
+
+[node name="wasd" type="Label" parent="Y-sort/Enviroment Manager/Day_1"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -132.0
+offset_top = -14.0
+offset_right = 257.0
+offset_bottom = 31.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.3, 0.3)
+text = "กดปุ่ม WASD เพื่อควบคุม R0"
+label_settings = SubResource("LabelSettings_fitt0")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Quest" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
 y_sort_enabled = true
@@ -369,6 +392,7 @@ minigame_scene = ExtResource("11_bdg8k")
 [node name="Quest9" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
 y_sort_enabled = true
 position = Vector2(1097, 748)
+quest_id = "trash_9"
 quest_day = 3
 required_qte_count = 2
 
@@ -390,6 +414,7 @@ quest_day = 4
 dialogue_resource = "res://Dialogues/KID_SECRET.dialogue"
 minigame_scene = ExtResource("11_bdg8k")
 has_minigame = false
+reward_item_name = "item1"
 reward_item_icon = ExtResource("8_44b7a")
 
 [node name="Quest11" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
@@ -426,6 +451,7 @@ required_qte_count = 2
 [node name="walkin_npc" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("9_rwu0h")]
 y_sort_enabled = true
 position = Vector2(518, -6)
+waypoints = Array[Vector2]([Vector2(800, -125), Vector2(1140, -125), Vector2(1140, -105), Vector2(1190, -105), Vector2(1190, 0), Vector2(1700, 0)])
 
 [node name="Quest14" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
 y_sort_enabled = true
@@ -457,6 +483,7 @@ quest_day = 5
 dialogue_resource = "res://Dialogues/KID_GIFT.dialogue"
 minigame_scene = ExtResource("11_bdg8k")
 has_minigame = false
+reward_item_name = "item2"
 reward_item_icon = ExtResource("8_44b7a")
 
 [node name="Day_6" type="Node2D" parent="Y-sort/Enviroment Manager"]
@@ -507,6 +534,25 @@ tile_set = SubResource("TileSet_jorat")
 
 [node name="HUD" parent="." instance=ExtResource("5_27i6d")]
 script = ExtResource("6_rqhi5")
+
+[node name="back to charger" type="Label" parent="HUD"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -267.0
+offset_top = -128.0
+offset_right = 267.0
+offset_bottom = -67.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "ข้อความ
+"
+label_settings = SubResource("LabelSettings_fitt0")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Charger" type="Area2D" parent="."]
 script = ExtResource("10_7dk4h")

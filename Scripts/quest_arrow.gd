@@ -11,12 +11,17 @@ var current_target: Area2D = null
 var quest_areas: Array[Area2D] = []
 
 @onready var arrow_sprite: Polygon2D = _get_or_create_arrow()
+@export var completion_text: String = "กลับสู่แท่นชาร์จ"
+@export var completion_label: Label = null
+@export var wasd_label: Label = null
+var _blink_tween: Tween
 
 var time: float = 0.0
 
 func _ready():
 	z_index = 100
-	
+	wasd_label.visible = true
+	_start_blink_effect()
 	if not arrow_sprite:
 		push_error("[QuestArrow] ไม่พบ Arrow node")
 		return
@@ -119,16 +124,26 @@ func _update_target():
 func _on_quest_completed(_quest_id: String):
 	await get_tree().create_timer(0.5).timeout
 	_update_target()
+	if wasd_label:
+		_stop_blink_effect()
+		wasd_label.visible = false
 
 func _on_all_quests_completed():
 	visible = false
 	current_target = null
 	print("[QuestArrow] ภารกิจครบ - ซ่อนลูกศร")
+	if completion_label:
+		completion_label.text = completion_text
+		completion_label.visible = true
+		_start_blink_effect()
 
 func _on_day_changed(_new_day: int, _date_text: String):
 	await get_tree().create_timer(0.3).timeout
 	_register_quest_areas()
 	_update_target()
+	if completion_label:
+		_stop_blink_effect()
+		completion_label.visible = false
 
 func set_arrow_color(color: Color):
 	arrow_color = color
@@ -138,3 +153,23 @@ func set_arrow_color(color: Color):
 func set_arrow_distance(distance: float):
 	arrow_distance = distance
 	_create_arrow_shape()
+	
+func _start_blink_effect():
+	if _blink_tween:
+		_blink_tween.kill()
+	
+	_blink_tween = create_tween().set_loops()
+	
+	_blink_tween.tween_property(completion_label, "modulate:a", 0.0, 0.8)
+	_blink_tween.tween_property(completion_label, "modulate:a", 1.0, 0.8)
+	_blink_tween.tween_property(wasd_label, "modulate:a", 0.0, 0.8)
+	_blink_tween.tween_property(wasd_label, "modulate:a", 1.0, 0.8)
+
+func _stop_blink_effect():
+	if _blink_tween:
+		_blink_tween.kill()
+	
+	if completion_label:
+		completion_label.modulate.a = 1.0
+	if wasd_label:
+		wasd_label.modulate.a = 1.0

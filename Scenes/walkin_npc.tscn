@@ -388,6 +388,7 @@ height = 10.0
 
 [node name="walkin_npc" type="CharacterBody2D"]
 collision_layer = 4
+collision_mask = 8
 script = ExtResource("1_hd3uj")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
