@@ -26,6 +26,7 @@ TransitionManager="*res://Scripts/transition_manager.gd"
 ItemManager="*res://Scripts/items_manager.gd"
 SystemDialogueManager="*res://Scripts/system_dialogue_manager.gd"
 GlitchManager="*res://Scripts/glitch_manager.gd"
+EndGameManager="*res://Scripts/end_game_manager.gd"
 
 [editor_plugins]
 
@@ -61,7 +62,7 @@ interact={
 
 [internationalization]
 
-locale/translations_pot_files=PackedStringArray("res://Dialogues/KID_CURIOSITY.dialogue", "res://Dialogues/KID_SECRET.dialogue", "res://Dialogues/KID_GIFT.dialogue", "res://Dialogues/OLD_LADY.dialogue", "res://Dialogues/STREET_MUSICIAN.dialogue", "res://Dialogues/DAYDREAMER.dialogue", "res://Dialogues/ENGINEER.dialogue", "res://Dialogues/OLD_MAN.dialogue")
+locale/translations_pot_files=PackedStringArray("res://Dialogues/KID_CURIOSITY.dialogue", "res://Dialogues/KID_SECRET.dialogue", "res://Dialogues/KID_GIFT.dialogue", "res://Dialogues/OLD_LADY.dialogue", "res://Dialogues/STREET_MUSICIAN.dialogue", "res://Dialogues/DAYDREAMER.dialogue", "res://Dialogues/ENGINEER.dialogue", "res://Dialogues/OLD_MAN.dialogue", "res://Dialogues/iknownyou.dialogue")
 
 [rendering]
 

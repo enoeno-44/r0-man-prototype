@@ -5,6 +5,8 @@ extends Node
 signal qte_success(object_id: String, current_count: int, required_count: int)
 signal qte_failed(object_id: String, current_count: int, required_count: int)
 signal qte_fully_completed(object_id: String)
+signal qte_started(object_id: String)
+signal qte_ended(object_id: String, was_successful: bool)
 
 var qte_progress: Dictionary = {}
 var is_qte_active: bool = false
@@ -144,6 +146,9 @@ func start_qte(object_id: String):
 	current_object_id = object_id
 	freeze_player(true)
 	
+	qte_started.emit(object_id)
+	print("[QTEManager] ✓ เริ่ม QTE: %s" % object_id)
+	
 	var progress = get_progress(object_id)
 	progress_label.text = "สำเร็จ: %d/%d" % [progress.current, progress.required]
 	_start_qte_round()
@@ -199,6 +204,7 @@ func _check_success():
 
 func _handle_qte_result(success: bool):
 	var progress = get_progress(current_object_id)
+	var saved_object_id = current_object_id
 	
 	if success:
 		qte_progress[current_object_id].current += 1
@@ -206,21 +212,52 @@ func _handle_qte_result(success: bool):
 		qte_success.emit(current_object_id, progress.current, progress.required)
 		
 		if is_fully_completed(current_object_id):
+			print("[QTEManager] ✓✓✓ QTE สำเร็จครบแล้ว: %s" % saved_object_id)
 			qte_ui.hide()
 			is_qte_active = false
 			freeze_player(false)
 			qte_fully_completed.emit(current_object_id)
+			qte_ended.emit(saved_object_id, true)
 			current_object_id = ""
 		else:
+			print("[QTEManager] QTE สำเร็จ %d/%d - ทำรอบต่อไป" % [progress.current, progress.required])
 			is_qte_active = false
 			await get_tree().create_timer(0.3).timeout
 			start_qte(current_object_id)
 	else:
+		print("[QTEManager] ✗✗✗ QTE ล้มเหลว: %s" % saved_object_id)
 		qte_ui.hide()
 		freeze_player(false)
 		qte_failed.emit(current_object_id, progress.current, progress.required)
+		qte_ended.emit(saved_object_id, false)
 		is_qte_active = false
 		current_object_id = ""
+
+# ⭐ ฟังก์ชันใหม่: บังคับปิด QTE
+func force_end_qte():
+	"""บังคับปิด QTE โดยไม่นับเป็นสำเร็จหรือล้มเหลว"""
+	if not is_qte_active:
+		return
+	
+	print("[QTEManager] ⚠️ บังคับปิด QTE: %s" % current_object_id)
+	
+	var saved_object_id = current_object_id
+	
+	# หยุดการเล่น
+	is_playing = false
+	is_qte_active = false
+	
+	# ซ่อน UI
+	qte_ui.hide()
+	
+	# ปลดล็อคผู้เล่น
+	freeze_player(false)
+	
+	# Emit signal (ส่ง false เพราะถูกบังคับปิด)
+	qte_ended.emit(saved_object_id, false)
+	
+	# เคลียร์ current_object_id
+	current_object_id = ""
 
 func reset_progress(object_id: String):
 	if object_id in qte_progress:

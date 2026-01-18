@@ -1,0 +1,15 @@
+[remap]
+
+importer="dialogue_manager_compiler_13"
+type="Resource"
+uid="uid://ca316wsq2wosv"
+path="res://.godot/imported/iknownyou.dialogue-e958ca2dd2af798277ab2cc4a7ca5f06.tres"
+
+[deps]
+
+source_file="res://Dialogues/iknownyou.dialogue"
+dest_files=["res://.godot/imported/iknownyou.dialogue-e958ca2dd2af798277ab2cc4a7ca5f06.tres"]
+
+[params]
+
+defaults=true

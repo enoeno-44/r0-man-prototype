@@ -1,60 +1,155 @@
-# NPC ที่เดินไปมาและแสดงข้อความเมื่อผู้เล่นเข้าใกล้
+# NPC ที่เดินไปมา + แสดง Dialogue + ใช้สำหรับจบเกม
 extends CharacterBody2D
 
 # === การเคลื่อนที่ ===
-@export var waypoints: Array[Vector2] = []  # จุดที่ NPC จะเดินไป
+@export var waypoints: Array[Vector2] = []
 @export var move_speed: float = 50.0
-@export var wait_time_at_waypoint: float = 2.0  # เวลารอที่แต่ละจุด
-@export var stop_at_end: bool = true  # หยุดที่จุดสุดท้าย
-@export var initial_wait_time: float = 0.0  # รอก่อนเริ่มเดิน (วินาที)
+@export var wait_time_at_waypoint: float = 2.0
+@export var stop_at_end: bool = true
+@export var initial_wait_time: float = 0.0
 
-# === ข้อความบนหัว ===
-@export var greeting_text: String = "สวัสดี เจ้าหุ่น"
-@export var detection_radius: float = 100.0  # ระยะที่ตรวจจับผู้เล่น
-@export var message_duration: float = 3.0  # ข้อความแสดงนานเท่าไร
+# === Dialogue ===
+@export_group("Dialogue Settings")
+@export var has_dialogue: bool = false
+@export var dialogue_resource: String = ""
+@export var dialogue_start: String = "start"
+@export var detection_radius: float = 100.0
 
-# === Animation (ถ้ามี) ===
+# === Quest Trigger (สำหรับจบเกม) ===
+@export_group("Quest Trigger")
+@export var wait_for_quest_start: bool = false  # ปรากฏเมื่อเริ่ม Quest
+@export var trigger_quest_id: String = ""  # เช่น "trash_17"
+
+# === End Game ===
+@export_group("End Game")
+@export var is_ending_npc: bool = false
+@export var ending_delay: float = 0.5  # ดีเลย์หลัง Dialogue จบ
+
+# === Animation ===
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
 
-# Label สำหรับแสดงข้อความ
-var message_label: Label
-
-# ตัวแปรสำหรับการเคลื่อนที่
+# ตัวแปรภายใน
 var current_waypoint_index: int = 0
 var is_waiting: bool = false
 var is_moving: bool = false
-var has_shown_message: bool = false  # แสดงข้อความครั้งเดียว
 var player_in_range: bool = false
-
-# ตัวแปรสำหรับ Animation
+var has_talked: bool = false
+var is_talking: bool = false
+var waiting_for_quest: bool = false
+var qte_has_ended: bool = false
 var last_direction: Vector2 = Vector2.DOWN
 
+# Detection Area
+var detection_area: Area2D
+
 func _ready():
-	_create_detection_area()
-	_create_message_label()
+	# ถ้าต้องรอ Quest เริ่ม
+	if wait_for_quest_start and trigger_quest_id != "":
+		visible = false
+		set_physics_process(false)
+		waiting_for_quest = true
+		qte_has_ended = false
+		
+		# เชื่อมต่อ signal ของ QTEManager
+		if has_node("/root/QTEManager"):
+			QTEManager.qte_started.connect(_on_qte_started)
+			QTEManager.qte_ended.connect(_on_qte_ended)
+			print("[WalkingNPC] ✓ เชื่อมต่อ Signal สำเร็จ")
+		else:
+			push_error("[WalkingNPC] ไม่พบ QTEManager!")
+		
+		print("[WalkingNPC] ซ่อนตัว - รอ Quest เริ่ม: %s" % trigger_quest_id)
+		return
 	
-	# เริ่มเคลื่อนที่ถ้ามี waypoints
+	_setup()
+
+func _on_qte_started(quest_id: String):
+	"""เมื่อผู้เล่นเริ่มทำ QTE ของ Quest นี้"""
+	if not waiting_for_quest or quest_id != trigger_quest_id:
+		return
+	
+	print("[WalkingNPC] ✓ ตรวจพบ QTE เริ่ม: %s - ปรากฏตัว!" % quest_id)
+	
+	# ตัดการเชื่อมต่อ qte_started
+	if QTEManager.qte_started.is_connected(_on_qte_started):
+		QTEManager.qte_started.disconnect(_on_qte_started)
+	
+	waiting_for_quest = false
+	qte_has_ended = false
+	visible = true
+	set_physics_process(true)
+	_setup()
+
+func _on_qte_ended(quest_id: String, was_successful: bool):
+	"""เมื่อผู้เล่นออกจาก QTE (ผ่านหรือไม่ผ่านก็ได้)"""
+	if quest_id != trigger_quest_id:
+		return
+	
+	print("[WalkingNPC] ✓✓✓ QTE '%s' จบแล้ว! (สำเร็จ: %s)" % [quest_id, was_successful])
+	print("[WalkingNPC] สถานะ: moving=%s, in_range=%s, has_talked=%s" % [is_moving, player_in_range, has_talked])
+	
+	# ตัดการเชื่อมต่อ
+	if QTEManager.qte_ended.is_connected(_on_qte_ended):
+		QTEManager.qte_ended.disconnect(_on_qte_ended)
+	
+	qte_has_ended = true
+	
+	# ลองเริ่ม Dialogue ทันที
+	_try_start_dialogue()
+
+func _try_start_dialogue():
+	"""พยายามเริ่ม Dialogue ถ้าเงื่อนไขครบ"""
+	print("[WalkingNPC] _try_start_dialogue: moving=%s, qte_ended=%s, in_range=%s, talked=%s" % [is_moving, qte_has_ended, player_in_range, has_talked])
+	
+	# ตรวจสอบเงื่อนไข
+	if is_moving:
+		print("[WalkingNPC] ❌ NPC ยังเดินอยู่")
+		return
+	
+	if not qte_has_ended:
+		print("[WalkingNPC] ❌ QTE ยังไม่จบ")
+		return
+	
+	if has_talked:
+		print("[WalkingNPC] ❌ พูดไปแล้ว")
+		return
+	
+	if not has_dialogue:
+		print("[WalkingNPC] ❌ ไม่มี dialogue")
+		return
+	
+	if not player_in_range:
+		print("[WalkingNPC] ❌ ผู้เล่นยังไม่เข้ามาใกล้")
+		return
+	
+	# ทุกเงื่อนไขผ่าน!
+	print("[WalkingNPC] ✓✓✓ ครบทุกเงื่อนไข! เริ่ม Dialogue!")
+	call_deferred("_start_dialogue_delayed")
+
+func _start_dialogue_delayed():
+	"""เริ่ม Dialogue แบบ Delayed"""
+	# ⭐ เพิ่มดีเลย์เพื่อให้แน่ใจว่า QTE UI หายไปแล้ว
+	await get_tree().create_timer(0.8).timeout
+	_trigger_dialogue()
+
+func _setup():
+	"""ตั้งค่าเริ่มต้น"""
+	if has_dialogue:
+		_create_detection_area()
+	
+	# เริ่มเคลื่อนที่
 	if waypoints.size() > 0:
 		if initial_wait_time > 0:
-			print("[NPC] รอ %.1f วินาทีก่อนเริ่มเดิน" % initial_wait_time)
 			await get_tree().create_timer(initial_wait_time).timeout
-		
 		is_moving = true
-		print("[NPC] เริ่มเคลื่อนที่ จำนวนจุด: %d" % waypoints.size())
-	else:
-		print("[NPC] ⚠ ไม่มี waypoints กำหนด!")
-	
-	# Test: แสดงข้อความทันทีเพื่อทดสอบ (ลบออกได้ถ้าไม่ต้องการ)
-	print("[NPC] ข้อความที่จะแสดง: '%s'" % greeting_text)
-	print("[NPC] ตำแหน่ง Label: %s" % str(message_label.global_position))
-	print("[NPC] Label visible: %s" % message_label.visible)
+		print("[WalkingNPC] เริ่มเดิน - จุด: %d" % waypoints.size())
 
 func _create_detection_area():
 	"""สร้าง Area2D สำหรับตรวจจับผู้เล่น"""
-	var detection_area = Area2D.new()
+	detection_area = Area2D.new()
 	detection_area.name = "DetectionArea"
-	detection_area.collision_layer = 0  # ไม่อยู่ใน layer ใดๆ
-	detection_area.collision_mask = 2   # ตรวจจับเฉพาะ layer 2 (Player)
+	detection_area.collision_layer = 0
+	detection_area.collision_mask = 2
 	add_child(detection_area)
 	
 	var collision_shape = CollisionShape2D.new()
@@ -63,34 +158,8 @@ func _create_detection_area():
 	collision_shape.shape = circle
 	detection_area.add_child(collision_shape)
 	
-	# เชื่อมสัญญาณ
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
-	
-	print("[NPC] สร้าง Detection Area (รัศมี: %.1f, Mask: %d)" % [detection_radius, detection_area.collision_mask])
-
-func _create_message_label():
-	"""สร้าง Label สำหรับแสดงข้อความบนหัว"""
-	message_label = Label.new()
-	message_label.name = "MessageLabel"
-	message_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	message_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	
-	# ตกแต่ง Label
-	message_label.add_theme_font_size_override("font_size", 18)
-	message_label.add_theme_constant_override("outline_size", 6)
-	message_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
-	message_label.add_theme_color_override("font_color", Color(1, 1, 0.8))
-	
-	# วางตำแหน่งบนหัว NPC
-	message_label.position = Vector2(-100, -70)  # ปรับตามขนาด sprite
-	message_label.custom_minimum_size = Vector2(200, 30)
-	
-	add_child(message_label)
-	message_label.hide()
-	message_label.z_index = 100  # ให้อยู่ด้านหน้าสุด
-	
-	print("[NPC] สร้าง Message Label")
 
 func _physics_process(delta):
 	if waypoints.size() == 0 or not is_moving or is_waiting:
@@ -102,108 +171,151 @@ func _physics_process(delta):
 	var target = waypoints[current_waypoint_index]
 	var direction = (target - global_position).normalized()
 	
-	# เช็คว่าถึงจุดหมายหรือยัง
 	if global_position.distance_to(target) < 5:
 		_reach_waypoint()
 		return
 	
-	# เคลื่อนที่ไปยังจุดหมาย
 	velocity = direction * move_speed
 	last_direction = direction
-	
 	_play_walk_animation(direction)
 	move_and_slide()
 
 func _reach_waypoint():
 	"""เมื่อถึงจุดหมาย"""
-	print("[NPC] ถึงจุดที่ %d" % current_waypoint_index)
+	print("[WalkingNPC] ถึงจุดที่ %d" % current_waypoint_index)
 	
 	is_waiting = true
 	velocity = Vector2.ZERO
 	_play_idle_animation()
 	
-	# รอที่จุดนี้
-	await get_tree().create_timer(wait_time_at_waypoint).timeout
-	
-	# ไปจุดถัดไป
 	current_waypoint_index += 1
 	
-	# เช็คว่าถึงจุดสุดท้ายหรือยัง
+	# ถ้าถึงจุดสุดท้าย
 	if current_waypoint_index >= waypoints.size():
 		if stop_at_end:
-			print("[NPC] ถึงจุดสุดท้ายแล้ว - หยุดเคลื่อนที่")
+			print("[WalkingNPC] ✓ ถึงจุดสุดท้าย - หยุดเดิน")
 			is_moving = false
 			is_waiting = false
 			_play_idle_animation()
+			
+			# ⭐ ปิด QTE ที่กำลังเล่นอยู่ทันที
+			await _force_close_qte()
+			
+			# ลองเริ่ม Dialogue
+			_try_start_dialogue()
 			return
 		else:
-			# วนกลับไปจุดแรก
 			current_waypoint_index = 0
-			print("[NPC] วนกลับไปจุดแรก")
 	
+	# รอที่จุดนี้
+	await get_tree().create_timer(wait_time_at_waypoint).timeout
 	is_waiting = false
 
-func _on_body_entered(body):
-	"""เมื่อมีวัตถุเข้ามาในรัศมี"""
-	print("[NPC] ตรวจพบ body: %s (group: %s)" % [body.name, body.get_groups()])
+func _force_close_qte():
+	"""บังคับปิด QTE ถ้ากำลังเล่นอยู่"""
+	if not has_node("/root/QTEManager"):
+		return
 	
+	# ⭐ ล็อควัตถุทั้งหมดที่เกี่ยวข้องกับ quest นี้
+	_lock_all_quest_objects()
+	
+	if QTEManager.is_active():
+		print("[WalkingNPC] ⚠️ กำลังปิด QTE ที่ผู้เล่นทำอยู่...")
+		QTEManager.force_end_qte()
+		qte_has_ended = true
+		# ⭐ รอให้ UI หายไปจริงๆ
+		await get_tree().create_timer(0.3).timeout
+		print("[WalkingNPC] ✓ QTE ปิดเรียบร้อยแล้ว")
+
+func _lock_all_quest_objects():
+	"""ล็อควัตถุทั้งหมดที่มี quest_id ตรงกับ trigger_quest_id"""
+	if trigger_quest_id == "":
+		return
+	
+	var quest_objects = get_tree().get_nodes_in_group("quest_area")
+	for obj in quest_objects:
+		if obj.has_method("get_quest_id") and obj.get_quest_id() == trigger_quest_id:
+			obj.force_lock()
+			print("[WalkingNPC] ล็อควัตถุ: %s" % trigger_quest_id)
+
+func _on_body_entered(body):
+	"""ผู้เล่นเข้ามาใกล้"""
 	if body.is_in_group("player") or body.name == "Player":
 		player_in_range = true
-		print("[NPC] ✓ ผู้เล่นเข้ามาใกล้!")
+		print("[WalkingNPC] ✓ ผู้เล่นเข้ามาใกล้")
 		
-		if not has_shown_message:
-			_show_message()
-		else:
-			print("[NPC] ⚠ ข้อความแสดงไปแล้ว")
+		# ลองเริ่ม Dialogue
+		_try_start_dialogue()
 
 func _on_body_exited(body):
-	"""เมื่อวัตถุออกจากรัศมี"""
+	"""ผู้เล่นออกไป"""
 	if body.is_in_group("player") or body.name == "Player":
 		player_in_range = false
-		print("[NPC] ผู้เล่นออกไป")
+		print("[WalkingNPC] ผู้เล่นออกไป")
 
-func _show_message():
-	"""แสดงข้อความบนหัว"""
-	if has_shown_message:
-		print("[NPC] ⚠ ข้อความแสดงไปแล้ว")
+func _trigger_dialogue():
+	"""เริ่มบทสนทนา"""
+	if is_talking or has_talked:
+		print("[WalkingNPC] ❌ กำลังพูดอยู่หรือพูดไปแล้ว")
 		return
 	
-	if greeting_text == "":
-		print("[NPC] ⚠ ไม่มีข้อความกำหนด!")
+	if dialogue_resource == "":
+		push_error("[WalkingNPC] ไม่ได้กำหนด dialogue_resource!")
 		return
 	
-	has_shown_message = true
-	print("[NPC] 🗨 กำลังแสดงข้อความ: '%s'" % greeting_text)
+	print("[WalkingNPC] === เริ่ม Dialogue ===")
+	is_talking = true
+	has_talked = true
 	
-	message_label.text = greeting_text
-	message_label.visible = true
-	print("[NPC] Label visible: %s, text: '%s'" % [message_label.visible, message_label.text])
+	# หยุดการเคลื่อนที่
+	is_moving = false
+	velocity = Vector2.ZERO
+	_play_idle_animation()
 	
-	# Fade in
-	message_label.modulate.a = 0.0
-	var tween = create_tween()
-	tween.tween_property(message_label, "modulate:a", 1.0, 0.3)
-	await tween.finished
+	# หยุดผู้เล่น
+	_freeze_player(true)
 	
-	print("[NPC] ✓ Fade in เสร็จ (alpha: %.2f)" % message_label.modulate.a)
+	# เล่น Dialogue
+	var dialogue_resource_loaded = load(dialogue_resource)
+	if dialogue_resource_loaded:
+		DialogueManager.show_dialogue_balloon(dialogue_resource_loaded, dialogue_start)
+		await DialogueManager.dialogue_ended
+		print("[WalkingNPC] ✓ Dialogue จบ")
+	else:
+		push_error("[WalkingNPC] โหลด dialogue_resource ไม่สำเร็จ: " + dialogue_resource)
 	
-	# รอแล้ว Fade out
-	await get_tree().create_timer(message_duration).timeout
+	# ปลดล็อคผู้เล่น (ถ้าไม่ใช่ Ending NPC)
+	if not is_ending_npc:
+		_freeze_player(false)
 	
-	print("[NPC] กำลัง Fade out...")
-	tween = create_tween()
-	tween.tween_property(message_label, "modulate:a", 0.0, 0.5)
-	await tween.finished
+	is_talking = false
 	
-	message_label.hide()
-	print("[NPC] ✓ ซ่อนข้อความแล้ว")
+	# ถ้าเป็น Ending NPC
+	if is_ending_npc:
+		print("[WalkingNPC] === เริ่มฉากจบเกม ===")
+		await get_tree().create_timer(ending_delay).timeout
+		_trigger_end_game()
+
+func _trigger_end_game():
+	"""จบเกม - เรียก EndGameManager"""
+	if has_node("/root/EndGameManager"):
+		EndGameManager.start_ending()
+	else:
+		push_error("[WalkingNPC] ไม่พบ EndGameManager!")
+
+func _freeze_player(freeze: bool):
+	"""หยุด/ปลดล็อคผู้เล่น"""
+	var player = get_tree().get_first_node_in_group("player")
+	if player:
+		player.set_physics_process(not freeze)
+		if player.has_method("set_can_move"):
+			player.set_can_move(not freeze)
 
 # ========================================
-# Animation Functions (ถ้ามี AnimatedSprite2D)
+# Animation Functions
 # ========================================
 
 func _play_walk_animation(dir: Vector2):
-	"""เล่น animation เดิน"""
 	if not sprite or not sprite.sprite_frames:
 		return
 	
@@ -221,7 +333,6 @@ func _play_walk_animation(dir: Vector2):
 			sprite.play("walk_up")
 
 func _play_idle_animation():
-	"""เล่น animation หยุด"""
 	if not sprite or not sprite.sprite_frames:
 		return
 	
@@ -237,30 +348,3 @@ func _play_idle_animation():
 			sprite.play("idle_down")
 		elif last_direction.y < 0 and frames.has_animation("idle_up"):
 			sprite.play("idle_up")
-
-# ========================================
-# Helper Functions
-# ========================================
-
-func set_waypoints(points: Array[Vector2]):
-	"""กำหนดเส้นทางใหม่"""
-	waypoints = points
-	current_waypoint_index = 0
-	is_moving = waypoints.size() > 0
-	print("[NPC] ตั้งค่า waypoints ใหม่: %d จุด" % waypoints.size())
-
-func pause_movement():
-	"""หยุดการเคลื่อนที่ชั่วคราว"""
-	is_moving = false
-	print("[NPC] หยุดการเคลื่อนที่")
-
-func resume_movement():
-	"""กลับมาเคลื่อนที่ต่อ"""
-	if waypoints.size() > 0:
-		is_moving = true
-		print("[NPC] เริ่มเคลื่อนที่ต่อ")
-
-func reset_message():
-	"""รีเซ็ตให้แสดงข้อความได้อีกครั้ง"""
-	has_shown_message = false
-	print("[NPC] รีเซ็ตข้อความ")

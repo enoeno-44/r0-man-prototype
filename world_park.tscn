@@ -243,6 +243,7 @@ y_sort_enabled = true
 [node name="Player" parent="Y-sort" instance=ExtResource("2_8gqyu")]
 y_sort_enabled = true
 position = Vector2(281, -171)
+collision_layer = 3
 speed = 300
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/Player"]
@@ -259,7 +260,7 @@ drag_top_margin = 0.3
 drag_right_margin = 0.3
 drag_bottom_margin = 0.3
 
-[node name="Enviroment Manager" type="Node2D" parent="Y-sort" node_paths=PackedStringArray("day1_node", "day2_node", "day3_node", "day4_node", "day5_node")]
+[node name="Enviroment Manager" type="Node2D" parent="Y-sort" node_paths=PackedStringArray("day1_node", "day2_node", "day3_node", "day4_node", "day5_node", "day6_node")]
 y_sort_enabled = true
 position = Vector2(282, -149)
 script = ExtResource("11_xci1g")
@@ -268,6 +269,7 @@ day2_node = NodePath("Day_2")
 day3_node = NodePath("Day_3")
 day4_node = NodePath("Day_4")
 day5_node = NodePath("Day_5")
+day6_node = NodePath("Day_6")
 
 [node name="Day_1" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
@@ -424,10 +426,6 @@ required_qte_count = 2
 [node name="walkin_npc" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("9_rwu0h")]
 y_sort_enabled = true
 position = Vector2(518, -6)
-waypoints = Array[Vector2]([Vector2(800, -120), Vector2(1140, -120), Vector2(1190, -105), Vector2(1190, 60), Vector2(1700, 60)])
-move_speed = 40.0
-wait_time_at_waypoint = 1.0
-initial_wait_time = 30.0
 
 [node name="Quest14" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
 y_sort_enabled = true
@@ -475,6 +473,17 @@ y_sort_enabled = true
 position = Vector2(-238, 513)
 quest_id = "trash_17"
 quest_day = 6
+
+[node name="walkin_npc" parent="Y-sort/Enviroment Manager/Day_6" instance=ExtResource("9_rwu0h")]
+position = Vector2(-517, 539)
+waypoints = Array[Vector2]([Vector2(10, 390)])
+wait_time_at_waypoint = 1.0
+has_dialogue = true
+dialogue_resource = "res://Dialogues/iknownyou.dialogue"
+wait_for_quest_start = true
+trigger_quest_id = "trash_17"
+is_ending_npc = true
+ending_delay = 0.0
 
 [node name="fences" type="TileMapLayer" parent="Y-sort" groups=["glitchable"]]
 y_sort_enabled = true
