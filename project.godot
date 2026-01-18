@@ -25,6 +25,7 @@ DayManager="*res://Scripts/day_manager.gd"
 TransitionManager="*res://Scripts/transition_manager.gd"
 ItemManager="*res://Scripts/items_manager.gd"
 SystemDialogueManager="*res://Scripts/system_dialogue_manager.gd"
+GlitchManager="*res://Scripts/glitch_manager.gd"
 
 [editor_plugins]
 

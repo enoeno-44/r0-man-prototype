@@ -12,7 +12,7 @@ extends CanvasLayer
 var is_transitioning: bool = false
 
 func _ready():
-	layer = 100
+	layer = 90
 	
 	_create_ui()
 	
@@ -66,31 +66,58 @@ func _on_viewport_size_changed():
 
 func opening_fade_in():
 	print("[TransitionManager] Opening fade in")
+	
+	# เริ่มจากจอดำ
 	fade_rect.modulate.a = 1.0
 	
-	# ========== ซ่อน HUD และหยุดผู้เล่นทันที ==========
+	# ซ่อน HUD และหยุดผู้เล่นทันที
 	_hide_hud()
 	_freeze_player(true)
 	print("[TransitionManager] ซ่อน HUD และหยุดผู้เล่น")
 	
-	var tween = create_tween()
-	tween.tween_property(fade_rect, "modulate:a", 0.0, 1.5)
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	await tween.finished
+	# === เพิ่ม: แสดงวันที่ในวันแรก ===
+	await _show_date_text_for_opening()
 	
 	# แสดง System Dialogue วันแรก
 	if has_node("/root/SystemDialogueManager"):
-		await get_tree().create_timer(0.5).timeout
 		var day = DayManager.get_current_day()
 		var lines = SystemDialogueManager._get_dialogue_for_day(day)
 		SystemDialogueManager.show_dialogue(lines)
 		
-		# รอให้ System Dialogue จบ
+		# รอให้ System Dialogue จบ (จอยังดำอยู่)
 		await SystemDialogueManager.dialogue_finished
-		print("[TransitionManager] System Dialogue จบ - ปลดล็อคผู้เล่น")
+		print("[TransitionManager] System Dialogue จบ - กำลัง fade out")
 		
-		# ปลดล็อคผู้เล่นหลัง System Dialogue จบ
+		# Fade out หลัง dialogue จบ
+		var tween = create_tween()
+		tween.tween_property(fade_rect, "modulate:a", 0.0, 1.5)
+		tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		await tween.finished
+		
+		# ปลดล็อคผู้เล่น
 		_freeze_player(false)
+		print("[TransitionManager] ปลดล็อคผู้เล่น")
+
+func _show_date_text_for_opening():
+	"""แสดงวันที่สำหรับวันแรก"""
+	if not DayManager:
+		return
+	
+	transition_label.text = DayManager.get_current_date_text()
+	print("[TransitionManager] แสดงวันที่: " + transition_label.text)
+	
+	# Fade in text
+	var tween = create_tween()
+	tween.tween_property(transition_label, "modulate:a", 1.0, text_fade_duration)
+	await tween.finished
+	
+	# แสดงวันที่ชั่วขณะ
+	await get_tree().create_timer(text_display_duration).timeout
+	
+	# Fade out text
+	tween = create_tween()
+	tween.tween_property(transition_label, "modulate:a", 0.0, text_fade_duration)
+	await tween.finished
 
 func _hide_hud():
 	"""ซ่อน HUD"""

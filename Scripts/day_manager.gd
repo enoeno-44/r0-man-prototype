@@ -6,7 +6,7 @@ signal day_changed(new_day: int, date_text: String)
 signal all_quests_completed
 signal day_transition_started
 
-var current_day: int = 1
+var current_day: int = 6
 var all_quests_done: bool = false
 
 var day_dates: Array[String] = [
