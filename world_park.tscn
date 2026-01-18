@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://cqgbie6savpmh"]
+[gd_scene load_steps=19 format=4 uid="uid://cqgbie6savpmh"]
 
 [ext_resource type="Script" path="res://Scripts/daynight_manager.gd" id="1_7hc8a"]
 [ext_resource type="TileSet" uid="uid://dwjv1k2o1gmr2" path="res://world_1.tres" id="1_x5tmx"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b3rvqc6qwyowr" path="res://Scenes/quest_items.tscn" id="6_bn031"]
 [ext_resource type="Script" path="res://Scripts/hud_manager.gd" id="6_rqhi5"]
 [ext_resource type="Texture2D" uid="uid://dcrnedf3ic72l" path="res://icon.svg" id="8_44b7a"]
+[ext_resource type="PackedScene" uid="uid://ds8gr55pdd2y1" path="res://Scenes/walkin_npc.tscn" id="9_rwu0h"]
 [ext_resource type="Script" path="res://Scripts/charger.gd" id="10_7dk4h"]
 [ext_resource type="PackedScene" uid="uid://e4lme64rd44a" path="res://Scenes/npcs.tscn" id="11_a06rh"]
 [ext_resource type="PackedScene" uid="uid://d3fyx8psdeiew" path="res://Scenes/simple_minigame.tscn" id="11_bdg8k"]
@@ -239,185 +240,9 @@ pulse_scale = 0.1
 [node name="Y-sort" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="Enviroment Manager" type="Node2D" parent="Y-sort" node_paths=PackedStringArray("day1_node", "day2_node", "day3_node", "day4_node", "day5_node")]
-position = Vector2(282, -149)
-script = ExtResource("11_xci1g")
-day1_node = NodePath("Day_1")
-day2_node = NodePath("Day_2")
-day3_node = NodePath("Day_3")
-day4_node = NodePath("Day_4")
-day5_node = NodePath("Day_5")
-
-[node name="Day_1" type="Node2D" parent="Y-sort/Enviroment Manager"]
-
-[node name="Quest" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
-position = Vector2(-508, 3)
-quest_id = "trash_1"
-
-[node name="Quest2" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
-position = Vector2(-238, 513)
-quest_id = "trash_2"
-required_qte_count = 2
-
-[node name="Quest3" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
-position = Vector2(556, 651)
-quest_id = "trash_3"
-required_qte_count = 2
-
-[node name="Day_2" type="Node2D" parent="Y-sort/Enviroment Manager"]
-
-[node name="Quest4" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
-position = Vector2(118, 106)
-quest_id = "trash_4"
-quest_day = 2
-required_qte_count = 2
-
-[node name="Quest5" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
-position = Vector2(64, 452)
-quest_id = "trash_5"
-quest_day = 2
-required_qte_count = 2
-
-[node name="NPC" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("11_a06rh")]
-position = Vector2(16, 410)
-quest_id = "npc_1_day2"
-quest_day = 2
-dialogue_resource = "res://Dialogues/STREET_MUSICIAN.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
-
-[node name="Quest6" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
-position = Vector2(930, 321)
-quest_id = "trash_6"
-quest_day = 2
-required_qte_count = 1
-
-[node name="NPC2" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("11_a06rh")]
-position = Vector2(856, 361)
-quest_id = "npc_2_day2"
-quest_day = 2
-dialogue_resource = "res://Dialogues/ENGINEER.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
-
-[node name="Day_3" type="Node2D" parent="Y-sort/Enviroment Manager"]
-
-[node name="Quest7" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
-position = Vector2(-682, 718)
-quest_id = "trash_7"
-quest_day = 3
-required_qte_count = 2
-
-[node name="NPC3" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("11_a06rh")]
-position = Vector2(-627, 680)
-quest_id = "npc_3_day3"
-quest_day = 3
-dialogue_resource = "res://Dialogues/KID_CURIOSITY.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
-has_minigame = false
-reward_item_name = "things"
-reward_item_icon = ExtResource("8_44b7a")
-
-[node name="Quest8" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
-position = Vector2(234, 733)
-quest_id = "trash_8"
-quest_day = 3
-required_qte_count = 1
-
-[node name="NPC4" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("11_a06rh")]
-position = Vector2(180, 674)
-quest_id = "npc_4_day3"
-quest_day = 3
-dialogue_resource = "res://Dialogues/OLD_LADY.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
-
-[node name="Quest9" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
-position = Vector2(1097, 748)
-quest_day = 3
-required_qte_count = 2
-
-[node name="Day_4" type="Node2D" parent="Y-sort/Enviroment Manager"]
-
-[node name="Quest10" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
-position = Vector2(448, 10)
-quest_id = "trash_10"
-quest_day = 4
-required_qte_count = 2
-
-[node name="NPC5" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("11_a06rh")]
-position = Vector2(325, -32)
-quest_id = "npc_5_day4"
-quest_day = 4
-dialogue_resource = "res://Dialogues/KID_SECRET.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
-has_minigame = false
-
-[node name="Quest11" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
-position = Vector2(754, 72)
-quest_id = "trash_11"
-quest_day = 4
-required_qte_count = 2
-
-[node name="NPC6" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("11_a06rh")]
-position = Vector2(673, 57)
-quest_id = "npc_6_day4"
-quest_day = 4
-dialogue_resource = "res://Dialogues/DAYDREAMER.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
-
-[node name="Quest12" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
-position = Vector2(1175, 550)
-quest_id = "trash_12"
-quest_day = 4
-
-[node name="Day_5" type="Node2D" parent="Y-sort/Enviroment Manager"]
-
-[node name="Quest13" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
-position = Vector2(992, 61)
-quest_id = "trash_13"
-quest_day = 5
-required_qte_count = 2
-
-[node name="Quest14" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
-position = Vector2(-618, 465)
-quest_id = "trash_14"
-quest_day = 5
-required_qte_count = 2
-
-[node name="NPC7" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("11_a06rh")]
-position = Vector2(-576, 566)
-quest_id = "npc_7_day5"
-quest_day = 5
-dialogue_resource = "res://Dialogues/OLD_MAN.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
-
-[node name="Quest15" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
-position = Vector2(-297, 167)
-quest_id = "trash_15"
-quest_day = 5
-required_qte_count = 2
-
-[node name="NPC8" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("11_a06rh")]
-position = Vector2(-253, 146)
-quest_id = "npc_8_day5"
-quest_day = 5
-dialogue_resource = "res://Dialogues/KID_GIFT.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
-has_minigame = false
-
-[node name="Day_6" type="Node2D" parent="Y-sort/Enviroment Manager"]
-
-[node name="Quest16" parent="Y-sort/Enviroment Manager/Day_6" instance=ExtResource("6_bn031")]
-position = Vector2(-508, 3)
-quest_id = "trash_16"
-quest_day = 6
-
-[node name="Quest17" parent="Y-sort/Enviroment Manager/Day_6" instance=ExtResource("6_bn031")]
-position = Vector2(-238, 513)
-quest_id = "trash_17"
-quest_day = 6
-
 [node name="Player" parent="Y-sort" instance=ExtResource("2_8gqyu")]
 y_sort_enabled = true
-position = Vector2(293, -173)
+position = Vector2(281, -171)
 speed = 300
 
 [node name="Camera2D" type="Camera2D" parent="Y-sort/Player"]
@@ -433,6 +258,223 @@ drag_left_margin = 0.3
 drag_top_margin = 0.3
 drag_right_margin = 0.3
 drag_bottom_margin = 0.3
+
+[node name="Enviroment Manager" type="Node2D" parent="Y-sort" node_paths=PackedStringArray("day1_node", "day2_node", "day3_node", "day4_node", "day5_node")]
+y_sort_enabled = true
+position = Vector2(282, -149)
+script = ExtResource("11_xci1g")
+day1_node = NodePath("Day_1")
+day2_node = NodePath("Day_2")
+day3_node = NodePath("Day_3")
+day4_node = NodePath("Day_4")
+day5_node = NodePath("Day_5")
+
+[node name="Day_1" type="Node2D" parent="Y-sort/Enviroment Manager"]
+y_sort_enabled = true
+
+[node name="Quest" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(-508, 3)
+quest_id = "trash_1"
+
+[node name="Quest2" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(-238, 513)
+quest_id = "trash_2"
+required_qte_count = 2
+
+[node name="Quest3" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(556, 651)
+quest_id = "trash_3"
+required_qte_count = 2
+
+[node name="Day_2" type="Node2D" parent="Y-sort/Enviroment Manager"]
+y_sort_enabled = true
+
+[node name="Quest4" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(118, 106)
+quest_id = "trash_4"
+quest_day = 2
+required_qte_count = 2
+
+[node name="Quest5" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(64, 452)
+quest_id = "trash_5"
+quest_day = 2
+required_qte_count = 2
+
+[node name="NPC" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("11_a06rh")]
+y_sort_enabled = true
+position = Vector2(16, 410)
+quest_id = "npc_1_day2"
+quest_day = 2
+dialogue_resource = "res://Dialogues/STREET_MUSICIAN.dialogue"
+minigame_scene = ExtResource("11_bdg8k")
+
+[node name="Quest6" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(930, 321)
+quest_id = "trash_6"
+quest_day = 2
+required_qte_count = 1
+
+[node name="NPC2" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("11_a06rh")]
+y_sort_enabled = true
+position = Vector2(856, 361)
+quest_id = "npc_2_day2"
+quest_day = 2
+dialogue_resource = "res://Dialogues/ENGINEER.dialogue"
+minigame_scene = ExtResource("11_bdg8k")
+
+[node name="Day_3" type="Node2D" parent="Y-sort/Enviroment Manager"]
+y_sort_enabled = true
+
+[node name="Quest7" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(-682, 718)
+quest_id = "trash_7"
+quest_day = 3
+required_qte_count = 2
+
+[node name="NPC3" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("11_a06rh")]
+y_sort_enabled = true
+position = Vector2(-627, 680)
+quest_id = "npc_3_day3"
+quest_day = 3
+dialogue_resource = "res://Dialogues/KID_CURIOSITY.dialogue"
+minigame_scene = ExtResource("11_bdg8k")
+has_minigame = false
+reward_item_name = "things"
+
+[node name="Quest8" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(234, 733)
+quest_id = "trash_8"
+quest_day = 3
+required_qte_count = 1
+
+[node name="NPC4" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("11_a06rh")]
+y_sort_enabled = true
+position = Vector2(180, 674)
+quest_id = "npc_4_day3"
+quest_day = 3
+dialogue_resource = "res://Dialogues/OLD_LADY.dialogue"
+minigame_scene = ExtResource("11_bdg8k")
+
+[node name="Quest9" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(1097, 748)
+quest_day = 3
+required_qte_count = 2
+
+[node name="Day_4" type="Node2D" parent="Y-sort/Enviroment Manager"]
+y_sort_enabled = true
+
+[node name="Quest10" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(448, 10)
+quest_id = "trash_10"
+quest_day = 4
+required_qte_count = 2
+
+[node name="NPC5" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("11_a06rh")]
+y_sort_enabled = true
+position = Vector2(325, -32)
+quest_id = "npc_5_day4"
+quest_day = 4
+dialogue_resource = "res://Dialogues/KID_SECRET.dialogue"
+minigame_scene = ExtResource("11_bdg8k")
+has_minigame = false
+reward_item_icon = ExtResource("8_44b7a")
+
+[node name="Quest11" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(754, 72)
+quest_id = "trash_11"
+quest_day = 4
+required_qte_count = 2
+
+[node name="NPC6" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("11_a06rh")]
+y_sort_enabled = true
+position = Vector2(673, 57)
+quest_id = "npc_6_day4"
+quest_day = 4
+dialogue_resource = "res://Dialogues/DAYDREAMER.dialogue"
+minigame_scene = ExtResource("11_bdg8k")
+
+[node name="Quest12" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(1175, 550)
+quest_id = "trash_12"
+quest_day = 4
+
+[node name="Day_5" type="Node2D" parent="Y-sort/Enviroment Manager"]
+y_sort_enabled = true
+
+[node name="Quest13" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(992, 61)
+quest_id = "trash_13"
+quest_day = 5
+required_qte_count = 2
+
+[node name="walkin_npc" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("9_rwu0h")]
+y_sort_enabled = true
+position = Vector2(518, -6)
+waypoints = Array[Vector2]([Vector2(800, -120), Vector2(1140, -120), Vector2(1190, -105), Vector2(1190, 60), Vector2(1700, 60)])
+move_speed = 40.0
+wait_time_at_waypoint = 1.0
+initial_wait_time = 30.0
+
+[node name="Quest14" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(-618, 465)
+quest_id = "trash_14"
+quest_day = 5
+required_qte_count = 2
+
+[node name="NPC7" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("11_a06rh")]
+y_sort_enabled = true
+position = Vector2(-576, 566)
+quest_id = "npc_7_day5"
+quest_day = 5
+dialogue_resource = "res://Dialogues/OLD_MAN.dialogue"
+minigame_scene = ExtResource("11_bdg8k")
+
+[node name="Quest15" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(-297, 167)
+quest_id = "trash_15"
+quest_day = 5
+required_qte_count = 2
+
+[node name="NPC8" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("11_a06rh")]
+y_sort_enabled = true
+position = Vector2(-253, 146)
+quest_id = "npc_8_day5"
+quest_day = 5
+dialogue_resource = "res://Dialogues/KID_GIFT.dialogue"
+minigame_scene = ExtResource("11_bdg8k")
+has_minigame = false
+reward_item_icon = ExtResource("8_44b7a")
+
+[node name="Day_6" type="Node2D" parent="Y-sort/Enviroment Manager"]
+y_sort_enabled = true
+
+[node name="Quest16" parent="Y-sort/Enviroment Manager/Day_6" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(-508, 3)
+quest_id = "trash_16"
+quest_day = 6
+
+[node name="Quest17" parent="Y-sort/Enviroment Manager/Day_6" instance=ExtResource("6_bn031")]
+y_sort_enabled = true
+position = Vector2(-238, 513)
+quest_id = "trash_17"
+quest_day = 6
 
 [node name="fences" type="TileMapLayer" parent="Y-sort" groups=["glitchable"]]
 y_sort_enabled = true
