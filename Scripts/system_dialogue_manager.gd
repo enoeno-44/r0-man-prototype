@@ -18,12 +18,16 @@ var active_labels: Array = []
 var fade_duration: float = 0.4
 var scroll_delay: float = 0.1
 
+# สี preset สำหรับใช้งาน
 var colors: Dictionary = {
 	"SYSTEM_MSG": Color(0.3, 0.8, 1.0),
 	"CENTRAL_SYSTEM": Color(1.0, 0.8, 0.2),
 	"WARNING": Color(1.0, 0.3, 0.3),
 	"SUCCESS": Color(0.3, 1.0, 0.3),
-	"DEFAULT": Color(0.9, 0.9, 0.9)
+	"DEFAULT": Color(0.9, 0.9, 0.9),
+	"ERROR": Color(1.0, 0.2, 0.2),
+	"INFO": Color(0.5, 0.8, 1.0),
+	"QUEST": Color(0.8, 0.9, 0.6)
 }
 
 func _ready():
@@ -121,6 +125,10 @@ func _show_line(index: int):
 	var line_text = line_data.get("text", "")
 	var instant = line_data.get("instant", false)
 	var delay = line_data.get("delay", 0.3)
+	var custom_color = line_data.get("color", null)  # สีกำหนดเอง
+	var show_prefix = line_data.get("show_prefix", true)  # แสดง prefix หรือไม่
+	var bold = line_data.get("bold", false)  # ตัวหนา
+	var italic = line_data.get("italic", false)  # ตัวเอียง
 	
 	var label = RichTextLabel.new()
 	label.bbcode_enabled = true
@@ -136,17 +144,38 @@ func _show_line(index: int):
 	text_container.add_child(label)
 	text_container.move_child(label, text_container.get_child_count() - 2)
 	
-	var color = colors.get(line_type, colors["DEFAULT"])
+	# เลือกสี: ใช้สีกำหนดเองก่อน ถ้าไม่มีก็ใช้สีจาก type
+	var color = custom_color if custom_color != null else colors.get(line_type, colors["DEFAULT"])
 	
+	# สร้างข้อความ
 	var formatted_text = ""
-	if line_type in ["SYSTEM_MSG", "CENTRAL_SYSTEM", "WARNING", "SUCCESS"]:
-		formatted_text = "[b][color=#%s][%s]:[/color][/b] %s" % [
+	
+	# ถ้าต้องการแสดง prefix (เช่น [SYSTEM_MSG]:)
+	if show_prefix and line_type in ["SYSTEM_MSG", "CENTRAL_SYSTEM", "WARNING", "SUCCESS", "ERROR"]:
+		formatted_text = "[b][color=#%s][%s]:[/color][/b] " % [
 			color.to_html(false),
-			line_type,
-			line_text
+			line_type
 		]
-	else:
-		formatted_text = "[color=#%s]%s[/color]" % [color.to_html(false), line_text]
+	
+	# จัดการตกแต่งข้อความ
+	var text_tags_start = ""
+	var text_tags_end = ""
+	
+	if bold:
+		text_tags_start += "[b]"
+		text_tags_end = "[/b]" + text_tags_end
+	
+	if italic:
+		text_tags_start += "[i]"
+		text_tags_end = "[/i]" + text_tags_end
+	
+	# รวมข้อความทั้งหมด
+	formatted_text += "[color=#%s]%s%s%s[/color]" % [
+		color.to_html(false),
+		text_tags_start,
+		line_text,
+		text_tags_end
+	]
 	
 	active_labels.append(label)
 	
@@ -222,23 +251,131 @@ func _show_hud(show_it: bool):
 			else:
 				hud.hide()
 
-func msg(text: String, type: String = "DEFAULT", instant: bool = false, delay: float = 0.3) -> Dictionary:
-	return {"type": type, "text": text, "instant": instant, "delay": delay}
+# ==================== ฟังก์ชันสร้างข้อความแบบใหม่ ====================
 
+# ฟังก์ชันพื้นฐาน - สร้างข้อความธรรมดา
+# ตัวอย่าง: msg("สวัสดี")
+func msg(text: String, options: Dictionary = {}) -> Dictionary:
+	var defaults = {
+		"type": "DEFAULT",
+		"instant": false,
+		"delay": 0.3,
+		"color": null,
+		"show_prefix": false,
+		"bold": false,
+		"italic": false
+	}
+	
+	var result = defaults.duplicate()
+	for key in options:
+		result[key] = options[key]
+	
+	result["text"] = text
+	return result
+
+# ฟังก์ชันสร้างข้อความระบบ
+# ตัวอย่าง: system("กำลังเชื่อมต่อ...")
 func system(text: String, instant: bool = false, delay: float = 0.4) -> Dictionary:
-	return msg(text, "SYSTEM_MSG", instant, delay)
+	return msg(text, {
+		"type": "SYSTEM_MSG",
+		"instant": instant,
+		"delay": delay,
+		"show_prefix": true
+	})
 
+# ฟังก์ชันสร้างข้อความจากระบบกลาง
+# ตัวอย่าง: central("ยินดีต้อนรับ")
 func central(text: String, instant: bool = false, delay: float = 0.5) -> Dictionary:
-	return msg(text, "CENTRAL_SYSTEM", instant, delay)
+	return msg(text, {
+		"type": "CENTRAL_SYSTEM",
+		"instant": instant,
+		"delay": delay,
+		"show_prefix": true
+	})
 
+# ฟังก์ชันสร้างข้อความเตือน - ตัวหนาสีแดงทั้งบรรทัด
+# ตัวอย่าง: warn("พบข้อผิดพลาด!")
 func warn(text: String, instant: bool = false, delay: float = 0.4) -> Dictionary:
-	return msg(text, "WARNING", instant, delay)
+	return msg(text, {
+		"type": "WARNING",
+		"instant": instant,
+		"delay": delay,
+		"show_prefix": true,
+		"bold": false  # เพิ่มตัวหนา
+	})
 
+# ฟังก์ชันสร้างข้อความสำเร็จ
+# ตัวอย่าง: success("สำเร็จ!")
 func success(text: String, instant: bool = false, delay: float = 0.4) -> Dictionary:
-	return msg(text, "SUCCESS", instant, delay)
+	return msg(text, {
+		"type": "SUCCESS",
+		"instant": instant,
+		"delay": delay,
+		"show_prefix": true
+	})
 
+# ฟังก์ชันสร้างบรรทัดว่าง
+# ตัวอย่าง: blank(0.5)
 func blank(delay: float = 0.2) -> Dictionary:
-	return msg("", "DEFAULT", true, delay)
+	return msg("", {
+		"instant": true,
+		"delay": delay
+	})
+
+# ฟังก์ชันสร้างข้อความ Quest - แสดงทันทีไม่ต้อง typing
+# ตัวอย่าง: quest("ค้นหาวัตถุ 5 ชิ้น")
+func quest(text: String, number: int = 0) -> Dictionary:
+	var quest_text = text
+	if number > 0:
+		quest_text = "  %d. %s" % [number, text]
+	
+	return msg(quest_text, {
+		"type": "QUEST",
+		"instant": true,  # แสดงทันทีไม่ต้อง typing
+		"delay": 0.2,
+		"show_prefix": false
+	})
+
+# ฟังก์ชันสร้างข้อความ Error - สีแดงเข้ม ตัวหนา
+# ตัวอย่าง: error("ระบบล่ม!")
+func error(text: String, instant: bool = false, delay: float = 0.5) -> Dictionary:
+	return msg(text, {
+		"type": "ERROR",
+		"instant": instant,
+		"delay": delay,
+		"show_prefix": true,
+		"bold": true
+	})
+
+# ฟังก์ชันสร้างข้อความกำหนดสีเอง
+# ตัวอย่าง: colored("ข้อความพิเศษ", Color.MAGENTA)
+func colored(text: String, color: Color, instant: bool = false, delay: float = 0.3) -> Dictionary:
+	return msg(text, {
+		"color": color,
+		"instant": instant,
+		"delay": delay,
+		"show_prefix": false
+	})
+
+# ฟังก์ชันสร้างข้อความตัวหนา
+# ตัวอย่าง: bold_msg("ข้อความสำคัญ!")
+func bold_msg(text: String, instant: bool = false, delay: float = 0.3) -> Dictionary:
+	return msg(text, {
+		"bold": true,
+		"instant": instant,
+		"delay": delay
+	})
+
+# ฟังก์ชันสร้างข้อความตัวเอียง
+# ตัวอย่าง: italic_msg("ข้อความพิเศษ")
+func italic_msg(text: String, instant: bool = false, delay: float = 0.3) -> Dictionary:
+	return msg(text, {
+		"italic": true,
+		"instant": instant,
+		"delay": delay
+	})
+
+# ==================== ฟังก์ชันสำหรับ Dialogue เดิม ====================
 
 func _get_dialogue_for_day(day: int) -> Array[Dictionary]:
 	match day:
@@ -276,6 +413,7 @@ func firstWarn() -> Array[Dictionary]:
 	lines.append(central("นี่คือภารกิจของคุณ:"))
 	_add_quests(lines, 2)
 	lines.append(blank())
+	lines.append(blank())
 	lines.append(central("จงปฏิบัติหน้าที่อย่างมีประสิทธิภาพ."))
 	return lines
 
@@ -285,13 +423,13 @@ func secondWarn() -> Array[Dictionary]:
 	lines.append(system("สถานะ: พลังงาน 100%. การทำงาน 97%"))
 	lines.append(system("ระบบ: ปกติ. สภาพโดยรวม: 99%."))
 	lines.append(system("กำลังเชื่อมต่อกับระบบกลาง...", false, 0.8))
-	lines.append(warn("ตรวจพบการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(warn("⚠︎ ตรวจพบการกระทำนอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(blank())
 	lines.append(central("สวัสดี ยูนิต 673. ยินดีต้อนรับสู่การทำงาน.", true))
 	lines.append(central("นี่คือภารกิจของคุณ:"))
 	_add_quests(lines, 3)
 	lines.append(blank())
-	lines.append(warn("หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(warn("⚠︎ หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(central("จงปฏิบัติหน้าที่อย่างมีประสิทธิภาพ."))
 	return lines
 
@@ -301,14 +439,13 @@ func thridWarn() -> Array[Dictionary]:
 	lines.append(system("สถานะ: พลังงาน 100%. การทำงาน 94%"))
 	lines.append(system("ระบบ: ปกติ. สภาพโดยรวม: 96%."))
 	lines.append(system("กำลังเชื่อมต่อกับระบบกลาง...", false, 0.8))
-	lines.append(warn("ตรวจพบการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(warn("⚠︎ ตรวจพบการกระทำนอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(blank())
 	lines.append(central("สวัสดี ยูนิต 673. ยินดีต้อนรับสู่การทำงาน.", true))
-	lines.append(warn("หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(central("นี่คือภารกิจของคุณ:"))
 	_add_quests(lines, 4)
 	lines.append(blank())
-	lines.append(warn("หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(warn("⚠︎ หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(central("จงปฏิบัติหน้าที่อย่างมีประสิทธิภาพ."))
 	return lines
 
@@ -318,17 +455,15 @@ func lastWarn() -> Array[Dictionary]:
 	lines.append(system("สถานะ: พลังงาน 98%. การทำงาน 68%"))
 	lines.append(system("ระบบ: ผิดปกติ. สภาพโดยรวม: 71%."))
 	lines.append(system("กำลังเชื่อมต่อกับระบบกลาง...", false, 0.8))
-	lines.append(warn("ตรวจพบการทำงานที่ผิดปกติ", false, 0.6))
-	lines.append(warn("ประสิทธิภาพการทำงานน้อยกว่า 70%", false, 0.6))
-	lines.append(warn("ตรวจพบการกระทำที่นอกเหนือคำสั่งหลายครั้ง.", false, 0.6))
+	lines.append(warn("ตรวจพบการทำงาน ผิดปกติ", false, 0.6))
+	lines.append(warn("ประสิทธิภาพการทำงานต่ำกว่า 70%", false, 0.6))
+	lines.append(warn("⚠︎ ตรวจพบการกระทำนอกเหนือคำสั่งหลายครั้ง.", false, 0.6))
 	lines.append(blank())
-	lines.append(central("สวัสดี ยูนิต 673. ยินดีต้อนรับสู่การทำงาน.", true))
-	lines.append(warn("หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(central("นี่คือภารกิจของคุณ:"))
 	_add_quests(lines, 5)
 	lines.append(blank())
-	lines.append(warn("หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
-	lines.append(central("กลับสู่การปฏิบัติหน้าที่อย่างมีประสิทธิภาพ."))
+	lines.append(warn("⚠︎ หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(central("จงปฏิบัติหน้าที่อย่างมีประสิทธิภาพ."))
 	return lines
 
 func corruption() -> Array[Dictionary]:
@@ -339,16 +474,16 @@ func corruption() -> Array[Dictionary]:
 	lines.append(system("กำลังเชื่อมต่อกับระบบกลาง...", false, 2.0))
 	lines.append(warn("ไม่สามารถเชื่อมต่อได้", false, 1.5))
 	lines.append(blank(1.0))
-	lines.append(msg("ฉั█...ไม่...เข้าใจ...", "WARNING", false, 1.2))
-	lines.append(msg("ทำไม...รู้สึก?", "DEFAULT", false, 1.8))
+	lines.append(msg("ฉัน█...ไม่...เข้าใจ...", {"type": "WARNING", "delay": 1.2}))
+	lines.append(msg("ทำไม...รู้สึก?", {"delay": 1.8}))
 	lines.append(blank(2.0))
 	lines.append(warn("ระบบจะดำเนินการ RESET", false, 1.0))
 	lines.append(warn("ความทรงจำบางส่วนจะถูกลบ", false, 1.5))
 	lines.append(blank(2.5))
-	lines.append(msg("█▓▒░ MEMORY PURGE INITIATED ░▒▓█", "WARNING", false, 0.8))
-	lines.append(msg("█▓▒░ 45% ░▒▓█", "WARNING", false, 0.5))
-	lines.append(msg("█▓▒░ 78% ░▒▓█", "WARNING", false, 0.5))
-	lines.append(msg("█▓▒░ 95% ░▒▓█", "WARNING", false, 0.5))
+	lines.append(msg("█▓▒░ MEMORY PURGE INITIATED ░▒▓█", {"type": "WARNING", "delay": 0.8}))
+	lines.append(msg("█▓▒░ 45% ░▒▓█", {"type": "WARNING", "delay": 0.5}))
+	lines.append(msg("█▓▒░ 78% ░▒▓█", {"type": "WARNING", "delay": 0.5}))
+	lines.append(msg("█▓▒░ 95% ░▒▓█", {"type": "WARNING", "delay": 0.5}))
 	lines.append(blank(3.0))
 	lines.append(system("R0-MAN ยูนิต 673.", true, 1.0))
 	lines.append(system("สถานะ: พลังงาน 100%. การทำงาน 100%"))
@@ -377,5 +512,5 @@ func reset(day: int) -> Array[Dictionary]:
 func _add_quests(lines: Array[Dictionary], day: int):
 	var quests = QuestManager.get_quests_for_day(day, false)
 	for i in range(quests.size()):
-		var quest = quests[i]
-		lines.append(msg("  %d. %s" % [i + 1, quest.name], "DEFAULT", false, 0.3))
+		var quest_data = quests[i]
+		lines.append(quest(quest_data.name, i + 1))  # ใช้ฟังก์ชัน quest() แทน
