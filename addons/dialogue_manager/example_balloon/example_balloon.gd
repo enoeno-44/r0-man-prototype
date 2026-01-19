@@ -7,6 +7,9 @@ class_name DialogueManagerExampleBalloon extends CanvasLayer
 ## The action to use to skip typing the dialogue
 @export var skip_action: StringName = &"ui_cancel"
 
+var blink_timer: float = 0.0
+@onready var continue_label: Label = $Balloon/Panel/Dialogue/VBoxContainer/ContinueLabel
+
 ## The dialogue resource
 var resource: DialogueResource
 
@@ -28,6 +31,10 @@ var _locale: String = TranslationServer.get_locale()
 var dialogue_line: DialogueLine:
 	set(next_dialogue_line):
 		is_waiting_for_input = false
+		# ซ่อน continue label เมื่อเริ่มบรรทัดใหม่
+		continue_label.visible = false
+		blink_timer = 0.0  # รีเซ็ต timer
+		
 		balloon.focus_mode = Control.FOCUS_ALL
 		balloon.grab_focus()
 
@@ -87,11 +94,20 @@ var dialogue_line: DialogueLine:
 ## The menu of responses
 @onready var responses_menu: DialogueResponsesMenu = %ResponsesMenu
 
+func _process(delta: float) -> void:
+	# เอฟเฟกต์กระพริบสำหรับ continue label
+	if continue_label.visible:
+		blink_timer += delta
+		continue_label.modulate.a = 0.5 + sin(blink_timer * 4) * 0.5
 
 func _ready() -> void:
+	continue_label.visible = false
 	balloon.hide()
 	Engine.get_singleton("DialogueManager").mutated.connect(_on_mutated)
 
+	# เชื่อม signal finished_typing จาก DialogueLabel
+	dialogue_label.finished_typing.connect(_on_dialogue_label_finished_typing)
+	
 	# If the responses menu doesn't have a next action set, use this one
 	if responses_menu.next_action.is_empty():
 		responses_menu.next_action = next_action
@@ -164,6 +180,16 @@ func _on_balloon_gui_input(event: InputEvent) -> void:
 
 func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 	next(response.next_id)
+
+
+func _on_dialogue_label_finished_typing() -> void:
+	# แสดง continue label เฉพาะเมื่อไม่มีตัวเลือก (responses)
+	if dialogue_line and dialogue_line.responses.size() == 0:
+		await get_tree().create_timer(1.0).timeout
+		continue_label.visible = true
+		blink_timer = 0.0
+	else:
+		continue_label.visible = false
 
 
 #endregion

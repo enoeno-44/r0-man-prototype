@@ -74,7 +74,7 @@ func _create_ui():
 	panel.add_child(timing_bar)
 	
 	hit_zone = ColorRect.new()
-	hit_zone.color = Color(0.4, 0.4, 0.3)
+	hit_zone.color = Color(0.2, 0.6, 0)
 	hit_zone.size = Vector2(30, 20)
 	hit_zone.position.y = 40
 	panel.add_child(hit_zone)
@@ -252,3 +252,5 @@ func freeze_player(freeze: bool):
 		player.set_physics_process(not freeze)
 		if player.has_method("set_can_move"):
 			player.set_can_move(not freeze)
+		if freeze and player.has_method("force_idle"):
+			player.force_idle()

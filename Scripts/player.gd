@@ -56,3 +56,10 @@ func play_idle_animation():
 			
 func set_can_move(value: bool):
 	can_move = value
+	
+func apply_push_force(force: Vector2):
+	velocity += force
+
+func force_idle():
+	velocity = Vector2.ZERO
+	play_idle_animation()

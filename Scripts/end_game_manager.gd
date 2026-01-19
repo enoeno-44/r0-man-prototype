@@ -123,7 +123,9 @@ func _freeze_everything():
 		player.set_physics_process(false)
 		if player.has_method("set_can_move"):
 			player.set_can_move(false)
-	
+		if player.has_method("force_idle"):
+			player.force_idle()
+			
 	if has_node("/root/TimeManager"):
 		TimeManager.set_process(false)
 

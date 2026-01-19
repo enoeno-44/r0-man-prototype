@@ -3,10 +3,11 @@
 extends CanvasLayer
 
 @onready var fade_rect: ColorRect
-@onready var transition_label: Label
+@onready var chapter_label: Label
+@onready var date_label: Label
 
 @export var fade_duration: float = 0.8
-@export var text_display_duration: float = 1.0
+@export var text_display_duration: float = 1.8
 @export var text_fade_duration: float = 0.5
 
 var is_transitioning: bool = false
@@ -26,14 +27,23 @@ func _create_ui():
 	fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fade_rect)
 	
-	transition_label = Label.new()
-	transition_label.name = "TransitionLabel"
-	transition_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	transition_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	add_child(transition_label)
+	# Label สำหรับ Chapter (ตัวใหญ่)
+	chapter_label = Label.new()
+	chapter_label.name = "ChapterLabel"
+	chapter_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	chapter_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	add_child(chapter_label)
+	
+	# Label สำหรับวันที่ (ตัวเล็ก)
+	date_label = Label.new()
+	date_label.name = "DateLabel"
+	date_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	date_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	add_child(date_label)
 	
 	fade_rect.modulate.a = 0.0
-	transition_label.modulate.a = 0.0
+	chapter_label.modulate.a = 0.0
+	date_label.modulate.a = 0.0
 	
 	get_tree().root.size_changed.connect(_on_viewport_size_changed)
 	_on_viewport_size_changed()
@@ -49,12 +59,19 @@ func _on_viewport_size_changed():
 		fade_rect.size = viewport_size
 		fade_rect.position = Vector2.ZERO
 	
-	if transition_label:
-		transition_label.size = viewport_size
-		transition_label.position = Vector2.ZERO
-		
-		var font_size = int(viewport_size.y / 10)
-		transition_label.add_theme_font_size_override("font_size", font_size)
+	if chapter_label:
+		# Chapter อยู่ตรงกลาง ตัวใหญ่
+		chapter_label.size = viewport_size
+		chapter_label.position = Vector2.ZERO
+		var chapter_font_size = int(viewport_size.y / 8)  # ตัวใหญ่
+		chapter_label.add_theme_font_size_override("font_size", chapter_font_size)
+	
+	if date_label:
+		# วันที่อยู่ด้านล่าง Chapter ตัวเล็ก
+		date_label.size = viewport_size
+		date_label.position = Vector2(0, viewport_size.y * 0.58)  # เลื่อนลงมาหน่อย
+		var date_font_size = int(viewport_size.y / 20)  # ตัวเล็ก
+		date_label.add_theme_font_size_override("font_size", date_font_size)
 
 func opening_fade_in():
 	fade_rect.modulate.a = 1.0
@@ -82,16 +99,22 @@ func _show_date_text_for_opening():
 	if not DayManager:
 		return
 	
-	transition_label.text = DayManager.get_current_date_text()
+	# แสดง Chapter และวันที่แยกกัน
+	chapter_label.text = DayManager.get_current_chapter()
+	date_label.text = DayManager.get_current_date_text()
 	
 	var tween = create_tween()
-	tween.tween_property(transition_label, "modulate:a", 1.0, text_fade_duration)
+	tween.set_parallel(true)
+	tween.tween_property(chapter_label, "modulate:a", 1.0, text_fade_duration)
+	tween.tween_property(date_label, "modulate:a", 1.0, text_fade_duration)
 	await tween.finished
 	
 	await get_tree().create_timer(text_display_duration).timeout
 	
 	tween = create_tween()
-	tween.tween_property(transition_label, "modulate:a", 0.0, text_fade_duration)
+	tween.set_parallel(true)
+	tween.tween_property(chapter_label, "modulate:a", 0.0, text_fade_duration)
+	tween.tween_property(date_label, "modulate:a", 0.0, text_fade_duration)
 	await tween.finished
 
 func _hide_hud():
@@ -105,7 +128,9 @@ func _freeze_player(freeze: bool):
 		player.set_physics_process(not freeze)
 		if player.has_method("set_can_move"):
 			player.set_can_move(not freeze)
-
+		if freeze and player.has_method("force_idle"):
+			player.force_idle()
+			
 func _on_day_transition_started():
 	if is_transitioning:
 		return
@@ -135,16 +160,22 @@ func _show_date_text():
 	if not DayManager:
 		return
 	
-	transition_label.text = DayManager.get_current_date_text()
+	# แสดง Chapter และวันที่แยกกัน
+	chapter_label.text = DayManager.get_current_chapter()
+	date_label.text = DayManager.get_current_date_text()
 	
 	var tween = create_tween()
-	tween.tween_property(transition_label, "modulate:a", 1.0, text_fade_duration)
+	tween.set_parallel(true)
+	tween.tween_property(chapter_label, "modulate:a", 1.0, text_fade_duration)
+	tween.tween_property(date_label, "modulate:a", 1.0, text_fade_duration)
 	await tween.finished
 	
 	await get_tree().create_timer(text_display_duration).timeout
 	
 	tween = create_tween()
-	tween.tween_property(transition_label, "modulate:a", 0.0, text_fade_duration)
+	tween.set_parallel(true)
+	tween.tween_property(chapter_label, "modulate:a", 0.0, text_fade_duration)
+	tween.tween_property(date_label, "modulate:a", 0.0, text_fade_duration)
 	await tween.finished
 
 func _fade_in():
@@ -166,16 +197,17 @@ func custom_fade_in(duration: float = 1.0):
 	await tween.finished
 
 func show_text(text: String, duration: float = 2.0):
-	transition_label.text = text
+	chapter_label.text = text
+	date_label.text = ""
 	
 	var tween = create_tween()
-	tween.tween_property(transition_label, "modulate:a", 1.0, 0.5)
+	tween.tween_property(chapter_label, "modulate:a", 1.0, 0.5)
 	await tween.finished
 	
 	await get_tree().create_timer(duration).timeout
 	
 	tween = create_tween()
-	tween.tween_property(transition_label, "modulate:a", 0.0, 0.5)
+	tween.tween_property(chapter_label, "modulate:a", 0.0, 0.5)
 	await tween.finished
 
 func transition_to_scene(scene_path: String, fade_out_duration: float = 0.8, fade_in_duration: float = 0.8):

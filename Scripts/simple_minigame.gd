@@ -23,13 +23,6 @@ func start_minigame():
 	is_active = true
 	current_presses = 0
 	_update_ui()
-	
-	# ปิดการควบคุมผู้เล่น
-	var player = get_tree().get_first_node_in_group("player")
-	if player:
-		player.set_physics_process(false)
-		if player.has_method("set_can_move"):
-			player.set_can_move(false)
 
 func _process(_delta):
 	if not is_active:

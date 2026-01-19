@@ -6,12 +6,18 @@ signal day_changed(new_day: int, date_text: String)
 signal all_quests_completed
 signal day_transition_started
 
-var current_day: int = 6
+var current_day: int = 5
 var all_quests_done: bool = false
 
 var day_dates: Array[String] = [
 	"27/10/2056", "28/10/2056", "29/10/2056",
 	"30/10/2056", "4/11/2056", "5/11/2056",
+]
+
+# เพิ่ม Chapter สำหรับแต่ละวัน
+var day_chapters: Array[String] = [
+	"Chapter 1", "Chapter 2", "Chapter 3",
+	"Chapter 4", "Chapter 5", "Chapter 6",
 ]
 
 func _ready():
@@ -90,6 +96,17 @@ func get_current_date_text() -> String:
 	if index >= 0 and index < day_dates.size():
 		return day_dates[index]
 	return "??/??/????"
+
+# ฟังก์ชันใหม่: ดึง Chapter
+func get_current_chapter() -> String:
+	var index = current_day - 1
+	if index >= 0 and index < day_chapters.size():
+		return day_chapters[index]
+	return "Chapter ?"
+
+# ฟังก์ชันใหม่: ดึงข้อความรวม Chapter + วันที่
+func get_chapter_and_date() -> String:
+	return get_current_chapter() + "\n" + get_current_date_text()
 
 func get_completed_count() -> int:
 	return QuestManager.get_completed_count_for_day(current_day)

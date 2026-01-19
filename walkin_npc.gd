@@ -230,6 +230,8 @@ func _freeze_player(freeze: bool):
 		player.set_physics_process(not freeze)
 		if player.has_method("set_can_move"):
 			player.set_can_move(not freeze)
+		if freeze and player.has_method("force_idle"):
+			player.force_idle()
 
 func _play_walk_animation(dir: Vector2):
 	if not sprite or not sprite.sprite_frames:

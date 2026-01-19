@@ -90,7 +90,8 @@ func _handle_minigame():
 		await minigame_instance.completed
 	else:
 		await get_tree().create_timer(3.0).timeout
-	
+		
+	_freeze_player(true)
 	if minigame_instance:
 		minigame_instance.queue_free()
 		minigame_instance = null
@@ -117,6 +118,8 @@ func _freeze_player(freeze: bool):
 		player.set_physics_process(not freeze)
 		if player.has_method("set_can_move"):
 			player.set_can_move(not freeze)
+		if freeze and player.has_method("force_idle"):
+			player.force_idle()
 
 func _mark_as_completed():
 	modulate = Color(0.7, 0.7, 0.7)
