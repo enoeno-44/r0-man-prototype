@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=4 uid="uid://cqgbie6savpmh"]
+[gd_scene load_steps=75 format=4 uid="uid://cqgbie6savpmh"]
 
 [ext_resource type="Script" path="res://Scripts/daynight_manager.gd" id="1_7hc8a"]
 [ext_resource type="TileSet" uid="uid://dwjv1k2o1gmr2" path="res://world_1.tres" id="1_x5tmx"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" path="res://Scripts/charger.gd" id="10_7dk4h"]
 [ext_resource type="PackedScene" uid="uid://e4lme64rd44a" path="res://Scenes/npcs.tscn" id="11_a06rh"]
 [ext_resource type="PackedScene" uid="uid://d3fyx8psdeiew" path="res://Scenes/simple_minigame.tscn" id="11_bdg8k"]
+[ext_resource type="PackedScene" uid="uid://lmpdatskd40f" path="res://Minigames/daydreamer_minigame.tscn" id="11_f82wf"]
 [ext_resource type="Script" path="res://Scripts/enviroment_manager.gd" id="11_xci1g"]
 [ext_resource type="Script" path="res://Scripts/normal_walkin_npc.gd" id="12_kt5mi"]
 [ext_resource type="Texture2D" uid="uid://5n8nt3y3g3r" path="res://Sprites/Modern_Exteriors_Characters_Scout_16x16_3.png" id="12_l0ht0"]
@@ -855,7 +856,7 @@ position = Vector2(673, 57)
 quest_id = "npc_6_day4"
 quest_day = 4
 dialogue_resource = "res://Dialogues/DAYDREAMER.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
+minigame_scene = ExtResource("11_f82wf")
 
 [node name="Quest12" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
 y_sort_enabled = true

@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://dvux2og04l741"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4sv20"]
+font_size = 56
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x2fji"]
+size = Vector2(80, 80)
+
+[node name="Note" type="Area2D"]
+
+[node name="Background" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(80, 80)
+
+[node name="KeyLabel" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 13.5
+offset_top = 1.5
+offset_right = 66.5
+offset_bottom = 78.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "W"
+label_settings = SubResource("LabelSettings_4sv20")
+horizontal_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(40, 40)
+shape = SubResource("RectangleShape2D_x2fji")
