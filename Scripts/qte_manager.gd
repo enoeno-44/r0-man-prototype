@@ -111,7 +111,7 @@ func is_fully_completed(object_id: String) -> bool:
 	if object_id not in qte_progress:
 		return false
 	var data = qte_progress[object_id]
-	return data.current >= data.required
+	return data["current"] >= data["required"]
 
 func is_active() -> bool:
 	return is_qte_active
@@ -195,9 +195,10 @@ func _handle_qte_result(success: bool):
 	var saved_object_id = current_object_id
 	
 	if success:
-		qte_progress[current_object_id].current += 1
+		# ✅ FIX: Use bracket notation for dictionary access
+		qte_progress[current_object_id]["current"] += 1
 		progress = get_progress(current_object_id)
-		qte_success.emit(current_object_id, progress.current, progress.required)
+		qte_success.emit(current_object_id, progress["current"], progress["required"])
 		
 		if is_fully_completed(current_object_id):
 			qte_ui.hide()
@@ -213,11 +214,11 @@ func _handle_qte_result(success: bool):
 	else:
 		qte_ui.hide()
 		freeze_player(false)
-		qte_failed.emit(current_object_id, progress.current, progress.required)
+		qte_failed.emit(current_object_id, progress["current"], progress["required"])
 		qte_ended.emit(saved_object_id, false)
 		is_qte_active = false
 		current_object_id = ""
-
+		
 func force_end_qte():
 	if not is_qte_active:
 		return
