@@ -1,11 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://xikh38b6u7t2"]
+[gd_scene load_steps=3 format=3 uid="uid://xikh38b6u7t2"]
 
 [ext_resource type="Script" path="res://Scripts/engineer_minigame.gd" id="1_6ybis"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_jj7ba"]
-font_size = 24
-
-[sub_resource type="LabelSettings" id="LabelSettings_x2ej8"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_xa8mu"]
 font_size = 18
@@ -13,56 +8,70 @@ font_size = 18
 [node name="ChipExtractionMinigame" type="CanvasLayer"]
 script = ExtResource("1_6ybis")
 
-[node name="Panel" type="Panel" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="GamePanel" type="Panel" parent="."]
+z_index = 1
+custom_minimum_size = Vector2(450, 120)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 40.0
+offset_right = 225.0
+offset_bottom = 160.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GamePanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -74.0
+offset_top = -38.5
+offset_right = 74.0
+offset_bottom = 38.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 81.0
-grow_horizontal = 2
-
-[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="GamePanel/MarginContainer"]
 layout_mode = 2
-text = "ดึงชิปประมวลผล
-"
-label_settings = SubResource("LabelSettings_jj7ba")
+size_flags_horizontal = 4
+
+[node name="TitleLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "ดึงชิปประมวลผล"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="InstructionLabel" type="Label" parent="Panel/VBoxContainer"]
+[node name="InstructionLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "กดค้างเพื่อเพิ่มแรงดึง - ปล่อยเพื่อหยุด"
-label_settings = SubResource("LabelSettings_x2ej8")
+text = "กดคลิ๊กเมาส์หรือ spacebar ค้างเพื่อดึงชิป"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="Spacer" type="Control" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-
-[node name="StatsContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+[node name="StatsContainer" type="HBoxContainer" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="ForceLabel" type="Label" parent="Panel/VBoxContainer/StatsContainer"]
+[node name="ForceLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer/StatsContainer"]
 layout_mode = 2
 text = "แรงดึง: 0%"
 label_settings = SubResource("LabelSettings_xa8mu")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DamageLabel" type="Label" parent="Panel/VBoxContainer/StatsContainer"]
+[node name="DamageLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer/StatsContainer"]
 layout_mode = 2
 text = "ความเสียหาย: 0%"
 label_settings = SubResource("LabelSettings_xa8mu")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="GameArea" type="Control" parent="Panel"]
 custom_minimum_size = Vector2(600, 400)

@@ -1,0 +1,91 @@
+[gd_scene load_steps=5 format=3 uid="uid://u2kcgqargaka"]
+
+[ext_resource type="Script" path="res://Scripts/box_breaking_minigame.gd" id="1_8xi6r"]
+[ext_resource type="Texture2D" uid="uid://dajnbc6w1u2v7" path="res://Resources/Gemini_Generated_pipedog_kq08sskq08sskq08.png" id="2_6nnbv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fn7fh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x4el3"]
+size = Vector2(23.4707, 176.467)
+
+[node name="BoxBreakingMinigame" type="CanvasLayer"]
+script = ExtResource("1_8xi6r")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 1166.0
+offset_bottom = 660.0
+texture = ExtResource("2_6nnbv")
+expand_mode = 1
+
+[node name="GamePanel" type="Panel" parent="."]
+z_index = 1
+custom_minimum_size = Vector2(450, 120)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 40.0
+offset_right = 225.0
+offset_bottom = 160.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GamePanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -74.0
+offset_top = -38.5
+offset_right = 74.0
+offset_bottom = 38.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GamePanel/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TitleLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "หาคำผิดในจดหมาย"
+horizontal_alignment = 1
+
+[node name="InstructionLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "คลิกที่คำที่คิดว่าผิด แล้วพิมพ์คำที่ถูกต้อง"
+horizontal_alignment = 1
+
+[node name="ProgressLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "ความคืบหน้า: 0/3"
+horizontal_alignment = 1
+
+[node name="BoxSpawnPoint" type="Node2D" parent="."]
+position = Vector2(555, 350)
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(0, 50)
+collision_layer = 128
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+position = Vector2(555, 627.135)
+scale = Vector2(40, 1)
+shape = SubResource("RectangleShape2D_fn7fh")
+debug_color = Color(0.951236, 0.175694, 0.349874, 0.42)
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Ground"]
+position = Vector2(1063.61, 488.678)
+rotation = 0.663225
+scale = Vector2(1, 2)
+shape = SubResource("RectangleShape2D_x4el3")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Ground"]
+position = Vector2(43.875, 497.268)
+rotation = -0.663225
+scale = Vector2(1, 2)
+shape = SubResource("RectangleShape2D_x4el3")

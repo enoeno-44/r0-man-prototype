@@ -439,17 +439,6 @@ func _complete_minigame():
 	print("  ความแม่นยำ: %.1f%%" % accuracy_percent)
 	print("========================================")
 	
-	var result_text = "เกมจบ!\n\n"
-	result_text += "คะแนน: %d\n" % score
-	result_text += "Max Combo: x%d\n\n" % max_combo
-	result_text += "Perfect: %d | Great: %d\n" % [perfect_hits, great_hits]
-	result_text += "Good: %d | Miss: %d\n" % [good_hits, miss_count]
-	result_text += "ความแม่นยำ: %.1f%%" % accuracy_percent
-	
-	countdown_label.text = result_text
-	countdown_label.modulate = Color.GREEN
-	countdown_label.show()
-	
 	await get_tree().create_timer(5.0).timeout
 	
 	var player = get_tree().get_first_node_in_group("player")

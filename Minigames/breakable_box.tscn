@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://bp224ojsd8v3g"]
+
+[ext_resource type="Script" path="res://Scripts/breakable_box.gd" id="1_spy8i"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_f5bp4"]
+size = Vector2(64, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8nkbo"]
+size = Vector2(64, 64)
+
+[node name="BreakableBox" type="RigidBody2D"]
+collision_layer = 128
+collision_mask = 128
+can_sleep = false
+linear_damp = 0.1
+angular_damp = 0.5
+script = ExtResource("1_spy8i")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("PlaceholderTexture2D_f5bp4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_8nkbo")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(60, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -5.0
+offset_right = 30.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+show_percentage = false

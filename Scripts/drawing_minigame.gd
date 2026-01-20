@@ -7,9 +7,9 @@ signal completed  # สัญญาณเมื่อเล่นจบ
 @onready var background_texture = $Panel/BackgroundTexture
 @onready var drawing_canvas = $Panel/DrawingCanvas  # Node2D สำหรับวาด
 @onready var drawing_area = $Panel/DrawingArea
-@onready var instruction_label = $Panel/UIContainer/InstructionLabel
-@onready var progress_label = $Panel/UIContainer/ProgressLabel
-@onready var stroke_count_label = $Panel/UIContainer/StrokeCountLabel
+@onready var title_label = $GamePanel/MarginContainer/VBoxContainer/TitleLabel
+@onready var instruction_label = $GamePanel/MarginContainer/VBoxContainer/InstructionLabel
+@onready var progress_label = $GamePanel/MarginContainer/VBoxContainer/StrokeCountLabel
 
 # การตั้งค่า
 var min_strokes_needed: int = 2  # จำนวนเส้นขั้นต่ำที่ต้องการ
@@ -192,18 +192,18 @@ func _update_ui():
 	"""อัปเดต UI"""
 	var strokes_count = all_strokes.size()
 	
-	stroke_count_label.text = "เส้นที่วาด: %d/%d" % [strokes_count, min_strokes_needed]
+	progress_label.text = "เส้นที่วาด: %d/%d" % [strokes_count, min_strokes_needed]
 	
 	if strokes_count >= min_strokes_needed:
-		instruction_label.text = "เสร็จสิ้น! กำลังปิด..."
+		instruction_label.text = "เสร็จสิ้น!"
 		instruction_label.modulate = Color.GREEN
 		progress_label.text = "✓ ผ่าน"
 		progress_label.modulate = Color.GREEN
 	else:
 		instruction_label.text = "วาด %d รูป" % min_strokes_needed
 		instruction_label.modulate = Color.WHITE
-		progress_label.text = "นายคิดว่ามันเหมือนอะไรล่ะเจ้าหุ่น"
-		progress_label.modulate = Color.YELLOW
+		progress_label.text = "วาดอะไรก็ได้ที่คิดว่าก้อนเมฆนี้เป็น!"
+		progress_label.modulate = Color.WHITE
 
 func _check_completion():
 	"""ตรวจสอบว่าผ่านเงื่อนไขหรือยัง"""

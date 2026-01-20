@@ -919,7 +919,7 @@ position = Vector2(-576, 566)
 quest_id = "npc_7_day5"
 quest_day = 5
 dialogue_resource = "res://Dialogues/OLD_MAN.dialogue"
-minigame_scene = ExtResource("11_w8up7")
+minigame_scene = ExtResource("11_bdg8k")
 
 [node name="Quest15" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
 y_sort_enabled = true

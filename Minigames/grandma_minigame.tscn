@@ -2,7 +2,12 @@
 
 [ext_resource type="Script" path="res://Scripts/grandma_minigame.gd" id="1_6ruq4"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_qgvhw"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcwbk"]
+bg_color = Color(0.133378, 0.164643, 0.210589, 0.784314)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_6ruq4")
@@ -15,34 +20,63 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="GamePanel" type="Panel" parent="Panel"]
+z_index = 1
+custom_minimum_size = Vector2(450, 12)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 40.0
+offset_right = 225.0
+offset_bottom = 160.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/GamePanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -74.0
+offset_top = -38.5
+offset_right = 74.0
+offset_bottom = 38.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/GamePanel/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TitleLabel" type="Label" parent="Panel/GamePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "หาคำผิดในจดหมาย"
+horizontal_alignment = 1
+
+[node name="InstructionLabel" type="Label" parent="Panel/GamePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "คลิกที่คำที่คิดว่าผิด แล้วพิมพ์คำที่ถูกต้อง"
+horizontal_alignment = 1
+
+[node name="ProgressLabel" type="Label" parent="Panel/GamePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "ความคืบหน้า: 0/3"
+horizontal_alignment = 1
+
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -200.0
-offset_top = 60.0
+offset_top = 180.0
 offset_right = 200.0
-offset_bottom = 559.0
+offset_bottom = 679.0
 grow_horizontal = 2
 theme_override_constants/separation = 10
-
-[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
-layout_mode = 2
-text = "หาคำผิดในบทความ"
-horizontal_alignment = 1
-
-[node name="InstructionLabel" type="Label" parent="Panel/VBoxContainer"]
-layout_mode = 2
-text = "คลิกที่คำที่คุณคิดว่าผิด แล้วพิมพ์คำที่ถูกต้อง"
-label_settings = SubResource("LabelSettings_qgvhw")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ProgressLabel" type="Label" parent="Panel/VBoxContainer"]
-layout_mode = 2
-text = "ความคืบหน้า: 0/3"
-horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer"]
 custom_minimum_size = Vector2(400, 400)
@@ -63,8 +97,6 @@ alignment = 1
 layout_mode = 2
 
 [node name="CorrectionPanel" type="Panel" parent="Panel"]
-visible = false
-self_modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 1
 anchors_preset = 8
@@ -78,6 +110,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jcwbk")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/CorrectionPanel"]
 layout_mode = 1

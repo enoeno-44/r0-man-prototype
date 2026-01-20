@@ -3,9 +3,9 @@ extends CanvasLayer
 signal completed  # สัญญาณเมื่อเล่นจบ
 
 @onready var panel = $Panel
-@onready var title_label = $Panel/VBoxContainer/TitleLabel
-@onready var instruction_label = $Panel/VBoxContainer/InstructionLabel
-@onready var progress_label = $Panel/VBoxContainer/ProgressLabel
+@onready var title_label = $Panel/GamePanel/MarginContainer/VBoxContainer/TitleLabel
+@onready var instruction_label = $Panel/GamePanel/MarginContainer/VBoxContainer/InstructionLabel
+@onready var progress_label = $Panel/GamePanel/MarginContainer/VBoxContainer/ProgressLabel
 @onready var article_container = $Panel/VBoxContainer/ScrollContainer/ArticleContainer
 @onready var correction_panel = $Panel/CorrectionPanel
 @onready var question_label = $Panel/CorrectionPanel/VBoxContainer/QuestionLabel
@@ -96,7 +96,7 @@ func start_minigame():
 
 func _setup_ui():
 	"""ตั้งค่า UI"""
-	title_label.text = "จดหมายจากคุณแม่"
+	title_label.text = "แก้คำผิดในจดหมาย"
 	instruction_label.text = "คลิกที่คำที่คิดว่าผิด แล้วพิมพ์คำที่ถูกต้อง"
 
 func _create_article():
@@ -239,7 +239,7 @@ func _mark_word_corrected(index: int):
 		if label.has_meta("word_index") and label.get_meta("word_index") == index:
 			label.set_meta("corrected", true)
 			label.text = article_data.errors[index].correct
-			label.add_theme_color_override("font_color", Color.SEA_GREEN)
+			label.add_theme_color_override("font_color", Color.DARK_GREEN)
 			break
 
 func _update_progress():

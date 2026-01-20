@@ -6,10 +6,10 @@ signal failed     # สัญญาณเมื่อล้มเหลว
 
 # ===== Node References =====
 @onready var panel = $Panel
-@onready var title_label = $Panel/VBoxContainer/TitleLabel
-@onready var instruction_label = $Panel/VBoxContainer/InstructionLabel
-@onready var force_label = $Panel/VBoxContainer/StatsContainer/ForceLabel
-@onready var damage_label = $Panel/VBoxContainer/StatsContainer/DamageLabel
+@onready var title_label = $GamePanel/MarginContainer/VBoxContainer/TitleLabel
+@onready var instruction_label = $GamePanel/MarginContainer/VBoxContainer/InstructionLabel
+@onready var force_label = $GamePanel/MarginContainer/VBoxContainer/StatsContainer/ForceLabel
+@onready var damage_label = $GamePanel/MarginContainer/VBoxContainer/StatsContainer/DamageLabel
 @onready var chip_slot = $Panel/GameArea/ChipSlot
 @onready var chip_sprite = $Panel/GameArea/ChipSprite
 @onready var force_bar = $Panel/GameArea/ForceBar
@@ -31,7 +31,7 @@ var safe_force_max: float = 70.0         # แรงสูงสุดที่�
 var damage_increase_speed: float = 30.0  # ความเร็วเพิ่ม Damage เมื่อแรงมากเกิน
 var extraction_speed: float = 4.0       # ความเร็วดึงชิปออกมา
 var max_damage: float = 5.0             # Damage สูงสุดก่อนเริ่มใหม่
-var extraction_goal: float = 40.0       # เป้าหมายการดึง
+var extraction_goal: float = 50.0       # เป้าหมายการดึง
 
 # ตัวแปรสำหรับ Feedback
 var shake_intensity: float = 0.0
@@ -144,7 +144,7 @@ func _update_chip_position():
 		return
 	
 	# คำนวณตำแหน่ง Y (ขึ้นเมื่อดึงได้)
-	var extraction_offset = -(extraction_progress / extraction_goal) * 200.0  # ขึ้นสูงสุด 200 pixel
+	var extraction_offset = -(extraction_progress / extraction_goal) * 120.0  # ขึ้นสูงสุด 200 pixel
 	chip_sprite.position.y = original_chip_position.y + extraction_offset
 
 func _apply_screen_shake():
