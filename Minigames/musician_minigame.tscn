@@ -1,13 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://df5coc2dhkjsd"]
+[gd_scene load_steps=4 format=3 uid="uid://df5coc2dhkjsd"]
 
 [ext_resource type="Script" path="res://Scripts/musician_minigame.gd" id="1_bv4sn"]
 [ext_resource type="AudioStream" uid="uid://dcokrgjcecahk" path="res://Resources/dokrajeawbarn.mp3" id="1_t3st2"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_tmslv"]
 font_size = 96
-
-[sub_resource type="LabelSettings" id="LabelSettings_qux5y"]
-font_size = 32
 
 [node name="RhythmMinigame" type="CanvasLayer"]
 script = ExtResource("1_bv4sn")
@@ -18,9 +15,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.06, 0.06, 0.06, 1)
+color = Color(0.0588235, 0.0588235, 0.0588235, 0.396078)
 
 [node name="StartPanel" type="Panel" parent="."]
+z_index = 1
 custom_minimum_size = Vector2(500, 300)
 anchors_preset = 8
 anchor_left = 0.5
@@ -38,13 +36,17 @@ size_flags_vertical = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="StartPanel"]
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 8
 anchor_left = 0.5
+anchor_top = 0.5
 anchor_right = 0.5
+anchor_bottom = 0.5
 offset_left = -76.5
+offset_top = -33.0
 offset_right = 76.5
-offset_bottom = 66.0
+offset_bottom = 33.0
 grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 20
 
 [node name="TitleLabel" type="Label" parent="StartPanel/VBoxContainer"]
@@ -80,24 +82,30 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GamePanel" type="Panel" parent="."]
-custom_minimum_size = Vector2(450, 180)
+z_index = 1
+custom_minimum_size = Vector2(450, 100)
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -225.0
+offset_top = 40.0
 offset_right = 225.0
-offset_bottom = 180.0
+offset_bottom = 140.0
 grow_horizontal = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="GamePanel"]
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 8
 anchor_left = 0.5
+anchor_top = 0.5
 anchor_right = 0.5
+anchor_bottom = 0.5
 offset_left = -74.0
+offset_top = -38.5
 offset_right = 74.0
-offset_bottom = 77.0
+offset_bottom = 38.5
 grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GamePanel/MarginContainer"]
 layout_mode = 2
@@ -132,39 +140,8 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -286.0
-offset_top = -329.0
+offset_top = -370.0
 offset_right = 286.0
-offset_bottom = 22.0
 grow_horizontal = 2
 grow_vertical = 0
 color = Color(0, 0.66, 0.176, 0)
-
-[node name="KeyHints" type="HBoxContainer" parent="."]
-offset_left = 100.0
-offset_top = 300.0
-offset_right = 140.0
-offset_bottom = 340.0
-
-[node name="KeyW" type="Label" parent="KeyHints"]
-layout_mode = 2
-text = "W"
-label_settings = SubResource("LabelSettings_qux5y")
-horizontal_alignment = 1
-
-[node name="KeyA" type="Label" parent="KeyHints"]
-layout_mode = 2
-text = "A"
-label_settings = SubResource("LabelSettings_qux5y")
-horizontal_alignment = 1
-
-[node name="KeyS" type="Label" parent="KeyHints"]
-layout_mode = 2
-text = "S"
-label_settings = SubResource("LabelSettings_qux5y")
-horizontal_alignment = 1
-
-[node name="KeyD" type="Label" parent="KeyHints"]
-layout_mode = 2
-text = "D"
-label_settings = SubResource("LabelSettings_qux5y")
-horizontal_alignment = 1

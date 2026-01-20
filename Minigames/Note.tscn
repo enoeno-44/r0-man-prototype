@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dvux2og04l741"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_4sv20"]
-font_size = 56
+font_size = 18
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x2fji"]
@@ -24,9 +24,10 @@ offset_right = 66.5
 offset_bottom = 78.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "W"
+text = "SPACE"
 label_settings = SubResource("LabelSettings_4sv20")
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(40, 40)

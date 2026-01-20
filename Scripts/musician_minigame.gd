@@ -31,31 +31,40 @@ var note_scene = preload("res://Minigames/Note.tscn")
 var active_notes: Array = []
 
 # === TIMING SETTINGS ===
+#var beat_times: Array = [
+	#2.3, 4.5, 6.7, 9.1, 11.2, 13.4 ,15.7, 20.1, 22.3, 24.5, 28.9, 31.3, 33.4
+#]
 var beat_times: Array = [
-	2.4, 4.6, 6.8, 9.2, 11.3, 13.5 ,15.8, 20.2, 22.4, 24.6, 29.0, 31.4, 33.5
+	2.5, 4.7, 6.9, 9.3, 11.4, 13.6 ,15.9, 20.3, 22.5, 24.7, 29.1, 31.5, 33.6
 ]
 #var beat_times: Array = [
-	#1.3, 3.6,5.8, 8.6, 10.3, 12.6,13.7, 17.0, 21.4, 25.7, 26.8, 34.6, 38.5
+	#2.4, 4.6, 6.8, 9.2, 11.3, 13.5 ,15.8, 20.2, 22.4, 24.6, 29.0, 31.4, 33.5
 #]
 
 var song_duration: float = 41.0
 var beat_pattern: Array = []
 var game_time: float = 0.0
 
-# การคำนวณความเร็วและระยะทาง
+# การคำนวดความเร็วและระยะทาง
 var spawn_y: float = 0.0
 var hit_zone_y: float = 0.0
 var note_speed: float = 200.0  # ความเร็วคงที่ (pixels ต่อวินาที)
 
+# ตำแหน่ง X ที่สุ่มได้
+const MIN_X: float = 400.0
+const MAX_X: float = 730.0  # 1024 - 200 = 824
+const NOTE_SPACING: float = 100.0  # ระยะห่างขั้นต่ำระหว่าง Note
+
 # ช่วงเวลาที่ Note จะเปลี่ยนสี (ก่อนถึง hit time)
-const HIGHLIGHT_TIME: float = 0.3  # เปลี่ยนสีเมื่อเหลือ 0.3 วินาที
+const HIGHLIGHT_TIME: float = 0.2  # เปลี่ยนสีเมื่อเหลือ 0.3 วินาที
 
 # ช่วงเวลาที่ถือว่ากดถูก (วินาที)
-const PERFECT_WINDOW: float = 0.05
-const GREAT_WINDOW: float = 0.1
-const GOOD_WINDOW: float = 0.15
+const PERFECT_WINDOW: float = 1
+const GREAT_WINDOW: float = 0.5
+const GOOD_WINDOW: float = 0.3
 
 func _ready():
+	randomize()  # เริ่มต้น random seed
 	_calculate_positions()
 	_generate_beat_pattern()
 	hide()
@@ -63,37 +72,71 @@ func _ready():
 		start_minigame()
 
 func _calculate_positions():
-	"""คำนวณตำแหน่ง Spawn และ Hit Zone"""
+	"""คำนวดตำแหน่ง Spawn และ Hit Zone"""
 	spawn_y = 0.0
 	hit_zone_y = hit_zone.position.y
 	
 	print("========================================")
-	print("คำนวณ Positions")
+	print("คำนวด Positions")
 	print("========================================")
 	print("  Spawn Y: %.1f" % spawn_y)
 	print("  Hit Zone Y: %.1f" % hit_zone_y)
 	print("  ความเร็ว Note: %.1f pixels/วินาที" % note_speed)
+	print("  ตำแหน่ง X: %.1f - %.1f" % [MIN_X, MAX_X])
 	print("========================================")
 
 func _generate_beat_pattern():
 	"""สร้างจังหวะ"""
 	beat_pattern.clear()
+	var used_positions: Array = []
 	
 	for beat_time in beat_times:
-		# คำนวณเวลาที่ต้อง spawn เพื่อให้ถึง hit zone พอดีเวลา
+		# คำนวดเวลาที่ต้อง spawn เพื่อให้ถึง hit zone พอดีเวลา
 		var travel_distance = hit_zone_y - spawn_y
 		var travel_time = travel_distance / note_speed
 		var spawn_time = beat_time - travel_time
 		
+		# สุ่มตำแหน่ง X โดยหลีกเลี่ยงตำแหน่งที่ใกล้กันเกินไป
+		var spawn_x = _get_random_position(used_positions)
+		used_positions.append(spawn_x)
+		
+		# เก็บแค่ตำแหน่ง 3 อันล่าสุด เพื่อไม่ให้ซ้ำกันมากเกินไป
+		if used_positions.size() > 3:
+			used_positions.pop_front()
+		
 		beat_pattern.append({
 			"time": beat_time,
 			"spawn_time": spawn_time,
+			"spawn_x": spawn_x,
 			"spawned": false
 		})
 	
 	print("สร้างจังหวะเสร็จแล้ว!")
 	print("  - จำนวนโน้ต: %d โน้ต" % beat_pattern.size())
 	print("========================================")
+
+func _get_random_position(used_positions: Array) -> float:
+	"""สุ่มตำแหน่ง X โดยหลีกเลี่ยงตำแหน่งที่ใกล้กันเกินไป"""
+	var max_attempts = 20
+	var attempt = 0
+	
+	while attempt < max_attempts:
+		var rand_x = randf_range(MIN_X, MAX_X)
+		var is_valid = true
+		
+		# ตรวจสอบว่าไม่ใกล้กับตำแหน่งที่เคยใช้มากเกินไป
+		for used_x in used_positions:
+			if abs(rand_x - used_x) < NOTE_SPACING:
+				is_valid = false
+				break
+		
+		if is_valid:
+			return rand_x
+		
+		attempt += 1
+	
+	# ถ้าหาไม่เจอภายใน 20 ครั้ง ให้ใช้ตำแหน่งสุ่มทั่วไป
+	return randf_range(MIN_X, MAX_X)
 
 func start_minigame():
 	"""แสดงหน้าจอเริ่มต้น"""
@@ -191,13 +234,13 @@ func _spawn_notes():
 			continue
 		
 		if game_time >= beat.spawn_time:
-			_create_note(beat.time)
+			_create_note(beat.time, beat.spawn_x)
 			beat.spawned = true
 
-func _create_note(hit_time: float):
+func _create_note(hit_time: float, spawn_x: float):
 	"""สร้างโน้ตใหม่"""
 	var note = note_scene.instantiate()
-	note.position = Vector2(512, spawn_y)
+	note.position = Vector2(spawn_x, spawn_y)
 	note.set_meta("hit_time", hit_time)
 	note.set_meta("original_color", note.modulate)
 	
@@ -209,7 +252,7 @@ func _create_note(hit_time: float):
 	note_container.add_child(note)
 	active_notes.append(note)
 	
-	print("[Spawn] โน้ต | ต้องกดที่: %.2fs" % hit_time)
+	print("[Spawn] โน้ต | ตำแหน่ง X: %.1f | ต้องกดที่: %.2fs" % [spawn_x, hit_time])
 
 func _update_notes(delta):
 	"""เคลื่อนที่โน้ตลงมาและเปลี่ยนสีเมื่อใกล้ถึงเวลา"""
@@ -231,7 +274,7 @@ func _update_notes(delta):
 			# แสดง KeyLabel
 			key_label.visible = true
 			
-			# คำนวณความเข้มของสี (เริ่มจาง ๆ แล้วเข้มขึ้น)
+			# คำนวดความเข้มของสี (เริ่มจาง ๆ แล้วเข้มขึ้น)
 			var intensity = 1.0 - (time_until_hit / HIGHLIGHT_TIME)
 			intensity = clamp(intensity, 0.0, 1.0)
 			

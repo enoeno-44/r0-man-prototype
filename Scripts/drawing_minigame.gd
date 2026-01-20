@@ -25,7 +25,7 @@ var is_drawing: bool = false
 var is_active: bool = false
 
 # สี
-var draw_color: Color = Color.WHITE
+var draw_color: Color = Color.BLACK
 var line_width: float = 4.0
 
 func _ready():
@@ -200,9 +200,9 @@ func _update_ui():
 		progress_label.text = "✓ ผ่าน"
 		progress_label.modulate = Color.GREEN
 	else:
-		instruction_label.text = "วาดวงปิด %d รูป (ต้องบรรจบจุดเริ่มต้น)" % min_strokes_needed
+		instruction_label.text = "วาด %d รูป" % min_strokes_needed
 		instruction_label.modulate = Color.WHITE
-		progress_label.text = "วาดวงกลมหรือรูปปิดต่าง ๆ"
+		progress_label.text = "นายคิดว่ามันเหมือนอะไรล่ะเจ้าหุ่น"
 		progress_label.modulate = Color.YELLOW
 
 func _check_completion():

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://lmpdatskd40f"]
+[gd_scene load_steps=3 format=3 uid="uid://lmpdatskd40f"]
 
 [ext_resource type="Script" path="res://Scripts/drawing_minigame.gd" id="1_dunno"]
+[ext_resource type="Texture2D" uid="uid://cciihaqp8e3md" path="res://Resources/Gemini_Generated_Cloud_9zqp789zqp789zqp.png" id="2_rwrkp"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 layer = 99
@@ -12,21 +13,26 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="BackgroundTexture" type="TextureRect" parent="Panel"]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -256.0
-offset_top = -256.0
-offset_right = 256.0
-offset_bottom = 256.0
+offset_left = -346.0
+offset_top = -224.0
+offset_right = 839.0
+offset_bottom = 547.0
 grow_horizontal = 2
 grow_vertical = 2
-stretch_mode = 3
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("2_rwrkp")
+stretch_mode = 2
 
 [node name="DrawingArea" type="Control" parent="Panel"]
 layout_mode = 1
@@ -35,10 +41,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -256.0
-offset_top = -256.0
-offset_right = 256.0
-offset_bottom = 256.0
+offset_left = -396.0
+offset_top = -279.0
+offset_right = 404.0
+offset_bottom = 271.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_default_cursor_shape = 2
@@ -47,22 +53,27 @@ mouse_default_cursor_shape = 2
 position = Vector2(320, 68)
 
 [node name="UIContainer" type="VBoxContainer" parent="Panel"]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -20.0
+offset_top = 10.0
 offset_right = 20.0
-offset_bottom = 77.0
+offset_bottom = 90.0
 grow_horizontal = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 5
 alignment = 1
 
 [node name="InstructionLabel" type="Label" parent="Panel/UIContainer"]
 layout_mode = 2
+horizontal_alignment = 1
 
 [node name="ProgressLabel" type="Label" parent="Panel/UIContainer"]
 layout_mode = 2
+horizontal_alignment = 1
 
 [node name="StrokeCountLabel" type="Label" parent="Panel/UIContainer"]
 layout_mode = 2
+horizontal_alignment = 1
