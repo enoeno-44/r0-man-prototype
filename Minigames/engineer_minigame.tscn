@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://xikh38b6u7t2"]
 
-[ext_resource type="Script" path="res://Minigames/engineer_minigame.gd" id="1_6ybis"]
+[ext_resource type="Script" path="res://Scripts/engineer_minigame.gd" id="1_6ybis"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_jj7ba"]
 font_size = 24

@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=4 uid="uid://cqgbie6savpmh"]
+[gd_scene load_steps=78 format=4 uid="uid://cqgbie6savpmh"]
 
 [ext_resource type="Script" path="res://Scripts/daynight_manager.gd" id="1_7hc8a"]
 [ext_resource type="TileSet" uid="uid://dwjv1k2o1gmr2" path="res://world_1.tres" id="1_x5tmx"]
@@ -20,6 +20,7 @@
 [ext_resource type="Script" path="res://Scripts/enviroment_manager.gd" id="11_xci1g"]
 [ext_resource type="Script" path="res://Scripts/normal_walkin_npc.gd" id="12_kt5mi"]
 [ext_resource type="Texture2D" uid="uid://5n8nt3y3g3r" path="res://Sprites/Modern_Exteriors_Characters_Scout_16x16_3.png" id="12_l0ht0"]
+[ext_resource type="PackedScene" uid="uid://lb27ot3sexda" path="res://Minigames/grandma_minigame.tscn" id="12_v8thk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb6l5"]
 size = Vector2(20.375, 993)
@@ -815,7 +816,7 @@ position = Vector2(180, 674)
 quest_id = "npc_4_day3"
 quest_day = 3
 dialogue_resource = "res://Dialogues/OLD_LADY.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
+minigame_scene = ExtResource("12_v8thk")
 
 [node name="Quest9" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
 y_sort_enabled = true
