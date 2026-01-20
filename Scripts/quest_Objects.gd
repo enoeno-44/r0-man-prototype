@@ -5,6 +5,8 @@ extends Area2D
 @export var quest_day: int = 1
 @export var required_qte_count: int = 3
 @export var completed_texture: Texture2D
+@export var disappear_when_completed: bool = false  # เพิ่มตัวเลือกให้หายไปเมื่อทำเสร็จ
+@export var disappear_after_day: bool = false  # เพิ่มตัวเลือกให้หายไปเมื่อพ้นวัน
 
 @onready var label = $Label
 @onready var object_sprite = $Sprite2D
@@ -97,6 +99,10 @@ func _on_qte_fully_completed(completed_id: String):
 	if completed_id == quest_id:
 		_mark_as_completed()
 		QuestManager.complete_quest(quest_id)
+		
+		# ถ้าตั้งค่าให้หายไปเมื่อทำเสร็จ
+		if disappear_when_completed:
+			_disappear_object()
 
 func _mark_as_completed():
 	modulate = Color.WHITE
@@ -105,7 +111,7 @@ func _mark_as_completed():
 	is_locked = true
 	permanently_locked = true
 	
-	if object_sprite and completed_texture:
+	if object_sprite and completed_texture and not disappear_when_completed:
 		object_sprite.texture = completed_texture
 
 func _is_active() -> bool:
@@ -113,18 +119,39 @@ func _is_active() -> bool:
 
 func _update_visibility():
 	var is_today = _is_active()
+	var is_completed = QuestManager.is_quest_done(quest_id)
+	
+	# ตรวจสอบว่าควรหายไปหรือไม่
+	if is_completed and disappear_when_completed:
+		_disappear_object()
+		return
+	
+	if not is_today and disappear_after_day and not is_completed:
+		_disappear_object()
+		return
+	
 	visible = is_today
 	set_process(is_today)
 	monitoring = is_today
 	monitorable = is_today
 	
 	if is_today:
-		if not QuestManager.is_quest_done(quest_id):
+		if not is_completed:
 			QTEManager.reset_progress(quest_id)
 			is_locked = false
 		else:
-			_mark_as_completed()
+			if disappear_when_completed:
+				_disappear_object()
+			else:
+				_mark_as_completed()
 
 func _on_day_changed(_new_day: int, _date_text: String):
 	await get_tree().create_timer(0.1).timeout
 	_update_visibility()
+
+func _disappear_object():
+	"""ทำให้วัตถุหายไปแบบค่อยๆ จาง"""
+	visible = false
+	set_process(false)
+	monitoring = false
+	monitorable = false
