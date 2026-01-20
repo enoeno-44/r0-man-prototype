@@ -65,7 +65,7 @@ func start_minigame():
 	shake_intensity = 0.0
 	
 	# รีเซ็ตข้อความ
-	instruction_label.text = "กดค้างเพื่อดึงชิปออก)"
+	instruction_label.text = "กดค้างเพื่อดึงชิปออก"
 	instruction_label.modulate = Color.WHITE
 	
 	_update_ui()
