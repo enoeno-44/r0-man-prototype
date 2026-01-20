@@ -59,7 +59,7 @@ const NOTE_SPACING: float = 100.0  # ระยะห่างขั้นต่�
 const HIGHLIGHT_TIME: float = 0.2  # เปลี่ยนสีเมื่อเหลือ 0.3 วินาที
 
 # ช่วงเวลาที่ถือว่ากดถูก (วินาที)
-const PERFECT_WINDOW: float = 1
+const PERFECT_WINDOW: float = 0.7
 const GREAT_WINDOW: float = 0.5
 const GOOD_WINDOW: float = 0.3
 

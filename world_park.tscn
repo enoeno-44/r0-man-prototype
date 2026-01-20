@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=4 uid="uid://cqgbie6savpmh"]
+[gd_scene load_steps=77 format=4 uid="uid://cqgbie6savpmh"]
 
 [ext_resource type="Script" path="res://Scripts/daynight_manager.gd" id="1_7hc8a"]
 [ext_resource type="TileSet" uid="uid://dwjv1k2o1gmr2" path="res://world_1.tres" id="1_x5tmx"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://dcrnedf3ic72l" path="res://icon.svg" id="8_44b7a"]
 [ext_resource type="PackedScene" uid="uid://ds8gr55pdd2y1" path="res://Scenes/walkin_npc.tscn" id="9_rwu0h"]
 [ext_resource type="PackedScene" uid="uid://df5coc2dhkjsd" path="res://Minigames/musician_minigame.tscn" id="9_str8g"]
+[ext_resource type="PackedScene" uid="uid://xikh38b6u7t2" path="res://Minigames/engineer_minigame.tscn" id="10_1mhad"]
 [ext_resource type="Script" path="res://Scripts/charger.gd" id="10_7dk4h"]
 [ext_resource type="PackedScene" uid="uid://e4lme64rd44a" path="res://Scenes/npcs.tscn" id="11_a06rh"]
 [ext_resource type="PackedScene" uid="uid://d3fyx8psdeiew" path="res://Scenes/simple_minigame.tscn" id="11_bdg8k"]
@@ -779,7 +780,7 @@ position = Vector2(856, 361)
 quest_id = "npc_2_day2"
 quest_day = 2
 dialogue_resource = "res://Dialogues/ENGINEER.dialogue"
-minigame_scene = ExtResource("11_bdg8k")
+minigame_scene = ExtResource("10_1mhad")
 
 [node name="Day_3" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true

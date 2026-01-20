@@ -24,17 +24,21 @@ var current_damage: float = 0.0       # ความเสียหาย (0-100
 var extraction_progress: float = 0.0  # ความคืบหน้าการดึง (0-100)
 
 # พารามิเตอร์ที่ปรับได้
-var force_increase_speed: float = 40.0   # ความเร็วเพิ่มแรงต่อวินาที
-var force_decrease_speed: float = 60.0   # ความเร็วลดแรงเมื่อไม่กด
-var safe_force_min: float = 30.0         # แรงขั้นต่ำที่เริ่มดึงได้
+var force_increase_speed: float = 60.0   # ความเร็วเพิ่มแรงต่อวินาที
+var force_decrease_speed: float = 180.0   # ความเร็วลดแรงเมื่อไม่กด
+var safe_force_min: float = 50.0         # แรงขั้นต่ำที่เริ่มดึงได้
 var safe_force_max: float = 70.0         # แรงสูงสุดที่ปลอดภัย
-var damage_increase_speed: float = 50.0  # ความเร็วเพิ่ม Damage เมื่อแรงมากเกิน
-var extraction_speed: float = 15.0       # ความเร็วดึงชิปออกมา
-var max_damage: float = 100.0            # Damage สูงสุด
-var extraction_goal: float = 100.0       # เป้าหมายการดึง
+var damage_increase_speed: float = 30.0  # ความเร็วเพิ่ม Damage เมื่อแรงมากเกิน
+var extraction_speed: float = 4.0       # ความเร็วดึงชิปออกมา
+var max_damage: float = 5.0             # Damage สูงสุดก่อนเริ่มใหม่
+var extraction_goal: float = 40.0       # เป้าหมายการดึง
+
 # ตัวแปรสำหรับ Feedback
 var shake_intensity: float = 0.0
 var original_chip_position: Vector2
+
+# ตัวแปรสำหรับการเริ่มใหม่
+var is_restarting: bool = false
 
 func _ready():
 	hide()
@@ -52,6 +56,7 @@ func start_minigame():
 	show()
 	is_active = true
 	is_pressing = false
+	is_restarting = false
 	
 	# รีเซ็ตค่า
 	current_force = 0.0
@@ -59,11 +64,15 @@ func start_minigame():
 	extraction_progress = 0.0
 	shake_intensity = 0.0
 	
+	# รีเซ็ตข้อความ
+	instruction_label.text = "กดค้างเพื่อดึงชิปออก)"
+	instruction_label.modulate = Color.WHITE
+	
 	_update_ui()
 	_update_chip_position()
 
 func _process(delta):
-	if not is_active:
+	if not is_active or is_restarting:
 		return
 	
 	# เช็คการกดปุ่ม (Space หรือ Click ซ้าย)
@@ -97,11 +106,20 @@ func _process(delta):
 	_update_chip_position()
 	_apply_screen_shake()
 	
-	# === เช็คเงื่อนไขชนะ/แพ้ ===
+	# === เช็คเงื่อนไขเริ่มใหม่ ===
+	# 1. ความเสียหายเกิน 10%
+	if current_damage >= max_damage:
+		_restart_minigame("ชิปเสียหายเกินไป!")
+		return
+	
+	# 2. แรงลดลงจนหมด (0%) และมีความคืบหน้าอยู่
+	if current_force <= 0.0 and extraction_progress > 0.0:
+		_restart_minigame("แรงหมด! ชิปหลุดกลับเข้าไป")
+		return
+	
+	# === เช็คเงื่อนไขชนะ ===
 	if extraction_progress >= extraction_goal:
 		_win_minigame()
-	elif current_damage >= max_damage:
-		_lose_minigame()
 
 func _update_ui():
 	"""อัปเดตข้อความและ Progress Bar"""
@@ -142,6 +160,19 @@ func _apply_screen_shake():
 		panel.position = Vector2.ZERO
 		chip_sprite.modulate = Color.WHITE
 
+func _restart_minigame(reason: String):
+	"""เริ่มมินิเกมใหม่พร้อมแสดงเหตุผล"""
+	print("[ChipExtraction] เริ่มใหม่: ", reason)
+	is_restarting = true
+	
+	# แสดงข้อความเตือน
+	instruction_label.text = reason + " กำลังเริ่มใหม่..."
+	instruction_label.modulate = Color.ORANGE
+	
+	# รอ 1.5 วินาที แล้วเริ่มใหม่
+	await get_tree().create_timer(1.5).timeout
+	start_minigame()
+
 func _win_minigame():
 	"""ชนะ - ดึงชิปออกมาสำเร็จ"""
 	print("[ChipExtraction] ชนะ! ดึงชิปออกมาสำเร็จ")
@@ -157,23 +188,6 @@ func _win_minigame():
 	hide()
 	completed.emit()
 	print("[ChipExtraction] ส่งสัญญาณ 'completed'")
-
-func _lose_minigame():
-	"""แพ้ - ชิปพังเพราะแรงมากเกิน"""
-	print("[ChipExtraction] แพ้! ชิพเสียหายเกินไป")
-	is_active = false
-	
-	instruction_label.text = "ล้มเหลว! ชิปเสียหายเกินไป"
-	instruction_label.modulate = Color.RED
-	chip_sprite.modulate = Color.RED
-	
-	# แสดงข้อความ 2 วินาที
-	await get_tree().create_timer(2.0).timeout
-	
-	_unlock_player()
-	hide()
-	failed.emit()
-	print("[ChipExtraction] ส่งสัญญาณ 'failed'")
 
 func _unlock_player():
 	"""ปลดล็อคผู้เล่น"""
