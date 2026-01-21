@@ -439,7 +439,7 @@ func _complete_minigame():
 	print("  ความแม่นยำ: %.1f%%" % accuracy_percent)
 	print("========================================")
 	
-	await get_tree().create_timer(5.0).timeout
+	await get_tree().create_timer(3.0).timeout
 	
 	var player = get_tree().get_first_node_in_group("player")
 	if player:

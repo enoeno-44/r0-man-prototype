@@ -79,6 +79,9 @@ func _ready():
 	# เชื่อมต่อปุ่ม
 	submit_button.pressed.connect(_on_submit_pressed)
 	cancel_button.pressed.connect(_on_cancel_pressed)
+	
+	if answer_edit is LineEdit:
+		answer_edit.text_submitted.connect(_on_answer_submitted)
 
 func start_minigame():
 	"""เริ่มมินิเกม"""
@@ -251,6 +254,10 @@ func _update_progress():
 		instruction_label.modulate = Color.GREEN
 	else:
 		instruction_label.modulate = Color.WHITE
+
+func _on_answer_submitted(new_text: String):
+	"""เมื่อกด Enter ในช่องข้อความ"""
+	_on_submit_pressed()
 
 func _complete_minigame():
 	"""จบมินิเกม"""
