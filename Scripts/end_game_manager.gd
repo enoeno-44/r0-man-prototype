@@ -9,23 +9,32 @@ signal ending_finished
 @onready var credits_label: RichTextLabel
 @onready var exit_label: Label
 
-@export var credits_scroll_speed: float = 40.0
+@export var credits_scroll_speed: float = 35.0
 @export var credits_text: String = """
 [center][b]THE END[/b][/center]
 
 [center]--- CREDITS ---[/center]
 
 [center]Game Design & Programming[/center]
-[center]Your Name[/center]
+[center]นายจักรพรรดิ หงษ์ชากรณ์[/center]
+[center]นายรัฐภูมิ นามบัวน้อย[/center]
 
 [center]Art & Animation[/center]
-[center]Your Name[/center]
+[center]นายจักรพรรดิ หงษ์ชากรณ์[/center]
+[center]นายรัฐภูมิ นามบัวน้อย[/center]
 
 [center]Story & Dialogue[/center]
-[center]Your Name[/center]
+[center]นายจักรพรรดิ หงษ์ชากรณ์[/center]
+
+[center]Resources[/center]
+[center]Modern Exteriors - RPG Tileset By LimeZu[/center]
+[center]กีต้าดอกกระเจียวบาน - Tiktok @chanapat_jen[/center]
 
 [center]Special Thanks[/center]
 [center]Godot Engine Community[/center]
+[center]Claude AI[/center]
+[center]GEMINI AI[/center]
+[center]Chat GPT[/center]
 
 [center]Made with Godot 4.3[/center]
 
@@ -112,7 +121,7 @@ func start_ending():
 	_show_black_screen()
 	_hide_hud()
 	
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(3).timeout
 	await _show_credits()
 	
 	_enable_exit()

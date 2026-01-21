@@ -113,7 +113,7 @@ size_flags_horizontal = 4
 
 [node name="TitleLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "เล่นกีตาร์ให้ถูกจังหวะ!"
+text = "กด spacebar เพื่อเคาะจังหวะให้ถูก!"
 horizontal_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]

@@ -29,7 +29,7 @@ var force_decrease_speed: float = 180.0   # ความเร็วลดแร
 var safe_force_min: float = 50.0         # แรงขั้นต่ำที่เริ่มดึงได้
 var safe_force_max: float = 70.0         # แรงสูงสุดที่ปลอดภัย
 var damage_increase_speed: float = 30.0  # ความเร็วเพิ่ม Damage เมื่อแรงมากเกิน
-var extraction_speed: float = 4.0       # ความเร็วดึงชิปออกมา
+var extraction_speed: float = 8.0       # ความเร็วดึงชิปออกมา
 var max_damage: float = 5.0             # Damage สูงสุดก่อนเริ่มใหม่
 var extraction_goal: float = 50.0       # เป้าหมายการดึง
 
@@ -144,7 +144,7 @@ func _update_chip_position():
 		return
 	
 	# คำนวณตำแหน่ง Y (ขึ้นเมื่อดึงได้)
-	var extraction_offset = -(extraction_progress / extraction_goal) * 120.0  # ขึ้นสูงสุด 200 pixel
+	var extraction_offset = -(extraction_progress / extraction_goal) * 150.0
 	chip_sprite.position.y = original_chip_position.y + extraction_offset
 
 func _apply_screen_shake():

@@ -5,11 +5,13 @@ extends Area2D
 @export var quest_day: int = 1
 @export var required_qte_count: int = 3
 @export var completed_texture: Texture2D
-@export var disappear_when_completed: bool = false  # เพิ่มตัวเลือกให้หายไปเมื่อทำเสร็จ
-@export var disappear_after_day: bool = false  # เพิ่มตัวเลือกให้หายไปเมื่อพ้นวัน
+@export var disappear_when_completed: bool = false
+@export var disappear_after_day: bool = false
 
 @onready var label = $Label
 @onready var object_sprite = $Sprite2D
+@onready var collision_shape = $CollisionShape2D
+@onready var static_body = $StaticBody2D  # เพิ่มบรรทัดนี้
 
 var player_in_range: bool = false
 var is_locked: bool = false
@@ -100,7 +102,6 @@ func _on_qte_fully_completed(completed_id: String):
 		_mark_as_completed()
 		QuestManager.complete_quest(quest_id)
 		
-		# ถ้าตั้งค่าให้หายไปเมื่อทำเสร็จ
 		if disappear_when_completed:
 			_disappear_object()
 
@@ -121,7 +122,6 @@ func _update_visibility():
 	var is_today = _is_active()
 	var is_completed = QuestManager.is_quest_done(quest_id)
 	
-	# ตรวจสอบว่าควรหายไปหรือไม่
 	if is_completed and disappear_when_completed:
 		_disappear_object()
 		return
@@ -134,6 +134,18 @@ func _update_visibility():
 	set_process(is_today)
 	monitoring = is_today
 	monitorable = is_today
+	
+	# ปิด/เปิด collision shape ของ Area2D
+	if collision_shape:
+		collision_shape.set_deferred("disabled", not is_today)
+	
+	# ปิด/เปิด StaticBody2D และ collision shape ข้างใน
+	if static_body:
+		static_body.set_deferred("process_mode", Node.PROCESS_MODE_INHERIT if is_today else Node.PROCESS_MODE_DISABLED)
+		# ปิด collision ข้างใน StaticBody2D ด้วย
+		for child in static_body.get_children():
+			if child is CollisionShape2D or child is CollisionPolygon2D:
+				child.set_deferred("disabled", not is_today)
 	
 	if is_today:
 		if not is_completed:
@@ -150,8 +162,19 @@ func _on_day_changed(_new_day: int, _date_text: String):
 	_update_visibility()
 
 func _disappear_object():
-	"""ทำให้วัตถุหายไปแบบค่อยๆ จาง"""
+	"""ทำให้วัตถุหายไปแบบค่อยๆ จางหรือทันที"""
 	visible = false
 	set_process(false)
 	monitoring = false
 	monitorable = false
+	
+	# ปิด collision shape ของ Area2D
+	if collision_shape:
+		collision_shape.set_deferred("disabled", true)
+	
+	# ปิด StaticBody2D และ collision ข้างใน
+	if static_body:
+		static_body.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
+		for child in static_body.get_children():
+			if child is CollisionShape2D or child is CollisionPolygon2D:
+				child.set_deferred("disabled", true)

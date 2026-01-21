@@ -3,7 +3,7 @@ extends CanvasLayer
 
 signal completed  # สัญญาณเมื่อเล่นจบ
 
-@onready var panel = $Panel
+#@onready var panel = $Panel
 @onready var title_label = $GamePanel/MarginContainer/VBoxContainer/TitleLabel
 @onready var instruction_label = $GamePanel/MarginContainer/VBoxContainer/InstructionLabel
 @onready var progress_label = $GamePanel/MarginContainer/VBoxContainer/ProgressLabel

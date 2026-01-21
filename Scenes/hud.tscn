@@ -1,6 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bagbrbx1xqfam"]
+[gd_scene load_steps=4 format=3 uid="uid://bagbrbx1xqfam"]
 
 [ext_resource type="Script" path="res://Scripts/quest_panel.gd" id="1_w7ej2"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_184r2"]
+font_size = 22
 
 [sub_resource type="LabelSettings" id="LabelSettings_ykcb2"]
 font_size = 18
@@ -29,16 +32,20 @@ grow_horizontal = 0
 [node name="DateLabel" type="Label" parent="TopRight/VBoxContainer"]
 layout_mode = 2
 text = "วันที่ 26 / 10 / 2064"
+label_settings = SubResource("LabelSettings_184r2")
 horizontal_alignment = 2
 
 [node name="TimeLabel" type="Label" parent="TopRight/VBoxContainer"]
 layout_mode = 2
 text = "18:45"
+label_settings = SubResource("LabelSettings_184r2")
 horizontal_alignment = 2
 
 [node name="TempLabel" type="Label" parent="TopRight/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "27°C"
+label_settings = SubResource("LabelSettings_184r2")
 horizontal_alignment = 2
 
 [node name="RightCenter" type="Control" parent="."]

@@ -239,7 +239,7 @@ func _mark_word_corrected(index: int):
 		if label.has_meta("word_index") and label.get_meta("word_index") == index:
 			label.set_meta("corrected", true)
 			label.text = article_data.errors[index].correct
-			label.add_theme_color_override("font_color", Color.DARK_GREEN)
+			label.add_theme_color_override("font_color", Color.WHITE)
 			break
 
 func _update_progress():

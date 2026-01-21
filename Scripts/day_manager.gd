@@ -11,13 +11,13 @@ var all_quests_done: bool = false
 
 var day_dates: Array[String] = [
 	"27/10/2056", "28/10/2056", "29/10/2056",
-	"30/10/2056", "4/11/2056", "5/11/2056",
+	"30/10/2056", "5/11/2056", "6/11/2056",
 ]
 
 # เพิ่ม Chapter สำหรับแต่ละวัน
 var day_chapters: Array[String] = [
-	"Chapter 1", "Chapter 2", "Chapter 3",
-	"Chapter 4", "Chapter 5", "Chapter 6",
+	"โปรโตคอลของเช้าวันใหม่", "นอกเหนือจากคำสั่ง", "โกโก้?",
+	"ค่าที่ลดลง", "อุ่นกว่าปกติ", "ฉันเคยอยู่ที่นี่",
 ]
 
 func _ready():

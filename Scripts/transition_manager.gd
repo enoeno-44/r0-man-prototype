@@ -63,7 +63,7 @@ func _on_viewport_size_changed():
 		# Chapter อยู่ตรงกลาง ตัวใหญ่
 		chapter_label.size = viewport_size
 		chapter_label.position = Vector2.ZERO
-		var chapter_font_size = int(viewport_size.y / 8)  # ตัวใหญ่
+		var chapter_font_size = int(viewport_size.y / 12)  # ตัวใหญ่
 		chapter_label.add_theme_font_size_override("font_size", chapter_font_size)
 	
 	if date_label:

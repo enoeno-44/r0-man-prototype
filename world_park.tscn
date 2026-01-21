@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=4 uid="uid://cqgbie6savpmh"]
+[gd_scene load_steps=100 format=4 uid="uid://cqgbie6savpmh"]
 
 [ext_resource type="Script" path="res://Scripts/daynight_manager.gd" id="1_7hc8a"]
 [ext_resource type="TileSet" uid="uid://dwjv1k2o1gmr2" path="res://world_1.tres" id="1_x5tmx"]
@@ -7,27 +7,53 @@
 [ext_resource type="Script" path="res://Scripts/quest_arrow.gd" id="2_smrkw"]
 [ext_resource type="Texture2D" uid="uid://6vo5jf8bi23e" path="res://tiles/11_Camping_16x16.png" id="3_pnxr6"]
 [ext_resource type="PackedScene" uid="uid://bagbrbx1xqfam" path="res://Scenes/hud.tscn" id="5_27i6d"]
-[ext_resource type="PackedScene" uid="uid://b3rvqc6qwyowr" path="res://Scenes/quest_items.tscn" id="6_bn031"]
 [ext_resource type="Script" path="res://Scripts/hud_manager.gd" id="6_rqhi5"]
 [ext_resource type="Texture2D" uid="uid://dcrnedf3ic72l" path="res://icon.svg" id="8_44b7a"]
+[ext_resource type="Script" path="res://Scripts/quest_Objects.gd" id="8_c0skq"]
 [ext_resource type="PackedScene" uid="uid://df5coc2dhkjsd" path="res://Minigames/musician_minigame.tscn" id="9_str8g"]
+[ext_resource type="Texture2D" uid="uid://db2oc6ecdbno8" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Trash_2.png" id="9_wx3gr"]
 [ext_resource type="PackedScene" uid="uid://xikh38b6u7t2" path="res://Minigames/engineer_minigame.tscn" id="10_1mhad"]
 [ext_resource type="Script" path="res://Scripts/charger.gd" id="10_7dk4h"]
+[ext_resource type="Texture2D" uid="uid://be2qlwcuikcku" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Trash_4.png" id="10_an4wy"]
 [ext_resource type="PackedScene" uid="uid://e4lme64rd44a" path="res://Scenes/npcs.tscn" id="11_a06rh"]
 [ext_resource type="PackedScene" uid="uid://d3fyx8psdeiew" path="res://Scenes/simple_minigame.tscn" id="11_bdg8k"]
 [ext_resource type="PackedScene" uid="uid://lmpdatskd40f" path="res://Minigames/daydreamer_minigame.tscn" id="11_f82wf"]
+[ext_resource type="Texture2D" uid="uid://dhbt0w0ud42sg" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Single_Trash_4.png" id="11_ndtox"]
 [ext_resource type="PackedScene" uid="uid://u2kcgqargaka" path="res://Minigames/oldman.tscn" id="11_w8up7"]
 [ext_resource type="Script" path="res://Scripts/enviroment_manager.gd" id="11_xci1g"]
+[ext_resource type="Texture2D" uid="uid://bwvx8wuvkxolf" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Small_Trash_Pile_2.png" id="12_hupwu"]
 [ext_resource type="Script" path="res://Scripts/normal_walkin_npc.gd" id="12_kt5mi"]
 [ext_resource type="Texture2D" uid="uid://5n8nt3y3g3r" path="res://Sprites/Modern_Exteriors_Characters_Scout_16x16_3.png" id="12_l0ht0"]
 [ext_resource type="PackedScene" uid="uid://lb27ot3sexda" path="res://Minigames/grandma_minigame.tscn" id="12_v8thk"]
+[ext_resource type="Script" path="res://Scripts/walkin_npcnormal.gd" id="16_ahy42"]
+[ext_resource type="Texture2D" uid="uid://ckixlaedu8ufq" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Trashbin_5.png" id="17_1w6na"]
 [ext_resource type="Script" path="res://walkin_npc.gd" id="18_08d0n"]
+[ext_resource type="Texture2D" uid="uid://dk3iint52htdg" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Trashbin_6.png" id="18_pgram"]
+[ext_resource type="Texture2D" uid="uid://k1pycvkkuk21" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Small_Trash_Pile_3.png" id="20_v0sel"]
+[ext_resource type="Texture2D" uid="uid://bnsvlaxluenel" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Single_Trash_3.png" id="21_2juux"]
+[ext_resource type="Texture2D" uid="uid://qvxro5e2vq17" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Small_Empty_Trash_Can.png" id="28_s1q5c"]
+[ext_resource type="Texture2D" uid="uid://dsurykrugnk3j" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Small_Full_Trash_Can.png" id="29_8n6oa"]
+[ext_resource type="Texture2D" uid="uid://y7nbkt3frp" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Trashbin_11.png" id="30_44wcw"]
+[ext_resource type="Texture2D" uid="uid://bwvfarypnkb0h" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Small_Trash_Pile_1.png" id="30_r0bl7"]
+[ext_resource type="Texture2D" uid="uid://bl7re0dotb1xw" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Trashbin_12.png" id="31_r58al"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb6l5"]
 size = Vector2(20.375, 993)
 
 [sub_resource type="LabelSettings" id="LabelSettings_fitt0"]
 font_size = 32
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gemwu"]
+radius = 34.5254
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n12k0"]
+radius = 17.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_udh02"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_glqdk"]
+radius = 3.92001
+height = 13.05
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wsbka"]
 atlas = ExtResource("12_l0ht0")
@@ -412,6 +438,8 @@ animations = [{
 radius = 2.0
 height = 10.0
 
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cgtk2"]
+
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_gtgks"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_p7m4t"]
@@ -603,7 +631,6 @@ sources/0 = SubResource("TileSetAtlasSource_b7d7d")
 [sub_resource type="CircleShape2D" id="CircleShape2D_pyg5m"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_4g22t"]
-font_color = Color(0.163233, 0.370054, 0.204723, 1)
 
 [node name="world-park" type="Node2D"]
 script = ExtResource("1_7hc8a")
@@ -676,9 +703,9 @@ wasd_label = NodePath("../Y-sort/Enviroment Manager/Day_1/wasd")
 [node name="Y-sort" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="decorate" type="TileMapLayer" parent="Y-sort"]
+[node name="decorate" type="TileMapLayer" parent="Y-sort" groups=["glitchable"]]
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AADW/wwACAAcAD0AAADY//f/CAAcADQAAADY/yAACAAdADwAAADY/yIACAAbAD0AAADY/xkACAAdADwAAADb/xgACAAaAD0AAADe/xcACAAaAD0AAADe/xgACAAdADwAAADd/xkACAAdADwAAADa/xkACAAcADwAAADj/xcACAAaAD0AAADm/xYACAAdADwAAADu/xEACAAcADsAAADv/xEACAAdADwAAADw/xAACAAaAD0AAADa//3/CAAaAD0AAADa//z/CAAdADwAAADY//z/CAAaAD0AAADy//r/CAAbAD0AAADy//v/CAAcADwAAAD1//3/CAAaAD0AAAD1//X/CAAaAD0AAAD2//P/CAAdADwAAAAPAP//CAAaAD0AAAAJAP//CAAbAD0AAAAcAPv/CAAaAD0AAAAdAPf/CAAbAD0AAAAeAPj/CAAaAD0AAAAvAPL/CAAaAD0AAAAxAPL/CAAaAD0AAAA5APL/CAAaAD0AAAA6APL/CAAaAD0AAAA7APL/CAAbAD0AAAA9APP/CAAbAD0AAABFAPX/CAAaAD0AAABGAPX/CAAaAD0AAABIAPb/CAAbAD0AAABTAPT/CAAbAD0AAABTAPX/CAAaAD0AAABTAPf/CAAdADUAAABXAP//CAAbAD0AAABVAP//CAAaAD0AAABVAP7/CAAbAD0AAABPAPT/CAAbAD0AAABOAPT/CAAbAD0AAABOAPL/CAAbAD0AAABHAPv/CAAaAD0AAABJAP7/CAAaAD0AAABKAP//CAAaAD0AAABOAAIACAAbAD0AAABPAAMACAAaAD0AAABMAAUACAAaAD0AAABJAA4ACAAbAD0AAABJABAACAAbAD0AAABVABcACAAaAD0AAABXABEACAAaAD0AAABWABMACAAaAD0AAABWAB0ACAAaAD0AAABTAB8ACAAaAD0AAABTACAACAAbAD0AAABTACEACAAaAD0AAABPABkACAAbAD0AAABNABkACAAbAD0AAABMABoACAAbAD0AAABLABoACAAaAD0AAABHABoACAAbAD0AAABFABwACAAbAD0AAAA+AB0ACAAaAD0AAAA9AB0ACAAbAD0AAAA9ACAACAAbAD0AAAA8ACMACAAaAD0AAAA8ACkACAAbADcAAAA9ACoACAAbAD0AAABDACsACAAaAD0AAABBACsACAAbAD0AAABIACsACAAbAD0AAABZACsACAAaAD0AAAA9ACwACAAdADwAAAA4ACwACAAaAD0AAAA2ACsACAAbAD0AAAAtACsACAAdADwAAAAvACkACAAcADwAAAArACgACAAcADwAAAAqACgACAAdADwAAAApACkACAAdADwAAAAoACkACAAdADsAAAAjACsACAAaAD0AAAAdACsACAAcADwAAAAaACcACAAcADwAAAAYACcACAAbAD0AAAARACYACAAbAD0AAAAQACUACAAaAD0AAAATACcACAAcADwAAAAMACMACAAdADwAAAAKACMACAAcADwAAAAJACMACAAdADsAAAAIAB4ACAAcADwAAAAKABwACAAXABwAAAAKAB0ACAAcADwAAAAKABkACAAbAD0AAAAKABgACAAbAD0AAAALABgACAAdADsAAAALABcACAAcADwAAAANABYACAAaAD0AAAAOABYACAAbAD0AAAAPABYACAAaAD0AAAAZABYACAAbAD0AAAAeABYACAAbAD0AAAAeABcACAAaAD0AAAAdABcACAAaAD0AAAAZABoACAAdADwAAAAaABwACAAcADwAAAAaAB0ACAAdADsAAAAbAB0ACAAdADsAAAAeAB0ACAAdADwAAAAfAB0ACAAcADwAAAAlAB8ACAAaAD0AAAApAB0ACAAcADwAAAApAB8ACAAaAD0AAAArABYACAAcADwAAAAqABUACAAbAD0AAAApABUACAAbAD0AAAAfABEACAAdADwAAAAgABEACAAbAD0AAAAmAAoACAAaAD0AAAA0AAwACAAcADwAAAA2AA0ACAAbAD0AAAA2AAwACAAcADwAAAAzABEACAAdADsAAAA0ABEACAAbAD0AAAA2ABMACAAbAD0AAAA1ABMACAAaAD0AAAAhAAIACAAdADwAAAAjAAMACAAdADsAAAAjAAAACAAbAD0AAAAyAPf/CAAcADwAAAA0APf/CAAcADwAAAA2APb/CAAdADsAAAA0APb/CAAdADwAAAA4APn/CAAdADsAAAA5APr/CAAdADsAAABFAPz/CAAcADwAAABGAP7/CAAbAD0AAABFAP7/CAAbAD0AAABEAP7/CAAbAD0AAABAAPj/CAAdADsAAABCAPT/CAAcADwAAABMAPP/CAAbAD0AAABMAPX/CAAdADwAAABLAPf/CAAbAD0AAAA3APL/CAAaAD0AAAAjAPT/CAAcADwAAAAiAPT/CAAaAD0AAAAhAPb/CAAcADwAAAAXAPn/CAAdADwAAAAWAPn/CAAcADwAAAASAPr/CAAdADsAAAARAPr/CAAaAD0AAAAQAPr/CAAdADwAAAANAPv/CAAdADwAAAAMAPr/CAAaAD0AAAAJAPX/CAAbAD0AAAAJAPj/CAAdADsAAAAJAPf/CAAdADsAAAAGAPP/CAAbAD0AAAAFAPP/CAAaAD0AAAAFAPT/CAAdADsAAAAFAPX/CAAdADwAAAD2////CAAcADwAAAD3////CAAbAD0AAAD1/wwACAAbAD0AAAD4/w8ACAAcADwAAAD4/xAACAAcADwAAAD8/xEACAAaAD0AAAD6/xAACAAdADsAAADk/xoACAAcADwAAADk/xsACAAdADwAAADk/xwACAAdADsAAADi/x8ACAAbAD0AAADh/x8ACAAcADwAAADg/yAACAAdADsAAADg/yEACAAdADsAAADf/yEACAAaAD0AAADe/x4ACAAaAD0AAADd/yAACAAaAD0AAADd/yEACAAbAD0AAADf/yYACAAcADwAAADg/yYACAAbAD0AAADg/ycACAAdADsAAADj/ygACAAbAD0AAADg/yoACAAaAD0AAADf/yoACAAbAD0AAADc/ykACAAaAD0AAAABACYACAAbAD0AAAAAACYACAAbAD0AAAD//yYACAAdADsAAAD6/ysACAAdADsAAAD7/ysACAAaAD0AAAAAACMACAAbAD0AAAAAAB4ACAAbAD0AAAAAAB8ACAAbAD0AAAAAABwACAAbAD0AAAD//xwACAAdADsAAAD//x0ACAAaAD0AAAD//yEACAAcADwAAAD+/yEACAAbAD0AAAADACYACAAcADwAAAADACcACAAbAD0AAADv/yoACAAdADwAAADy/yoACAAdADwAAADx/yoACAAaAD0AAADw/yoACAAbAD0AAAAGACsACAAcADwAAAAIACsACAAaAD0AAAAHACsACAAdADwAAAAXACwACAAdADwAAAAWACwACAAaAD0AAAAUACwACAAaAD0AAAATACwACAAdADsAAAAqACYACAAdADsAAAAtACYACAAdADwAAAAvACUACAAcADwAAAAvACQACAAaAD0AAAAvACMACAAdADwAAAA4AB4ACAAdADsAAABDABsACAAdADwAAABCABwACAAaAD0AAABIABgACAAaAD0AAABPABUACAAaAD0AAABQABUACAAdADsAAABTABcACAAdADwAAABTABgACAAdADsAAABSABcACAAdADsAAABSABgACAAcADwAAAAuABYACAAbAD0AAAAuABgACAAcADwAAAAwABcACAAdADsAAAAvABcACAAdADwAAAAjABYACAAbAD0AAAAkABcACAAdADsAAAAmABYACAAdADsAAAAlABYACAAaAD0AAAAkABUACAAdADsAAAAjABUACAAbAD0AAAAiABUACAAdADsAAAAbABIACAAaAD0AAAAcABIACAAaAD0AAAAcABMACAAaAD0AAAAdABMACAAdADsAAAAbAAsACAAcADwAAAAbAA4ACAAdADwAAAAbAA0ACAAaAD0AAAAaAAwACAAdADsAAAAVAAUACAAaAD0AAAAWAAUACAAbAD0AAAAXAAQACAAbADUAAAAMAAQACAAaAD0AAAAMAAUACAAbAD0AAAALAAUACAAdADsAAAAHAAYACAAdADsAAAAGAAYACAAbAD0AAAAFAAgACAAbAD0AAAAFAAkACAAdADsAAAAEAAoACAAdADsAAAD+/wUACAAdADsAAAD9/wUACAAaAD0AAAD9/wQACAAdADsAAAALAAoACAAdADwAAAAMAAwACAAcADwAAAAMAA0ACAAaAD0AAAAMAA8ACAAdADsAAABWABkACAAdADwAAABWABoACAAbAD0AAABVABoACAAdADsAAABLAAIACAAbAD0AAAARABgACAAbAD0AAAASABgACAAcADwAAAAWABkACAAaAD0AAAAVABcACAAdADsAAAAkACEACAAdADsAAAAjACIACAAbAD0AAAAjACMACAAdADwAAAAhACMACAAaAD0AAAAgACMACAAbAD0AAADo/ycACAAcADwAAADq/ycACAAdADwAAADp/ycACAAcADsAAADm/ywACAAaAD0AAADl/ywACAAdADwAAABBABIACAAXABwAAABAABQACAAdADwAAABCABQACAAaAD0AAAA7AA8ACAAbAD0AAAA8AA8ACAAcADwAAAA8ABAACAAbAD0AAAA+ABAACAAdADwAAABTABwACAAbAD0AAABTAB0ACAAcADsAAABQABwACAAdADsAAABPABwACAAdADwAAABcACcACAAaADYAAABPACsACAAaADcAAABEACsACAAaADUAAAA3ACsACAAaADcAAAAjACkACAAaADYAAAAPACwACAAaADUAAAANACsACAAaADYAAAD//ywACAAaADYAAADv/ywACAAaADcAAADl/ysACAAaADUAAADh/yQACAAaADYAAADa/yIACAAaADUAAADg/xkACAAaADUAAADn/xUACAAaADYAAADa////CAAaADcAAADd//z/CAAaADYAAADY//X/CAAaADUAAADY//P/CAAaADcAAADx//P/CAAaADcAAAD4//L/CAAaADcAAAD///L/CAAaADYAAAALAPT/CAAaADYAAAAKAPL/CAAaADcAAAAkAPP/CAAaADcAAABBAPP/CAAaADUAAABWAPT/CAAaADcAAABVAPb/CAAaADUAAABTAPL/CAAaADYAAABYAPX/CAAeADQAAABTAPn/CAAaADYAAABIAAEACAAaADYAAAAxAAwACAAaADYAAAAsAA0ACAAeADQAAAAoAAcACAAaADUAAAApAP7/CAAaADUAAAAXABsACAAaADYAAAAMABMACAAaADcAAAAKABMACAAaADUAAAAKAAsACAAaADYAAAAFABEACAAaADYAAAAIAB0ACAAaADUAAAAQACQACAAeADQAAAAZACYACAAaADYAAAAnACAACAAaADYAAAAwABsACAAaADYAAAAvABkACAAeADQAAAA+ABYACAAaADYAAABFAA8ACAAaADcAAABbAB0ACAATACYAAAA1ACwACAATACcAAAArACsACAATACcAAAAXACQACAAVACUAAAAJACsACAAWACUAAAAFACwACAAWACYAAADq/ywACAAUACcAAADj/yYACAAWACYAAADa/yYACAAUACcAAADc/xkACAAYACYAAADY////CAATACYAAADx//L/CAATACUAAAAGAPL/CAATACYAAAALAPP/CAAWACUAAAAYAPP/CAAWACYAAAAeAPP/CAAUACYAAAAqAPL/CAAVACcAAABAAPT/CAATACcAAABIAPP/CAATACUAAABRAPT/CAAUACcAAABTAPr/CAAVACUAAABNAPj/CAAYACYAAABEAPz/CAAWACYAAAAmAAIACAATACcAAAAkAAkACAATACcAAAA6ABIACAATACcAAAA4ABIACAAWACYAAAA/ABUACAATACYAAAA+ACkACAAWACYAAABSACoACAATACcAAABXACkACAAUACcAAAAeABwACAAYACYAAAAQABcACAAUACYAAAALABEACAAWACUAAAAIAAsACAAVACcAAAAOAAYACAAUACUAAAAcABAACAAWACYAAAAjABMACAAVACYAAAAsAB0ACAAVACcAAAAkAB0ACAAWACYAAAAOACYACAAYACUAAAABAB0ACAATACcAAADm/xwACAAVACUAAADZ/xgACAAVACUAAADc/x0ACAATACUAAAAtAPv/CAAUACcAAAAPAPP/CAAdADcAAADc/xsACAAdADUAAADc/ysACAAdADUAAAABACkACAAbADcAAAAyACsACAAdADUAAAAOAAsADQARAAMAAAAOAAwADQARAAYAAAAOAAoADQARAAIAAAAYAAwADQASAAIAAAAYAA0ADQASAAMAAAAYAA4ADQASAAYAAAATAAcADQAVAAIAAAAeACAACAAZABwAAABJAP3/CAAXABwAAAA1AA0ACAAZABwAAAD2/w8ACAAZABwAAAD//yUACAAXABwAAAAzAPf/CAAZABwAAABIABoACAAZABwAAAAsACcACAAZABwAAABYABgACAAdADUAAABVACoACAAbADcAAAAmACoACAAdADUAAABFAPT/CAAdADUAAADZ//z/CAAbADUAAAA=")
+tile_map_data = PackedByteArray("AADW/wwACAAcAD0AAADY//f/CAAcADQAAADY/yAACAAdADwAAADY/yIACAAbAD0AAADY/xkACAAdADwAAADb/xgACAAaAD0AAADe/xcACAAaAD0AAADe/xgACAAdADwAAADd/xkACAAdADwAAADa/xkACAAcADwAAADj/xcACAAaAD0AAADm/xYACAAdADwAAADu/xEACAAcADsAAADv/xEACAAdADwAAADw/xAACAAaAD0AAADa//3/CAAaAD0AAADa//z/CAAdADwAAADY//z/CAAaAD0AAADy//r/CAAbAD0AAADy//v/CAAcADwAAAD1//3/CAAaAD0AAAD1//X/CAAaAD0AAAD2//P/CAAdADwAAAAPAP//CAAaAD0AAAAJAP//CAAbAD0AAAAcAPv/CAAaAD0AAAAdAPf/CAAbAD0AAAAeAPj/CAAaAD0AAAAvAPL/CAAaAD0AAAAxAPL/CAAaAD0AAAA5APL/CAAaAD0AAAA6APL/CAAaAD0AAAA7APL/CAAbAD0AAAA9APP/CAAbAD0AAABFAPX/CAAaAD0AAABGAPX/CAAaAD0AAABIAPb/CAAbAD0AAABTAPT/CAAbAD0AAABTAPX/CAAaAD0AAABTAPf/CAAdADUAAABXAP//CAAbAD0AAABVAP//CAAaAD0AAABVAP7/CAAbAD0AAABPAPT/CAAbAD0AAABOAPT/CAAbAD0AAABOAPL/CAAbAD0AAABHAPv/CAAaAD0AAABJAP7/CAAaAD0AAABKAP//CAAaAD0AAABOAAIACAAbAD0AAABPAAMACAAaAD0AAABMAAUACAAaAD0AAABJAA4ACAAbAD0AAABJABAACAAbAD0AAABVABcACAAaAD0AAABXABEACAAaAD0AAABWABMACAAaAD0AAABWAB0ACAAaAD0AAABTAB8ACAAaAD0AAABTACAACAAbAD0AAABTACEACAAaAD0AAABPABkACAAbAD0AAABNABkACAAbAD0AAABMABoACAAbAD0AAABLABoACAAaAD0AAABHABoACAAbAD0AAABFABwACAAbAD0AAAA+AB0ACAAaAD0AAAA9AB0ACAAbAD0AAAA9ACAACAAbAD0AAAA8ACMACAAaAD0AAAA8ACkACAAbADcAAAA9ACoACAAbAD0AAABDACsACAAaAD0AAABBACsACAAbAD0AAABIACsACAAbAD0AAABZACsACAAaAD0AAAA9ACwACAAdADwAAAA4ACwACAAaAD0AAAA2ACsACAAbAD0AAAAtACsACAAdADwAAAAvACkACAAcADwAAAArACgACAAcADwAAAAqACgACAAdADwAAAApACkACAAdADwAAAAoACkACAAdADsAAAAjACsACAAaAD0AAAAdACsACAAcADwAAAAaACcACAAcADwAAAAYACcACAAbAD0AAAARACYACAAbAD0AAAAQACUACAAaAD0AAAATACcACAAcADwAAAAMACMACAAdADwAAAAKACMACAAcADwAAAAJACMACAAdADsAAAAIAB4ACAAcADwAAAAKABwACAAXABwAAAAKAB0ACAAcADwAAAAKABkACAAbAD0AAAAKABgACAAbAD0AAAALABgACAAdADsAAAALABcACAAcADwAAAANABYACAAaAD0AAAAOABYACAAbAD0AAAAPABYACAAaAD0AAAAZABYACAAbAD0AAAAeABYACAAbAD0AAAAeABcACAAaAD0AAAAdABcACAAaAD0AAAAZABoACAAdADwAAAAaABwACAAcADwAAAAaAB0ACAAdADsAAAAbAB0ACAAdADsAAAAeAB0ACAAdADwAAAAfAB0ACAAcADwAAAAlAB8ACAAaAD0AAAApAB0ACAAcADwAAAApAB8ACAAaAD0AAAArABYACAAcADwAAAAqABUACAAbAD0AAAApABUACAAbAD0AAAAfABEACAAdADwAAAAgABEACAAbAD0AAAAmAAoACAAaAD0AAAA0AAwACAAcADwAAAA2AA0ACAAbAD0AAAA2AAwACAAcADwAAAAzABEACAAdADsAAAA0ABEACAAbAD0AAAA2ABMACAAbAD0AAAA1ABMACAAaAD0AAAAhAAIACAAdADwAAAAjAAMACAAdADsAAAAjAAAACAAbAD0AAAAyAPf/CAAcADwAAAA0APf/CAAcADwAAAA2APb/CAAdADsAAAA0APb/CAAdADwAAAA4APn/CAAdADsAAAA5APr/CAAdADsAAABFAPz/CAAcADwAAABGAP7/CAAbAD0AAABFAP7/CAAbAD0AAABEAP7/CAAbAD0AAABAAPj/CAAdADsAAABCAPT/CAAcADwAAABMAPP/CAAbAD0AAABMAPX/CAAdADwAAABLAPf/CAAbAD0AAAA3APL/CAAaAD0AAAAjAPT/CAAcADwAAAAiAPT/CAAaAD0AAAAhAPb/CAAcADwAAAAXAPn/CAAdADwAAAAWAPn/CAAcADwAAAASAPr/CAAdADsAAAARAPr/CAAaAD0AAAAQAPr/CAAdADwAAAANAPv/CAAdADwAAAAMAPr/CAAaAD0AAAAJAPX/CAAbAD0AAAAJAPj/CAAdADsAAAAJAPf/CAAdADsAAAAGAPP/CAAbAD0AAAAFAPP/CAAaAD0AAAAFAPT/CAAdADsAAAAFAPX/CAAdADwAAAD2////CAAcADwAAAD3////CAAbAD0AAAD1/wwACAAbAD0AAAD4/w8ACAAcADwAAAD4/xAACAAcADwAAAD8/xEACAAaAD0AAAD6/xAACAAdADsAAADk/xoACAAcADwAAADk/xsACAAdADwAAADk/xwACAAdADsAAADi/x8ACAAbAD0AAADh/x8ACAAcADwAAADg/yAACAAdADsAAADg/yEACAAdADsAAADf/yEACAAaAD0AAADe/x4ACAAaAD0AAADd/yAACAAaAD0AAADd/yEACAAbAD0AAADf/yYACAAcADwAAADg/yYACAAbAD0AAADg/ycACAAdADsAAADj/ygACAAbAD0AAADg/yoACAAaAD0AAADf/yoACAAbAD0AAADc/ykACAAaAD0AAAABACYACAAbAD0AAAAAACYACAAbAD0AAAD//yYACAAdADsAAAD6/ysACAAdADsAAAD7/ysACAAaAD0AAAAAACMACAAbAD0AAAAAAB4ACAAbAD0AAAAAAB8ACAAbAD0AAAAAABwACAAbAD0AAAD//xwACAAdADsAAAD//x0ACAAaAD0AAAD//yEACAAcADwAAAD+/yEACAAbAD0AAAADACYACAAcADwAAAADACcACAAbAD0AAADv/yoACAAdADwAAADy/yoACAAdADwAAADx/yoACAAaAD0AAADw/yoACAAbAD0AAAAGACsACAAcADwAAAAIACsACAAaAD0AAAAHACsACAAdADwAAAAXACwACAAdADwAAAAWACwACAAaAD0AAAAUACwACAAaAD0AAAATACwACAAdADsAAAAqACYACAAdADsAAAAtACYACAAdADwAAAAvACUACAAcADwAAAAvACQACAAaAD0AAAAvACMACAAdADwAAAA4AB4ACAAdADsAAABDABsACAAdADwAAABCABwACAAaAD0AAABIABgACAAaAD0AAABPABUACAAaAD0AAABQABUACAAdADsAAABTABcACAAdADwAAABTABgACAAdADsAAABSABcACAAdADsAAABSABgACAAcADwAAAAuABYACAAbAD0AAAAuABgACAAcADwAAAAwABcACAAdADsAAAAvABcACAAdADwAAAAjABYACAAbAD0AAAAkABcACAAdADsAAAAmABYACAAdADsAAAAlABYACAAaAD0AAAAkABUACAAdADsAAAAjABUACAAbAD0AAAAiABUACAAdADsAAAAbABIACAAaAD0AAAAcABIACAAaAD0AAAAcABMACAAaAD0AAAAdABMACAAdADsAAAAbAAsACAAcADwAAAAbAA4ACAAdADwAAAAbAA0ACAAaAD0AAAAaAAwACAAdADsAAAAVAAUACAAaAD0AAAAWAAUACAAbAD0AAAAXAAQACAAbADUAAAAMAAQACAAaAD0AAAAMAAUACAAbAD0AAAALAAUACAAdADsAAAAHAAYACAAdADsAAAAGAAYACAAbAD0AAAAFAAgACAAbAD0AAAAFAAkACAAdADsAAAAEAAoACAAdADsAAAD+/wUACAAdADsAAAD9/wUACAAaAD0AAAD9/wQACAAdADsAAAALAAoACAAdADwAAAAMAAwACAAcADwAAAAMAA0ACAAaAD0AAAAMAA8ACAAdADsAAABWABkACAAdADwAAABWABoACAAbAD0AAABVABoACAAdADsAAABLAAIACAAbAD0AAAARABgACAAbAD0AAAASABgACAAcADwAAAAWABkACAAaAD0AAAAVABcACAAdADsAAAAkACEACAAdADsAAAAjACIACAAbAD0AAAAjACMACAAdADwAAAAhACMACAAaAD0AAAAgACMACAAbAD0AAADo/ycACAAcADwAAADq/ycACAAdADwAAADp/ycACAAcADsAAADm/ywACAAaAD0AAADl/ywACAAdADwAAABBABIACAAXABwAAABAABQACAAdADwAAABCABQACAAaAD0AAAA7AA8ACAAbAD0AAAA8AA8ACAAcADwAAAA8ABAACAAbAD0AAAA+ABAACAAdADwAAABTABwACAAbAD0AAABTAB0ACAAcADsAAABQABwACAAdADsAAABPABwACAAdADwAAABcACcACAAaADYAAABPACsACAAaADcAAABEACsACAAaADUAAAA3ACsACAAaADcAAAAjACkACAAaADYAAAAPACwACAAaADUAAAANACsACAAaADYAAAD//ywACAAaADYAAADv/ywACAAaADcAAADl/ysACAAaADUAAADh/yQACAAaADYAAADa/yIACAAaADUAAADg/xkACAAaADUAAADn/xUACAAaADYAAADa////CAAaADcAAADd//z/CAAaADYAAADY//X/CAAaADUAAADY//P/CAAaADcAAADx//P/CAAaADcAAAD4//L/CAAaADcAAAD///L/CAAaADYAAAALAPT/CAAaADYAAAAKAPL/CAAaADcAAAAkAPP/CAAaADcAAABBAPP/CAAaADUAAABWAPT/CAAaADcAAABVAPb/CAAaADUAAABTAPL/CAAaADYAAABYAPX/CAAeADQAAABTAPn/CAAaADYAAABIAAEACAAaADYAAAAxAAwACAAaADYAAAAsAA0ACAAeADQAAAAoAAcACAAaADUAAAApAP7/CAAaADUAAAAXABsACAAaADYAAAAMABMACAAaADcAAAAKABMACAAaADUAAAAKAAsACAAaADYAAAAFABEACAAaADYAAAAIAB0ACAAaADUAAAAQACQACAAeADQAAAAZACYACAAaADYAAAAnACAACAAaADYAAAAwABsACAAaADYAAAAvABkACAAeADQAAAA+ABYACAAaADYAAABFAA8ACAAaADcAAABbAB0ACAATACYAAAA1ACwACAATACcAAAArACsACAATACcAAAAXACQACAAVACUAAAAJACsACAAWACUAAAAFACwACAAWACYAAADq/ywACAAUACcAAADj/yYACAAWACYAAADa/yYACAAUACcAAADc/xkACAAYACYAAADY////CAATACYAAADx//L/CAATACUAAAAGAPL/CAATACYAAAALAPP/CAAWACUAAAAYAPP/CAAWACYAAAAeAPP/CAAUACYAAAAqAPL/CAAVACcAAABAAPT/CAATACcAAABIAPP/CAATACUAAABRAPT/CAAUACcAAABTAPr/CAAVACUAAABNAPj/CAAYACYAAABEAPz/CAAWACYAAAAmAAIACAATACcAAAAkAAkACAATACcAAAA6ABIACAATACcAAAA4ABIACAAWACYAAAA/ABUACAATACYAAAA+ACkACAAWACYAAABSACoACAATACcAAABXACkACAAUACcAAAAeABwACAAYACYAAAAQABcACAAUACYAAAALABEACAAWACUAAAAIAAsACAAVACcAAAAOAAYACAAUACUAAAAcABAACAAWACYAAAAjABMACAAVACYAAAAsAB0ACAAVACcAAAAkAB0ACAAWACYAAAAOACYACAAYACUAAAABAB0ACAATACcAAADm/xwACAAVACUAAADZ/xgACAAVACUAAADc/x0ACAATACUAAAAtAPv/CAAUACcAAAAPAPP/CAAdADcAAADc/xsACAAdADUAAADc/ysACAAdADUAAAABACkACAAbADcAAAAyACsACAAdADUAAAAOAAsADQARAAMAAAAOAAwADQARAAYAAAAOAAoADQARAAIAAAAYAAwADQASAAIAAAAYAA0ADQASAAMAAAAYAA4ADQASAAYAAAATAAcADQAVAAIAAAAeACAACAAZABwAAAA1AA0ACAAZABwAAAD//yUACAAXABwAAAAzAPf/CAAZABwAAABIABoACAAZABwAAAAsACcACAAZABwAAABYABgACAAdADUAAABVACoACAAbADcAAAAmACoACAAdADUAAABFAPT/CAAdADUAAADZ//z/CAAbADUAAABLAP3/CAAXABwAAAD7/xAACAAZABwAAAA=")
 tile_set = ExtResource("1_x5tmx")
 
 [node name="Chaarger" type="TileMapLayer" parent="Y-sort"]
@@ -739,44 +766,203 @@ label_settings = SubResource("LabelSettings_fitt0")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Quest" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
+[node name="Quest" type="Area2D" parent="Y-sort/Enviroment Manager/Day_1"]
 y_sort_enabled = true
 position = Vector2(-508, 3)
+script = ExtResource("8_c0skq")
 quest_id = "trash_1"
 disappear_when_completed = true
 
-[node name="Quest2" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_1/Quest"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_1/Quest/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_1/Quest"]
+position = Vector2(0, 16)
+texture = ExtResource("30_r0bl7")
+offset = Vector2(0, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_1/Quest"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_1/Quest"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_1/Quest"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_1/Quest/StaticBody2D"]
+position = Vector2(0, 8.475)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
+
+[node name="Quest2" type="Area2D" parent="Y-sort/Enviroment Manager/Day_1"]
 y_sort_enabled = true
 position = Vector2(-238, 513)
+script = ExtResource("8_c0skq")
 quest_id = "trash_2"
 required_qte_count = 2
 disappear_when_completed = true
 
-[node name="Quest3" parent="Y-sort/Enviroment Manager/Day_1" instance=ExtResource("6_bn031")]
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_1/Quest2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_1/Quest2/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_1/Quest2"]
+position = Vector2(0, 6.355)
+texture = ExtResource("9_wx3gr")
+offset = Vector2(0, -6.7)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_1/Quest2"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_1/Quest2"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_1/Quest2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_1/Quest2/StaticBody2D"]
+position = Vector2(0, 4.5)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
+
+[node name="Quest3" type="Area2D" parent="Y-sort/Enviroment Manager/Day_1"]
 y_sort_enabled = true
 position = Vector2(556, 651)
+script = ExtResource("8_c0skq")
 quest_id = "trash_3"
 required_qte_count = 2
 disappear_when_completed = true
 
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_1/Quest3"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_1/Quest3/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_1/Quest3"]
+position = Vector2(0, 11)
+texture = ExtResource("10_an4wy")
+offset = Vector2(0, -6.8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_1/Quest3"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_1/Quest3"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
 [node name="Day_2" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
 
-[node name="Quest4" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
+[node name="Quest4" type="Area2D" parent="Y-sort/Enviroment Manager/Day_2"]
 y_sort_enabled = true
 position = Vector2(118, 106)
+script = ExtResource("8_c0skq")
 quest_id = "trash_4"
 quest_day = 2
 required_qte_count = 2
 disappear_when_completed = true
 
-[node name="Quest5" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_2/Quest4"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_2/Quest4/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_2/Quest4"]
+position = Vector2(0, 8.3)
+texture = ExtResource("11_ndtox")
+offset = Vector2(0, -8.3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_2/Quest4"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_2/Quest4"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_2/Quest4"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_2/Quest4/StaticBody2D"]
+position = Vector2(0, 5.805)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
+
+[node name="Quest5" type="Area2D" parent="Y-sort/Enviroment Manager/Day_2"]
 y_sort_enabled = true
 position = Vector2(64, 452)
+script = ExtResource("8_c0skq")
 quest_id = "trash_5"
 quest_day = 2
 required_qte_count = 2
 disappear_when_completed = true
+
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_2/Quest5"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_2/Quest5/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_2/Quest5"]
+position = Vector2(0, 16)
+texture = ExtResource("12_hupwu")
+offset = Vector2(0, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_2/Quest5"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_2/Quest5"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_2/Quest5"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_2/Quest5/StaticBody2D"]
+position = Vector2(0, 11.445)
+rotation = 1.72788
+scale = Vector2(1, 1.745)
+shape = SubResource("CapsuleShape2D_glqdk")
 
 [node name="NPC" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("11_a06rh")]
 y_sort_enabled = true
@@ -786,13 +972,39 @@ quest_day = 2
 dialogue_resource = "res://Dialogues/STREET_MUSICIAN.dialogue"
 minigame_scene = ExtResource("9_str8g")
 
-[node name="Quest6" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("6_bn031")]
+[node name="Quest6" type="Area2D" parent="Y-sort/Enviroment Manager/Day_2"]
 y_sort_enabled = true
 position = Vector2(930, 321)
+script = ExtResource("8_c0skq")
 quest_id = "trash_6"
 quest_day = 2
 required_qte_count = 1
 disappear_when_completed = true
+
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_2/Quest6"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_2/Quest6/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_2/Quest6"]
+position = Vector2(0, 10.005)
+texture = ExtResource("10_an4wy")
+offset = Vector2(0, -6.3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_2/Quest6"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_2/Quest6"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
 
 [node name="NPC2" parent="Y-sort/Enviroment Manager/Day_2" instance=ExtResource("11_a06rh")]
 y_sort_enabled = true
@@ -805,13 +1017,46 @@ minigame_scene = ExtResource("10_1mhad")
 [node name="Day_3" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
 
-[node name="Quest7" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
+[node name="Quest7" type="Area2D" parent="Y-sort/Enviroment Manager/Day_3"]
 y_sort_enabled = true
 position = Vector2(-682, 718)
+script = ExtResource("8_c0skq")
 quest_id = "trash_7"
 quest_day = 3
 required_qte_count = 2
 disappear_when_completed = true
+
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_3/Quest7"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_3/Quest7/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_3/Quest7"]
+position = Vector2(0, 10.69)
+texture = ExtResource("9_wx3gr")
+offset = Vector2(0, -7.8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_3/Quest7"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_3/Quest7"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_3/Quest7"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_3/Quest7/StaticBody2D"]
+position = Vector2(0, 6.6)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
 
 [node name="NPC3" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("11_a06rh")]
 y_sort_enabled = true
@@ -823,13 +1068,46 @@ minigame_scene = ExtResource("11_w8up7")
 has_minigame = false
 reward_item_name = "things"
 
-[node name="Quest8" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
+[node name="Quest8" type="Area2D" parent="Y-sort/Enviroment Manager/Day_3"]
 y_sort_enabled = true
 position = Vector2(234, 733)
+script = ExtResource("8_c0skq")
 quest_id = "trash_8"
 quest_day = 3
 required_qte_count = 1
-disappear_when_completed = true
+completed_texture = ExtResource("17_1w6na")
+
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_3/Quest8"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_3/Quest8/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_3/Quest8"]
+position = Vector2(0, 16)
+texture = ExtResource("18_pgram")
+offset = Vector2(0, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_3/Quest8"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_3/Quest8"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_3/Quest8"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_3/Quest8/StaticBody2D"]
+position = Vector2(0, 13.275)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
 
 [node name="NPC4" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("11_a06rh")]
 y_sort_enabled = true
@@ -839,24 +1117,90 @@ quest_day = 3
 dialogue_resource = "res://Dialogues/OLD_LADY.dialogue"
 minigame_scene = ExtResource("12_v8thk")
 
-[node name="Quest9" parent="Y-sort/Enviroment Manager/Day_3" instance=ExtResource("6_bn031")]
+[node name="Quest9" type="Area2D" parent="Y-sort/Enviroment Manager/Day_3"]
 y_sort_enabled = true
 position = Vector2(1097, 748)
+script = ExtResource("8_c0skq")
 quest_id = "trash_9"
 quest_day = 3
 required_qte_count = 2
 disappear_when_completed = true
 
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_3/Quest9"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_3/Quest9/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_3/Quest9"]
+position = Vector2(0, 16)
+texture = ExtResource("20_v0sel")
+offset = Vector2(0, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_3/Quest9"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_3/Quest9"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_3/Quest9"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_3/Quest9/StaticBody2D"]
+position = Vector2(0, 8.765)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
+
 [node name="Day_4" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
 
-[node name="Quest10" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+[node name="Quest10" type="Area2D" parent="Y-sort/Enviroment Manager/Day_4"]
 y_sort_enabled = true
 position = Vector2(448, 10)
+script = ExtResource("8_c0skq")
 quest_id = "trash_10"
 quest_day = 4
 required_qte_count = 2
 disappear_when_completed = true
+
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_4/Quest10"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_4/Quest10/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_4/Quest10"]
+position = Vector2(0, 8.295)
+texture = ExtResource("21_2juux")
+offset = Vector2(0, -7.8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_4/Quest10"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_4/Quest10"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_4/Quest10"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_4/Quest10/StaticBody2D"]
+position = Vector2(0, 5.225)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
 
 [node name="NPC5" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("11_a06rh")]
 y_sort_enabled = true
@@ -869,13 +1213,47 @@ has_minigame = false
 reward_item_name = "item1"
 reward_item_icon = ExtResource("8_44b7a")
 
-[node name="Quest11" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+[node name="Quest11" type="Area2D" parent="Y-sort/Enviroment Manager/Day_4"]
 y_sort_enabled = true
 position = Vector2(754, 72)
+script = ExtResource("8_c0skq")
 quest_id = "trash_11"
 quest_day = 4
 required_qte_count = 2
 disappear_when_completed = true
+
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_4/Quest11"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_4/Quest11/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_4/Quest11"]
+position = Vector2(0, 8.08)
+texture = ExtResource("9_wx3gr")
+offset = Vector2(0, -7.7)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_4/Quest11"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_4/Quest11"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_4/Quest11"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_4/Quest11/StaticBody2D"]
+position = Vector2(0, 5.015)
+rotation = 1.5708
+scale = Vector2(1, 0.895)
+shape = SubResource("CapsuleShape2D_glqdk")
 
 [node name="NPC6" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("11_a06rh")]
 y_sort_enabled = true
@@ -885,31 +1263,91 @@ quest_day = 4
 dialogue_resource = "res://Dialogues/DAYDREAMER.dialogue"
 minigame_scene = ExtResource("11_f82wf")
 
-[node name="Quest12" parent="Y-sort/Enviroment Manager/Day_4" instance=ExtResource("6_bn031")]
+[node name="Quest12" type="Area2D" parent="Y-sort/Enviroment Manager/Day_4"]
 y_sort_enabled = true
-position = Vector2(1175, 550)
+position = Vector2(1193.58, 545.35)
+script = ExtResource("8_c0skq")
 quest_id = "trash_12"
 quest_day = 4
 disappear_when_completed = true
 
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_4/Quest12"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_4/Quest12/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_4/Quest12"]
+position = Vector2(0, 16)
+texture = ExtResource("12_hupwu")
+offset = Vector2(0, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_4/Quest12"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_4/Quest12"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_4/Quest12"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_4/Quest12/StaticBody2D"]
+position = Vector2(0, 8.475)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
+
 [node name="Day_5" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
 
-[node name="Quest13" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+[node name="Quest13" type="Area2D" parent="Y-sort/Enviroment Manager/Day_5"]
 y_sort_enabled = true
 position = Vector2(992, 61)
+script = ExtResource("8_c0skq")
 quest_id = "trash_13"
 quest_day = 5
 required_qte_count = 2
 disappear_when_completed = true
 
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_5/Quest13"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_5/Quest13/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_5/Quest13"]
+position = Vector2(0, 10.77)
+texture = ExtResource("10_an4wy")
+offset = Vector2(0, -6.8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_5/Quest13"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_5/Quest13"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
 [node name="walkin_npc" type="CharacterBody2D" parent="Y-sort/Enviroment Manager/Day_5"]
 y_sort_enabled = true
 position = Vector2(695, 76)
 collision_layer = 4
-collision_mask = 2
-script = ExtResource("12_kt5mi")
+collision_mask = 4
+script = ExtResource("16_ahy42")
 waypoints = Array[Vector2]([Vector2(977, -55), Vector2(1162, -55), Vector2(1162, 40), Vector2(1700, 40)])
+wait_time_at_waypoint = 3.0
 initial_wait_time = 50.0
 label_text = "สวัสดี เจ้าหุ่น"
 
@@ -925,13 +1363,46 @@ position = Vector2(0, -1)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_77buh")
 
-[node name="Quest14" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+[node name="Quest14" type="Area2D" parent="Y-sort/Enviroment Manager/Day_5"]
 y_sort_enabled = true
 position = Vector2(-618, 465)
+script = ExtResource("8_c0skq")
 quest_id = "trash_14"
 quest_day = 5
 required_qte_count = 2
 disappear_when_completed = true
+
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_5/Quest14"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_5/Quest14/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_5/Quest14"]
+position = Vector2(0, 16)
+texture = ExtResource("9_wx3gr")
+offset = Vector2(0, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_5/Quest14"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_5/Quest14"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_5/Quest14"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_5/Quest14/StaticBody2D"]
+position = Vector2(0, 4.64)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
 
 [node name="NPC7" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("11_a06rh")]
 y_sort_enabled = true
@@ -941,13 +1412,39 @@ quest_day = 5
 dialogue_resource = "res://Dialogues/OLD_MAN.dialogue"
 minigame_scene = ExtResource("11_w8up7")
 
-[node name="Quest15" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("6_bn031")]
+[node name="Quest15" type="Area2D" parent="Y-sort/Enviroment Manager/Day_5"]
 y_sort_enabled = true
 position = Vector2(-297, 167)
+script = ExtResource("8_c0skq")
 quest_id = "trash_15"
 quest_day = 5
 required_qte_count = 2
 disappear_when_completed = true
+
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_5/Quest15"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_5/Quest15/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_5/Quest15"]
+position = Vector2(0, 10.58)
+texture = ExtResource("10_an4wy")
+offset = Vector2(0, -7)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_5/Quest15"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_5/Quest15"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
 
 [node name="NPC8" parent="Y-sort/Enviroment Manager/Day_5" instance=ExtResource("11_a06rh")]
 y_sort_enabled = true
@@ -963,27 +1460,116 @@ reward_item_icon = ExtResource("8_44b7a")
 [node name="Day_6" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
 
-[node name="Quest16" parent="Y-sort/Enviroment Manager/Day_6" instance=ExtResource("6_bn031")]
-visible = false
+[node name="walkin_npc2" type="CharacterBody2D" parent="Y-sort/Enviroment Manager/Day_6"]
+y_sort_enabled = true
+position = Vector2(-384.135, 123.43)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("12_kt5mi")
+waypoints = Array[Vector2]([Vector2(-102, -180), Vector2(50, -115), Vector2(550, -115)])
+wait_time_at_waypoint = 10.0
+initial_wait_time = 40.0
+label_text = "2%^##&*$"
+
+[node name="AnimatedSprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_6/walkin_npc2"]
+position = Vector2(0.135012, -8.645)
+scale = Vector2(12, 17.57)
+texture = SubResource("PlaceholderTexture2D_cgtk2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_6/walkin_npc2"]
+position = Vector2(0, -1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_77buh")
+
+[node name="Quest16" type="Area2D" parent="Y-sort/Enviroment Manager/Day_6"]
 y_sort_enabled = true
 position = Vector2(-508, 3)
+script = ExtResource("8_c0skq")
 quest_id = "trash_16"
 quest_day = 6
+completed_texture = ExtResource("28_s1q5c")
 disappear_when_completed = true
 
-[node name="Quest17" parent="Y-sort/Enviroment Manager/Day_6" instance=ExtResource("6_bn031")]
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_6/Quest16"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_6/Quest16/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_6/Quest16"]
+position = Vector2(-3, 10.865)
+texture = ExtResource("29_8n6oa")
+offset = Vector2(0, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_6/Quest16"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_6/Quest16"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_6/Quest16"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_6/Quest16/StaticBody2D"]
+position = Vector2(-2.505, 7.46)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
+
+[node name="Quest17" type="Area2D" parent="Y-sort/Enviroment Manager/Day_6"]
 y_sort_enabled = true
 position = Vector2(-238, 513)
+script = ExtResource("8_c0skq")
 quest_id = "trash_17"
 quest_day = 6
+completed_texture = ExtResource("30_44wcw")
 disappear_when_completed = true
 
+[node name="ArrowHideArea" type="Area2D" parent="Y-sort/Enviroment Manager/Day_6/Quest17"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_6/Quest17/ArrowHideArea"]
+shape = SubResource("CircleShape2D_gemwu")
+debug_color = Color(0.673605, 0.496706, 0.292689, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_6/Quest17"]
+position = Vector2(0, 16)
+texture = ExtResource("31_r58al")
+offset = Vector2(0, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_6/Quest17"]
+position = Vector2(0, 4.45)
+shape = SubResource("CircleShape2D_n12k0")
+debug_color = Color(0.769417, 0.33207, 0.755254, 0.42)
+
+[node name="Label" type="Label" parent="Y-sort/Enviroment Manager/Day_6/Quest17"]
+z_index = 100
+offset_left = 12.0
+offset_top = -33.0
+offset_right = 52.0
+offset_bottom = -10.0
+text = "กด E"
+label_settings = SubResource("LabelSettings_udh02")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_6/Quest17"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Y-sort/Enviroment Manager/Day_6/Quest17/StaticBody2D"]
+position = Vector2(0, 10.365)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_glqdk")
+
 [node name="walkin_npc" type="CharacterBody2D" parent="Y-sort/Enviroment Manager/Day_6"]
-position = Vector2(-517, 539)
+position = Vector2(-531.435, 539)
 collision_layer = 4
 collision_mask = 8
 script = ExtResource("18_08d0n")
 waypoints = Array[Vector2]([Vector2(10, 390)])
+move_speed = 80.0
 wait_time_at_waypoint = 1.0
 has_dialogue = true
 dialogue_resource = "res://Dialogues/iknownyou.dialogue"
@@ -993,8 +1579,8 @@ is_ending_npc = true
 ending_delay = 0.0
 
 [node name="AnimatedSprite2D" type="Sprite2D" parent="Y-sort/Enviroment Manager/Day_6/walkin_npc"]
-position = Vector2(-7.06315e-06, 209.25)
-scale = Vector2(8.00001, 14.5)
+position = Vector2(-1.25468e-05, 274.499)
+scale = Vector2(12, 19)
 texture = SubResource("PlaceholderTexture2D_gtgks")
 offset = Vector2(0, -15)
 
@@ -1054,9 +1640,9 @@ shape = SubResource("CircleShape2D_pyg5m")
 debug_color = Color(0.806585, 0.398604, 0.318059, 0.42)
 
 [node name="Label" type="Label" parent="Charger"]
-offset_left = 266.0
-offset_top = -160.0
-offset_right = 306.0
-offset_bottom = -137.0
+offset_left = 198.0
+offset_top = -165.0
+offset_right = 238.0
+offset_bottom = -142.0
 text = "TEXT"
 label_settings = SubResource("LabelSettings_4g22t")

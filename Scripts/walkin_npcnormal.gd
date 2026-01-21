@@ -13,7 +13,7 @@ extends CharacterBody2D
 @export var label_offset_y: float = -40.0
 @export var fade_duration: float = 0.3
 
-#@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
 
 var current_waypoint_index: int = 0
 var is_waiting: bool = false
@@ -78,7 +78,7 @@ func _create_detection_area():
 func _physics_process(delta):
 	if waypoints.size() == 0 or not is_moving or is_waiting:
 		velocity = Vector2.ZERO
-		#_play_idle_animation()
+		_play_idle_animation()
 		move_and_slide()
 		return
 	
@@ -91,7 +91,7 @@ func _physics_process(delta):
 	
 	velocity = direction * move_speed
 	last_direction = direction
-	#_play_walk_animation(direction)
+	_play_walk_animation(direction)
 	move_and_slide()
 
 func _reach_waypoint():
@@ -100,12 +100,12 @@ func _reach_waypoint():
 	if current_waypoint_index >= waypoints.size():
 		is_moving = false
 		velocity = Vector2.ZERO
-		#_play_idle_animation()
+		_play_idle_animation()
 		return
 	
 	is_waiting = true
 	velocity = Vector2.ZERO
-	#_play_idle_animation()
+	_play_idle_animation()
 	
 	await get_tree().create_timer(wait_time_at_waypoint).timeout
 	is_waiting = false
@@ -138,36 +138,36 @@ func _fade_out_label():
 	await tween.finished
 	label.visible = false
 
-#func _play_walk_animation(dir: Vector2):
-	#if not sprite or not sprite.sprite_frames:
-		#return
-	#
-	#var frames = sprite.sprite_frames
-	#
-	#if abs(dir.x) > abs(dir.y):
-		#if dir.x > 0 and frames.has_animation("walk_right"):
-			#sprite.play("walk_right")
-		#elif dir.x < 0 and frames.has_animation("walk_left"):
-			#sprite.play("walk_left")
-	#else:
-		#if dir.y > 0 and frames.has_animation("walk_down"):
-			#sprite.play("walk_down")
-		#elif dir.y < 0 and frames.has_animation("walk_up"):
-			#sprite.play("walk_up")
-#
-#func _play_idle_animation():
-	#if not sprite or not sprite.sprite_frames:
-		#return
-	#
-	#var frames = sprite.sprite_frames
-	#
-	#if abs(last_direction.x) > abs(last_direction.y):
-		#if last_direction.x > 0 and frames.has_animation("idle_right"):
-			#sprite.play("idle_right")
-		#elif last_direction.x < 0 and frames.has_animation("idle_left"):
-			#sprite.play("idle_left")
-	#else:
-		#if last_direction.y > 0 and frames.has_animation("idle_down"):
-			#sprite.play("idle_down")
-		#elif last_direction.y < 0 and frames.has_animation("idle_up"):
-			#sprite.play("idle_up")
+func _play_walk_animation(dir: Vector2):
+	if not sprite or not sprite.sprite_frames:
+		return
+	
+	var frames = sprite.sprite_frames
+	
+	if abs(dir.x) > abs(dir.y):
+		if dir.x > 0 and frames.has_animation("walk_right"):
+			sprite.play("walk_right")
+		elif dir.x < 0 and frames.has_animation("walk_left"):
+			sprite.play("walk_left")
+	else:
+		if dir.y > 0 and frames.has_animation("walk_down"):
+			sprite.play("walk_down")
+		elif dir.y < 0 and frames.has_animation("walk_up"):
+			sprite.play("walk_up")
+
+func _play_idle_animation():
+	if not sprite or not sprite.sprite_frames:
+		return
+	
+	var frames = sprite.sprite_frames
+	
+	if abs(last_direction.x) > abs(last_direction.y):
+		if last_direction.x > 0 and frames.has_animation("idle_right"):
+			sprite.play("idle_right")
+		elif last_direction.x < 0 and frames.has_animation("idle_left"):
+			sprite.play("idle_left")
+	else:
+		if last_direction.y > 0 and frames.has_animation("idle_down"):
+			sprite.play("idle_down")
+		elif last_direction.y < 0 and frames.has_animation("idle_up"):
+			sprite.play("idle_up")
