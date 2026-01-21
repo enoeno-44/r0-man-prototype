@@ -2,7 +2,6 @@
 extends Area2D
 
 @onready var label = $Label
-@onready var sprite = $Sprite2D
 
 var player_in_range: bool = false
 
