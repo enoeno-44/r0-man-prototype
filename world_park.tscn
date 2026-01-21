@@ -759,10 +759,6 @@ quest_id = "trash_3"
 required_qte_count = 2
 disappear_when_completed = true
 
-[node name="TileMapLayer" type="TileMapLayer" parent="Y-sort/Enviroment Manager/Day_1"]
-tile_map_data = PackedByteArray("AADO/xAACgAAAAEAAADc/xYACgAAAAUAAADZ/wkACgAKAAAAAADb/wkACgAWAAQAAABLABoACgASAAkAAABLAAYACgAGAAUAAAA=")
-tile_set = ExtResource("1_x5tmx")
-
 [node name="Day_2" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
 
@@ -805,10 +801,6 @@ quest_id = "npc_2_day2"
 quest_day = 2
 dialogue_resource = "res://Dialogues/ENGINEER.dialogue"
 minigame_scene = ExtResource("10_1mhad")
-
-[node name="TileMapLayer2" type="TileMapLayer" parent="Y-sort/Enviroment Manager/Day_2"]
-tile_map_data = PackedByteArray("AADS/xQACgAGAAUAAADc/xAACgAMAAEAAADb/wkACgAWAAQAAADS/xAACgASAAkAAABLABoACgASAAkAAABLABQACgAMAAUAAABLAAQACgASAAEAAAA=")
-tile_set = ExtResource("1_x5tmx")
 
 [node name="Day_3" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
@@ -855,9 +847,6 @@ quest_day = 3
 required_qte_count = 2
 disappear_when_completed = true
 
-[node name="TileMapLayer3" type="TileMapLayer" parent="Y-sort/Enviroment Manager/Day_3"]
-tile_set = ExtResource("1_x5tmx")
-
 [node name="Day_4" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
 
@@ -902,10 +891,6 @@ position = Vector2(1175, 550)
 quest_id = "trash_12"
 quest_day = 4
 disappear_when_completed = true
-
-[node name="TileMapLayer4" type="TileMapLayer" parent="Y-sort/Enviroment Manager/Day_4"]
-tile_map_data = PackedByteArray("AADS/xAACgASAAEAAADc/xQACgAMAAUAAADZ/wkACgAWAAgAAADR/wkACgAKAAAAAADO/xgACgAMAAUAAABLABoACgASAAEAAABLAAoACgAMAAkAAABLAAYACgAGAAUAAAA=")
-tile_set = ExtResource("1_x5tmx")
 
 [node name="Day_5" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
@@ -975,10 +960,6 @@ has_minigame = false
 reward_item_name = "item2"
 reward_item_icon = ExtResource("8_44b7a")
 
-[node name="TileMapLayer5" type="TileMapLayer" parent="Y-sort/Enviroment Manager/Day_5"]
-tile_map_data = PackedByteArray("AADd/xQACgAGAAUAAADO/xIACgAMAAEAAADV/wkACgAKAAAAAADb/wkACgAKAAgAAADS/xgACgASAAkAAABLAAgACgASAAkAAABLAAQACgASAAUAAABLABoACgAGAAUAAAA=")
-tile_set = ExtResource("1_x5tmx")
-
 [node name="Day_6" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
 
@@ -1021,10 +1002,6 @@ offset = Vector2(0, -15)
 position = Vector2(0, -1)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_p7m4t")
-
-[node name="TileMapLayer6" type="TileMapLayer" parent="Y-sort/Enviroment Manager/Day_6"]
-tile_map_data = PackedByteArray("AABLABgACgAGAAUAAABLABQACgASAAEAAABLAAYACgASAAUAAADS/xYACgAGAAUAAADO/xAACgAAAAEAAADc/xYACgAMAAUAAADX/wkACgAWAAgAAADc/xAACgAAAAkAAAA=")
-tile_set = ExtResource("1_x5tmx")
 
 [node name="fences" type="TileMapLayer" parent="Y-sort" groups=["glitchable"]]
 y_sort_enabled = true
