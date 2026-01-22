@@ -1,0 +1,188 @@
+[gd_scene load_steps=3 format=3 uid="uid://bjy3cmrmukoup"]
+
+[ext_resource type="FontFile" uid="uid://ngxarfbccvdp" path="res://Resources/Fonts/2005_iannnnnCPU.ttf" id="1_p3d11"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ayq2s"]
+font = ExtResource("1_p3d11")
+font_size = 96
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.101961, 0.101961, 0.180392, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(400, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -41.5
+offset_right = 20.0
+offset_bottom = 41.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "R0-MAN"
+label_settings = SubResource("LabelSettings_ayq2s")
+horizontal_alignment = 1
+
+[node name="PlayButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(250, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("1_p3d11")
+theme_override_font_sizes/font_size = 48
+text = "เริ่มเกมใหม่"
+
+[node name="ContinueButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("1_p3d11")
+theme_override_font_sizes/font_size = 32
+text = "เล่นต่อ"
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("1_p3d11")
+theme_override_font_sizes/font_size = 32
+text = "ตั้งค่า"
+
+[node name="LoadButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(250, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("1_p3d11")
+theme_override_font_sizes/font_size = 32
+text = "โหลดเกม"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("1_p3d11")
+theme_override_font_sizes/font_size = 32
+text = "ออกจากเกม"
+
+[node name="SettingsPanel" type="Panel" parent="."]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsPanel"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -77.0
+offset_right = 150.0
+offset_bottom = 103.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="HBoxContainer Music" type="HBoxContainer" parent="SettingsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = 26
+alignment = 1
+
+[node name="MusicLabel" type="Label" parent="SettingsPanel/VBoxContainer/HBoxContainer Music"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_p3d11")
+theme_override_font_sizes/font_size = 24
+text = "เสียงเพลง"
+horizontal_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="SettingsPanel/VBoxContainer/HBoxContainer Music"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+value = 100.0
+
+[node name="HBoxContainer SFX" type="HBoxContainer" parent="SettingsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="SFXLabel" type="Label" parent="SettingsPanel/VBoxContainer/HBoxContainer SFX"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_p3d11")
+theme_override_font_sizes/font_size = 24
+text = "เสียงเอฟเฟค"
+horizontal_alignment = 1
+
+[node name="SFXSlider" type="HSlider" parent="SettingsPanel/VBoxContainer/HBoxContainer SFX"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+value = 100.0
+
+[node name="BackButton" type="Button" parent="SettingsPanel/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("1_p3d11")
+theme_override_font_sizes/font_size = 32
+text = "ปิด"
+
+[node name="LoadPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="LoadPanel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LoadPanel/ScrollContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="LoadPanel"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
