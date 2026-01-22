@@ -34,6 +34,7 @@ func _try_advance_day():
 	if DayManager.can_advance_day():
 		print("[Charger] กำลังเปลี่ยนวัน...")
 		label.hide()
+		SaveManager.save_game()
 		DayManager.advance_to_next_day()
 	else:
 		var completed = DayManager.get_completed_count()

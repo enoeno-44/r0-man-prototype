@@ -11,14 +11,12 @@ extends CanvasLayer
 @export var text_fade_duration: float = 0.5
 
 var is_transitioning: bool = false
+var auto_opening_enabled: bool = false
 
 func _ready():
 	layer = 90
 	_create_ui()
 	call_deferred("_connect_signals")
-	
-	await get_tree().process_frame
-	opening_fade_in()
 
 func _create_ui():
 	fade_rect = ColorRect.new()
@@ -27,20 +25,19 @@ func _create_ui():
 	fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fade_rect)
 	
-	# Label สำหรับ Chapter (ตัวใหญ่)
 	chapter_label = Label.new()
 	chapter_label.name = "ChapterLabel"
 	chapter_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	chapter_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	add_child(chapter_label)
 	
-	# Label สำหรับวันที่ (ตัวเล็ก)
 	date_label = Label.new()
 	date_label.name = "DateLabel"
 	date_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	date_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	add_child(date_label)
 	
+	# ✅ เริ่มต้นด้วยหน้าจอโปร่งใส (จะถูกตั้งค่าเป็นดำโดย main_menu ถ้าจำเป็น)
 	fade_rect.modulate.a = 0.0
 	chapter_label.modulate.a = 0.0
 	date_label.modulate.a = 0.0
@@ -60,46 +57,54 @@ func _on_viewport_size_changed():
 		fade_rect.position = Vector2.ZERO
 	
 	if chapter_label:
-		# Chapter อยู่ตรงกลาง ตัวใหญ่
 		chapter_label.size = viewport_size
 		chapter_label.position = Vector2.ZERO
-		var chapter_font_size = int(viewport_size.y / 12)  # ตัวใหญ่
+		var chapter_font_size = int(viewport_size.y / 12)
 		chapter_label.add_theme_font_size_override("font_size", chapter_font_size)
 	
 	if date_label:
-		# วันที่อยู่ด้านล่าง Chapter ตัวเล็ก
 		date_label.size = viewport_size
-		date_label.position = Vector2(0, viewport_size.y * 0.58)  # เลื่อนลงมาหน่อย
-		var date_font_size = int(viewport_size.y / 20)  # ตัวเล็ก
+		date_label.position = Vector2(0, viewport_size.y * 0.58)
+		var date_font_size = int(viewport_size.y / 20)
 		date_label.add_theme_font_size_override("font_size", date_font_size)
 
 func opening_fade_in():
+	# ✅ หน้าจอควรจะดำอยู่แล้ว (ตั้งโดย main_menu.gd)
+	# แต่เผื่อไว้ก็ตั้งอีกครั้ง
 	fade_rect.modulate.a = 1.0
 	
 	_hide_hud()
 	_freeze_player(true)
 	
+	# แสดงข้อความวันที่/บท
 	await _show_date_text_for_opening()
 	
+	# แสดง System Dialogue (หน้าจอยังมืดอยู่)
 	if has_node("/root/SystemDialogueManager"):
 		var day = DayManager.get_current_day()
 		var lines = SystemDialogueManager._get_dialogue_for_day(day)
 		SystemDialogueManager.show_dialogue(lines)
 		
+		# รอให้ dialogue เสร็จก่อน
 		await SystemDialogueManager.dialogue_finished
-		
-		var tween = create_tween()
-		tween.tween_property(fade_rect, "modulate:a", 0.0, 1.5)
-		tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-		await tween.finished
-		
-		_freeze_player(false)
+	
+	# ค่อย fade out หน้าจอดำ หลังจาก dialogue เสร็จแล้ว
+	var tween = create_tween()
+	tween.tween_property(fade_rect, "modulate:a", 0.0, 1.5)
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await tween.finished
+	
+	_freeze_player(false)
+	_show_hud()
+	
+	# ✅ ล้าง flag หลังจากใช้งานเสร็จ
+	if has_meta("should_show_opening"):
+		remove_meta("should_show_opening")
 
 func _show_date_text_for_opening():
 	if not DayManager:
 		return
 	
-	# แสดง Chapter และวันที่แยกกัน
 	chapter_label.text = DayManager.get_current_chapter()
 	date_label.text = DayManager.get_current_date_text()
 	
@@ -121,6 +126,11 @@ func _hide_hud():
 	var hud_nodes = get_tree().get_nodes_in_group("hud")
 	for hud in hud_nodes:
 		hud.hide()
+
+func _show_hud():
+	var hud_nodes = get_tree().get_nodes_in_group("hud")
+	for hud in hud_nodes:
+		hud.show()
 
 func _freeze_player(freeze: bool):
 	var player = get_tree().get_first_node_in_group("player")
@@ -160,7 +170,6 @@ func _show_date_text():
 	if not DayManager:
 		return
 	
-	# แสดง Chapter และวันที่แยกกัน
 	chapter_label.text = DayManager.get_current_chapter()
 	date_label.text = DayManager.get_current_date_text()
 	

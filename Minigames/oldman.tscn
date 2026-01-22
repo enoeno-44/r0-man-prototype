@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://u2kcgqargaka"]
 
-[ext_resource type="Script" path="res://Scripts/box_breaking_minigame.gd" id="1_8xi6r"]
+[ext_resource type="Script" path="res://Scripts/oldman_minigame.gd" id="1_8xi6r"]
 [ext_resource type="Texture2D" uid="uid://dajnbc6w1u2v7" path="res://Resources/Gemini_Generated_pipedog_kq08sskq08sskq08.png" id="2_6nnbv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fn7fh"]

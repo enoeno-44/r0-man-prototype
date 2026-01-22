@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://lmpdatskd40f"]
 
-[ext_resource type="Script" path="res://Scripts/drawing_minigame.gd" id="1_dunno"]
+[ext_resource type="Script" path="res://Scripts/daydreamer_minigame.gd" id="1_dunno"]
 [ext_resource type="Texture2D" uid="uid://cciihaqp8e3md" path="res://Resources/Gemini_Generated_Cloud_9zqp789zqp789zqp.png" id="2_rwrkp"]
 
 [node name="CanvasLayer" type="CanvasLayer"]

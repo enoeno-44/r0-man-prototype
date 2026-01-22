@@ -1,33 +1,76 @@
-[gd_scene format=3 uid="uid://bdrc5o50ovx7t"]
+[gd_scene load_steps=3 format=3 uid="uid://bdrc5o50ovx7t"]
+
+[ext_resource type="FontFile" uid="uid://ngxarfbccvdp" path="res://Resources/Fonts/2005_iannnnnCPU.ttf" id="1_sdneb"]
+[ext_resource type="Script" path="res://Scripts/pause_menu.gd" id="1_ygog0"]
 
 [node name="PauseMenu" type="CanvasLayer"]
+script = ExtResource("1_ygog0")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+z_index = 1000
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0, 0, 0, 0.564706)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="CenterContainer" type="CenterContainer" parent="ColorRect"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Panel" type="Panel" parent="CenterContainer"]
+[node name="Panel" type="Panel" parent="ColorRect/CenterContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Panel"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/CenterContainer/Panel"]
+custom_minimum_size = Vector2(400, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.0
+offset_top = -29.5
+offset_right = 31.0
+offset_bottom = 29.5
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/Panel/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="ColorRect/CenterContainer/Panel/VBoxContainer"]
 layout_mode = 2
-text = "PAUSED"
+theme_override_fonts/font = ExtResource("1_sdneb")
+theme_override_font_sizes/font_size = 48
+text = "PAUSED."
 
-[node name="ResumeButton" type="Button" parent="CenterContainer/Panel/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="ColorRect/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("1_sdneb")
+theme_override_font_sizes/font_size = 32
+text = "เล่นต่อ"
 
-[node name="SettingsButton" type="Button" parent="CenterContainer/Panel/VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="ColorRect/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("1_sdneb")
+theme_override_font_sizes/font_size = 32
+text = "ตั้งค่า"
 
-[node name="QuitToMenuButton" type="Button" parent="CenterContainer/Panel/VBoxContainer"]
+[node name="QuitToMenuButton" type="Button" parent="ColorRect/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("1_sdneb")
+theme_override_font_sizes/font_size = 32
+text = "ออกไปหน้าหลัก"

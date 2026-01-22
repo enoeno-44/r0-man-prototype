@@ -1,17 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://bagbrbx1xqfam"]
+[gd_scene load_steps=5 format=3 uid="uid://bagbrbx1xqfam"]
 
 [ext_resource type="Script" path="res://Scripts/quest_panel.gd" id="1_w7ej2"]
+[ext_resource type="FontFile" uid="uid://ngxarfbccvdp" path="res://Resources/Fonts/2005_iannnnnCPU.ttf" id="1_yyxc7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_184r2"]
-font_size = 22
+font = ExtResource("1_yyxc7")
+font_size = 48
+outline_size = 12
+outline_color = Color(0, 0.484167, 0.83, 0.588235)
 
 [sub_resource type="LabelSettings" id="LabelSettings_ykcb2"]
-font_size = 18
+font = ExtResource("1_yyxc7")
+font_size = 36
 font_color = Color(1, 0.833333, 0, 1)
 
 [node name="HUD" type="CanvasLayer"]
 
 [node name="TopRight" type="Control" parent="."]
+z_index = 99
 layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
@@ -49,6 +55,7 @@ label_settings = SubResource("LabelSettings_184r2")
 horizontal_alignment = 2
 
 [node name="RightCenter" type="Control" parent="."]
+z_index = 99
 layout_mode = 3
 anchors_preset = 6
 anchor_left = 1.0
@@ -92,19 +99,20 @@ layout_mode = 2
 stretch_mode = 5
 
 [node name="QuestPanel" type="PanelContainer" parent="."]
+z_index = 99
 custom_minimum_size = Vector2(128, 0)
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 20.0
-offset_top = -132.0
-offset_right = 148.0
-offset_bottom = -67.0
+offset_top = -124.0
+offset_right = 200.0
+offset_bottom = -32.0
 grow_vertical = 2
 script = ExtResource("1_w7ej2")
 
 [node name="MarginContainer" type="MarginContainer" parent="QuestPanel"]
-custom_minimum_size = Vector2(160, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
@@ -123,11 +131,14 @@ vertical_alignment = 1
 
 [node name="questlist" type="RichTextLabel" parent="QuestPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_yyxc7")
+theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
-text = "ภารกงภารกิจ"
+text = "ทำภารกิจ"
 fit_content = true
 scroll_active = false
 
 [node name="Control4" type="Label" parent="."]
+z_index = 99
 offset_right = 40.0
 offset_bottom = 40.0

@@ -4,12 +4,15 @@
 [ext_resource type="TileSet" uid="uid://dwjv1k2o1gmr2" path="res://world_1.tres" id="1_x5tmx"]
 [ext_resource type="Script" path="res://Scripts/map_boundary.gd" id="2_5rdn0"]
 [ext_resource type="PackedScene" uid="uid://brf0akufn2hbe" path="res://Scenes/player.tscn" id="2_8gqyu"]
+[ext_resource type="PackedScene" uid="uid://bdrc5o50ovx7t" path="res://pause_menu.tscn" id="2_dvotg"]
+[ext_resource type="Script" path="res://Scripts/game_initializer.gd" id="2_mv6li"]
 [ext_resource type="Script" path="res://Scripts/quest_arrow.gd" id="2_smrkw"]
 [ext_resource type="Texture2D" uid="uid://6vo5jf8bi23e" path="res://tiles/11_Camping_16x16.png" id="3_pnxr6"]
 [ext_resource type="PackedScene" uid="uid://bagbrbx1xqfam" path="res://Scenes/hud.tscn" id="5_27i6d"]
 [ext_resource type="Script" path="res://Scripts/hud_manager.gd" id="6_rqhi5"]
 [ext_resource type="Texture2D" uid="uid://dcrnedf3ic72l" path="res://icon.svg" id="8_44b7a"]
 [ext_resource type="Script" path="res://Scripts/quest_Objects.gd" id="8_c0skq"]
+[ext_resource type="LabelSettings" uid="uid://j4maqoqe5dl5" path="res://Resources/fonts_styles/sty1.tres" id="9_14a1c"]
 [ext_resource type="PackedScene" uid="uid://df5coc2dhkjsd" path="res://Minigames/musician_minigame.tscn" id="9_str8g"]
 [ext_resource type="Texture2D" uid="uid://db2oc6ecdbno8" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Trash_2.png" id="9_wx3gr"]
 [ext_resource type="PackedScene" uid="uid://xikh38b6u7t2" path="res://Minigames/engineer_minigame.tscn" id="10_1mhad"]
@@ -48,16 +51,11 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb6l5"]
 size = Vector2(20.375, 993)
 
-[sub_resource type="LabelSettings" id="LabelSettings_fitt0"]
-font_size = 32
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_gemwu"]
 radius = 34.5254
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n12k0"]
 radius = 17.0
-
-[sub_resource type="LabelSettings" id="LabelSettings_udh02"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_glqdk"]
 radius = 3.92001
@@ -123,8 +121,6 @@ radius = 93.5361
 [sub_resource type="CircleShape2D" id="CircleShape2D_veeoo"]
 radius = 17.0
 
-[sub_resource type="LabelSettings" id="LabelSettings_i6wsc"]
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_nmvpu"]
 atlas = ExtResource("17_a1hkg")
 region = Rect2(0, 0, 16, 32)
@@ -181,6 +177,8 @@ size = Vector2(22, 13)
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3dj8w"]
 radius = 5.0
 height = 18.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_udh02"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o8w7w"]
 atlas = ExtResource("19_axenb")
@@ -1057,10 +1055,14 @@ sources/0 = SubResource("TileSetAtlasSource_b7d7d")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pyg5m"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_4g22t"]
-
 [node name="world-park" type="Node2D"]
 script = ExtResource("1_7hc8a")
+
+[node name="PauseMenu" parent="." instance=ExtResource("2_dvotg")]
+visible = false
+
+[node name="GameInitializer" type="Node2D" parent="."]
+script = ExtResource("2_mv6li")
 
 [node name="MapBoundary" type="Node2D" parent="."]
 
@@ -1189,7 +1191,7 @@ grow_horizontal = 2
 grow_vertical = 0
 scale = Vector2(0.3, 0.3)
 text = "กดปุ่ม WASD เพื่อควบคุม R0"
-label_settings = SubResource("LabelSettings_fitt0")
+label_settings = ExtResource("9_14a1c")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -1223,7 +1225,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_1/Quest"]
 
@@ -1263,7 +1265,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_1/Quest2"]
 
@@ -1303,7 +1305,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="Day_2" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
@@ -1340,7 +1342,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_2/Quest4"]
 
@@ -1381,7 +1383,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_2/Quest5"]
 
@@ -1433,7 +1435,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_i6wsc")
+label_settings = ExtResource("9_14a1c")
 
 [node name="Quest6" type="Area2D" parent="Y-sort/Enviroment Manager/Day_2"]
 y_sort_enabled = true
@@ -1467,7 +1469,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="NPC2" type="Area2D" parent="Y-sort/Enviroment Manager/Day_2"]
 y_sort_enabled = true
@@ -1511,7 +1513,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_i6wsc")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_2"]
 y_sort_enabled = true
@@ -1629,7 +1631,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_i6wsc")
+label_settings = ExtResource("9_14a1c")
 
 [node name="Quest8" type="Area2D" parent="Y-sort/Enviroment Manager/Day_3"]
 y_sort_enabled = true
@@ -1663,7 +1665,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_3/Quest8"]
 
@@ -1714,7 +1716,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_i6wsc")
+label_settings = ExtResource("9_14a1c")
 
 [node name="Quest9" type="Area2D" parent="Y-sort/Enviroment Manager/Day_3"]
 y_sort_enabled = true
@@ -1748,7 +1750,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_3/Quest9"]
 
@@ -1792,7 +1794,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_4/Quest10"]
 
@@ -1846,7 +1848,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_i6wsc")
+label_settings = ExtResource("9_14a1c")
 
 [node name="Quest11" type="Area2D" parent="Y-sort/Enviroment Manager/Day_4"]
 y_sort_enabled = true
@@ -1880,7 +1882,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_4/Quest11"]
 
@@ -1932,7 +1934,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_i6wsc")
+label_settings = ExtResource("9_14a1c")
 
 [node name="Quest12" type="Area2D" parent="Y-sort/Enviroment Manager/Day_4"]
 y_sort_enabled = true
@@ -1965,7 +1967,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_4/Quest12"]
 
@@ -2009,7 +2011,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="walkin_npc" type="CharacterBody2D" parent="Y-sort/Enviroment Manager/Day_5"]
 y_sort_enabled = true
@@ -2066,7 +2068,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_5/Quest14"]
 
@@ -2117,7 +2119,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_i6wsc")
+label_settings = ExtResource("9_14a1c")
 
 [node name="Quest15" type="Area2D" parent="Y-sort/Enviroment Manager/Day_5"]
 y_sort_enabled = true
@@ -2151,7 +2153,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="NPC8" type="Area2D" parent="Y-sort/Enviroment Manager/Day_5"]
 y_sort_enabled = true
@@ -2198,7 +2200,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_i6wsc")
+label_settings = ExtResource("9_14a1c")
 
 [node name="Day_6" type="Node2D" parent="Y-sort/Enviroment Manager"]
 y_sort_enabled = true
@@ -2256,7 +2258,7 @@ offset_top = -33.0
 offset_right = 52.0
 offset_bottom = -10.0
 text = "กด E"
-label_settings = SubResource("LabelSettings_udh02")
+label_settings = ExtResource("9_14a1c")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Y-sort/Enviroment Manager/Day_6/Quest16"]
 
@@ -2370,7 +2372,7 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "ข้อความ
 "
-label_settings = SubResource("LabelSettings_fitt0")
+label_settings = ExtResource("9_14a1c")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -2384,9 +2386,11 @@ shape = SubResource("CircleShape2D_pyg5m")
 debug_color = Color(0.806585, 0.398604, 0.318059, 0.42)
 
 [node name="Label" type="Label" parent="Charger"]
-offset_left = 198.0
-offset_top = -165.0
-offset_right = 238.0
-offset_bottom = -142.0
+offset_left = 301.775
+offset_top = -137.095
+offset_right = 350.775
+offset_bottom = -98.095
+scale = Vector2(0.8, 0.8)
 text = "TEXT"
-label_settings = SubResource("LabelSettings_4g22t")
+label_settings = ExtResource("9_14a1c")
+horizontal_alignment = 2

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="R0-MAN PROTOTYPE"
-run/main_scene="res://world_park.tscn"
+run/main_scene="res://main_menu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 boot_splash/bg_color=Color(0.1366, 0.142157, 0.133853, 1)
 config/icon="res://icon.svg"

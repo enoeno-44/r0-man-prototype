@@ -1,0 +1,9 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://j4maqoqe5dl5"]
+
+[ext_resource type="FontFile" uid="uid://ngxarfbccvdp" path="res://Resources/Fonts/2005_iannnnnCPU.ttf" id="1_pfink"]
+
+[resource]
+font = ExtResource("1_pfink")
+font_size = 36
+outline_size = 5
+outline_color = Color(0.0646965, 0.0646965, 0.0646965, 1)
