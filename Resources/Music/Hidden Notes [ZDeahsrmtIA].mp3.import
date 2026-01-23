@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dcn46mk2bs3ij"
+path="res://.godot/imported/Hidden Notes [ZDeahsrmtIA].mp3-7adfc735d0b9085e093ab49f1ff46d70.mp3str"
+
+[deps]
+
+source_file="res://Resources/Music/Hidden Notes [ZDeahsrmtIA].mp3"
+dest_files=["res://.godot/imported/Hidden Notes [ZDeahsrmtIA].mp3-7adfc735d0b9085e093ab49f1ff46d70.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

@@ -90,10 +90,11 @@ func show_dialogue(lines: Array[Dictionary]):
 	if is_showing:
 		return
 	
+	AudioManager.pause_bgm()
 	is_showing = true
 	current_lines = lines
 	current_line_index = 0
-	
+
 	_clear_text_container()
 	active_labels.clear()
 	show()
@@ -105,6 +106,7 @@ func hide_dialogue():
 	is_showing = false
 	hide()
 	_show_hud(true)
+	AudioManager.resume_bgm()
 	dialogue_finished.emit()
 
 func _clear_text_container():

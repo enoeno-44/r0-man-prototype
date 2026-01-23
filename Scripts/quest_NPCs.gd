@@ -79,6 +79,7 @@ func _handle_minigame():
 		return
 	
 	await get_tree().create_timer(0.5).timeout
+	AudioManager.pause_bgm()
 	
 	minigame_instance = minigame_scene.instantiate()
 	get_tree().root.add_child(minigame_instance)
@@ -107,6 +108,7 @@ func _complete_quest():
 	_mark_as_completed()
 	is_talking = false
 	QuestManager.complete_quest(quest_id)
+	AudioManager.resume_bgm()
 
 func _give_reward_item():
 	if has_node("/root/ItemManager"):

@@ -10,7 +10,6 @@ func _ready():
 		return
 	
 	is_initialized = true
-	
 	# เปิดการทำงานของ Managers ทั้งหมด
 	_enable_all_managers()
 	
@@ -38,7 +37,7 @@ func _enable_all_managers():
 	# เปิด TimeManager
 	if has_node("/root/TimeManager"):
 		TimeManager.set_process(true)
-
+	
 func _is_fresh_start() -> bool:
 	# ตรวจสอบว่าเป็นการเริ่มเกมใหม่หรือไม่
 	# ถ้า current_day = 1 และไม่มี meta data จาก SaveManager = เริ่มใหม่

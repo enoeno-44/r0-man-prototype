@@ -1,13 +1,15 @@
-[gd_scene load_steps=170 format=4 uid="uid://cqgbie6savpmh"]
+[gd_scene load_steps=172 format=4 uid="uid://cqgbie6savpmh"]
 
 [ext_resource type="Script" path="res://Scripts/daynight_manager.gd" id="1_7hc8a"]
 [ext_resource type="TileSet" uid="uid://dwjv1k2o1gmr2" path="res://world_1.tres" id="1_x5tmx"]
 [ext_resource type="Script" path="res://Scripts/map_boundary.gd" id="2_5rdn0"]
 [ext_resource type="PackedScene" uid="uid://brf0akufn2hbe" path="res://Scenes/player.tscn" id="2_8gqyu"]
-[ext_resource type="PackedScene" uid="uid://bdrc5o50ovx7t" path="res://pause_menu.tscn" id="2_dvotg"]
+[ext_resource type="Script" path="res://Scripts/ingamepause_menu.gd" id="2_40o1r"]
 [ext_resource type="Script" path="res://Scripts/game_initializer.gd" id="2_mv6li"]
 [ext_resource type="Script" path="res://Scripts/quest_arrow.gd" id="2_smrkw"]
+[ext_resource type="FontFile" uid="uid://ngxarfbccvdp" path="res://Resources/Fonts/2005_iannnnnCPU.ttf" id="3_bh6i4"]
 [ext_resource type="Texture2D" uid="uid://6vo5jf8bi23e" path="res://tiles/11_Camping_16x16.png" id="3_pnxr6"]
+[ext_resource type="Script" path="res://Scripts/settings_panel.gd" id="4_1y1mh"]
 [ext_resource type="PackedScene" uid="uid://bagbrbx1xqfam" path="res://Scenes/hud.tscn" id="5_27i6d"]
 [ext_resource type="Script" path="res://Scripts/hud_manager.gd" id="6_rqhi5"]
 [ext_resource type="Texture2D" uid="uid://dcrnedf3ic72l" path="res://icon.svg" id="8_44b7a"]
@@ -1058,8 +1060,160 @@ sources/0 = SubResource("TileSetAtlasSource_b7d7d")
 [node name="world-park" type="Node2D"]
 script = ExtResource("1_7hc8a")
 
-[node name="PauseMenu" parent="." instance=ExtResource("2_dvotg")]
+[node name="PauseMenu" type="CanvasLayer" parent="."]
 visible = false
+script = ExtResource("2_40o1r")
+
+[node name="ColorRect" type="ColorRect" parent="PauseMenu"]
+z_index = 1000
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.564706)
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseMenu/ColorRect"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="PauseMenu/ColorRect/CenterContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu/ColorRect/CenterContainer/Panel"]
+custom_minimum_size = Vector2(400, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.0
+offset_top = -29.5
+offset_right = 31.0
+offset_bottom = 29.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="PauseMenu/ColorRect/CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_bh6i4")
+theme_override_font_sizes/font_size = 48
+text = "PAUSED."
+
+[node name="ResumeButton" type="Button" parent="PauseMenu/ColorRect/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_bh6i4")
+theme_override_font_sizes/font_size = 32
+text = "เล่นต่อ"
+
+[node name="SettingsButton" type="Button" parent="PauseMenu/ColorRect/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_bh6i4")
+theme_override_font_sizes/font_size = 32
+text = "ตั้งค่า"
+
+[node name="QuitToMenuButton" type="Button" parent="PauseMenu/ColorRect/CenterContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_bh6i4")
+theme_override_font_sizes/font_size = 32
+text = "ออกไปหน้าหลัก"
+
+[node name="SettingsPanel" type="Panel" parent="PauseMenu/ColorRect"]
+visible = false
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_1y1mh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu/ColorRect/SettingsPanel"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -77.0
+offset_right = 150.0
+offset_bottom = 103.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="HBoxContainer Music" type="HBoxContainer" parent="PauseMenu/ColorRect/SettingsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = 26
+alignment = 1
+
+[node name="MusicLabel" type="Label" parent="PauseMenu/ColorRect/SettingsPanel/VBoxContainer/HBoxContainer Music"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_bh6i4")
+theme_override_font_sizes/font_size = 24
+text = "เสียงเพลง"
+horizontal_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="PauseMenu/ColorRect/SettingsPanel/VBoxContainer/HBoxContainer Music"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+value = 100.0
+
+[node name="HBoxContainer SFX" type="HBoxContainer" parent="PauseMenu/ColorRect/SettingsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="SFXLabel" type="Label" parent="PauseMenu/ColorRect/SettingsPanel/VBoxContainer/HBoxContainer SFX"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_bh6i4")
+theme_override_font_sizes/font_size = 24
+text = "เสียงเอฟเฟค"
+horizontal_alignment = 1
+
+[node name="SFXSlider" type="HSlider" parent="PauseMenu/ColorRect/SettingsPanel/VBoxContainer/HBoxContainer SFX"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+value = 100.0
+
+[node name="BackButton" type="Button" parent="PauseMenu/ColorRect/SettingsPanel/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("3_bh6i4")
+theme_override_font_sizes/font_size = 32
+text = "กลับ"
 
 [node name="GameInitializer" type="Node2D" parent="."]
 script = ExtResource("2_mv6li")

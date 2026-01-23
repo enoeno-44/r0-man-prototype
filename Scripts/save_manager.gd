@@ -14,7 +14,8 @@ func save_game():
 			"minute": TimeManager.minute
 		},
 		"player_position": _get_player_position(),
-		"save_timestamp": Time.get_datetime_string_from_system()
+		"save_timestamp": Time.get_datetime_string_from_system(),
+		"audio": AudioManager.get_save_data()
 	}
 	
 	var file = FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)
@@ -52,6 +53,9 @@ func load_game() -> bool:
 		# เก็บตำแหน่งผู้เล่นไว้โหลดทีหลัง (ใน game scene)
 		if "player_position" in save_data:
 			set_meta("player_position", save_data.player_position)
+			
+		if "audio" in save_data:
+			AudioManager.load_save_data(save_data.audio)
 		
 		print("[SaveManager] โหลดเกมสำเร็จ - วันที่ %d" % save_data.current_day)
 		return true

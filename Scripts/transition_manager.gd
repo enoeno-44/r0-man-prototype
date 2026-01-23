@@ -131,6 +131,7 @@ func _show_hud():
 	var hud_nodes = get_tree().get_nodes_in_group("hud")
 	for hud in hud_nodes:
 		hud.show()
+	AudioManager.play_bgm("main_theme",4.0)
 
 func _freeze_player(freeze: bool):
 	var player = get_tree().get_first_node_in_group("player")
@@ -198,6 +199,7 @@ func custom_fade_out(duration: float = 1.0):
 	tween.tween_property(fade_rect, "modulate:a", 1.0, duration)
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	await tween.finished
+	
 
 func custom_fade_in(duration: float = 1.0):
 	var tween = create_tween()

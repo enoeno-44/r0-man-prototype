@@ -23,3 +23,4 @@ func _update_light():
 	
 	var light_value = lerp(1.0, min_light, darkness)
 	day_night.color = Color(light_value, light_value, light_value)
+	

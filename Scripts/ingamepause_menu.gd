@@ -9,7 +9,7 @@ extends CanvasLayer
 @onready var quit_to_menu_button = $ColorRect/CenterContainer/Panel/VBoxContainer/QuitToMenuButton
 
 # Settings Panel
-@onready var settings_panel = $ColorRect/CenterContainer/Panel/SettingsPanel
+@onready var settings_panel = $ColorRect/SettingsPanel
 
 @export var main_menu_path: String = "res://main_menu.tscn"
 
@@ -101,7 +101,6 @@ func _on_settings_back_pressed():
 
 func _on_quit_to_menu_pressed():
 	# แสดง Confirmation Dialog ก่อนออกไปเมนูหลัก
-	AudioManager.play_sfx("ui_click")
 	_show_quit_confirmation()
 
 func _show_quit_confirmation():

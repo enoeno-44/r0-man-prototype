@@ -53,6 +53,7 @@ func advance_to_next_day():
 	
 	if current_day == 6:
 		await get_tree().create_timer(5.0).timeout
+		AudioManager.pause_bgm()
 	else:
 		await get_tree().create_timer(2.0).timeout
 	

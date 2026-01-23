@@ -181,9 +181,11 @@ func _check_success():
 	var success = (indicator_position >= hit_zone_start and indicator_position <= hit_zone_end)
 	
 	if success:
+		AudioManager.play_sfx("qte_success",0.2)
 		instruction_label.text = "Success!"
 		instruction_label.modulate = Color.GREEN
 	else:
+		AudioManager.play_sfx("qte_fail",0.2)
 		instruction_label.text = "Failed!"
 		instruction_label.modulate = Color.RED
 	
