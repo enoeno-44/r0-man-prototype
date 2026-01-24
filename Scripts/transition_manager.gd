@@ -12,6 +12,8 @@ extends CanvasLayer
 
 var is_transitioning: bool = false
 var auto_opening_enabled: bool = false
+var should_start_black: bool = false 
+
 
 func _ready():
 	layer = 90
@@ -37,10 +39,15 @@ func _create_ui():
 	date_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	add_child(date_label)
 	
-	# ✅ เริ่มต้นด้วยหน้าจอโปร่งใส (จะถูกตั้งค่าเป็นดำโดย main_menu ถ้าจำเป็น)
-	fade_rect.modulate.a = 0.0
-	chapter_label.modulate.a = 0.0
-	date_label.modulate.a = 0.0
+	# ✅ แก้ตรงนี้: เช็คว่าควรเริ่มดำหรือไม่
+	if should_start_black:
+		fade_rect.modulate.a = 1.0
+		chapter_label.modulate.a = 0.0
+		date_label.modulate.a = 0.0
+	else:
+		fade_rect.modulate.a = 0.0
+		chapter_label.modulate.a = 0.0
+		date_label.modulate.a = 0.0
 	
 	get_tree().root.size_changed.connect(_on_viewport_size_changed)
 	_on_viewport_size_changed()
@@ -69,26 +76,24 @@ func _on_viewport_size_changed():
 		date_label.add_theme_font_size_override("font_size", date_font_size)
 
 func opening_fade_in():
-	# ✅ หน้าจอควรจะดำอยู่แล้ว (ตั้งโดย main_menu.gd)
-	# แต่เผื่อไว้ก็ตั้งอีกครั้ง
-	fade_rect.modulate.a = 1.0
+	# ✅ บอกให้ _create_ui() รู้ว่าต้องเริ่มดำ (กรณี _create_ui ยังไม่ทำงาน)
+	should_start_black = true
+	
+	# ถ้า fade_rect สร้างแล้ว ให้ตั้งค่าทันที
+	if fade_rect:
+		fade_rect.modulate.a = 1.0
 	
 	_hide_hud()
 	_freeze_player(true)
 	
-	# แสดงข้อความวันที่/บท
 	await _show_date_text_for_opening()
 	
-	# แสดง System Dialogue (หน้าจอยังมืดอยู่)
 	if has_node("/root/SystemDialogueManager"):
 		var day = DayManager.get_current_day()
 		var lines = SystemDialogueManager._get_dialogue_for_day(day)
 		SystemDialogueManager.show_dialogue(lines)
-		
-		# รอให้ dialogue เสร็จก่อน
 		await SystemDialogueManager.dialogue_finished
 	
-	# ค่อย fade out หน้าจอดำ หลังจาก dialogue เสร็จแล้ว
 	var tween = create_tween()
 	tween.tween_property(fade_rect, "modulate:a", 0.0, 1.5)
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
@@ -97,7 +102,9 @@ func opening_fade_in():
 	_freeze_player(false)
 	_show_hud()
 	
-	# ✅ ล้าง flag หลังจากใช้งานเสร็จ
+	# ✅ reset flag
+	should_start_black = false
+	
 	if has_meta("should_show_opening"):
 		remove_meta("should_show_opening")
 
@@ -229,3 +236,9 @@ func transition_to_scene(scene_path: String, fade_out_duration: float = 0.8, fad
 func _exit_tree():
 	if DayManager and DayManager.day_transition_started.is_connected(_on_day_transition_started):
 		DayManager.day_transition_started.disconnect(_on_day_transition_started)
+
+func transition_to_new_game(scene_path: String):
+	await custom_fade_out(0.8)
+	should_start_black = true
+	
+	get_tree().change_scene_to_file(scene_path)

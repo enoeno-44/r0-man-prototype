@@ -7,6 +7,7 @@ signal all_quests_completed
 signal day_transition_started
 
 var current_day: int = 1
+var max_day_reached: int = 1
 var all_quests_done: bool = false
 
 var day_dates: Array[String] = [
@@ -49,6 +50,11 @@ func advance_to_next_day():
 	day_transition_started.emit()
 	
 	current_day += 1
+	
+	# อัปเดต max_day_reached
+	if current_day > max_day_reached:
+		max_day_reached = current_day
+	
 	all_quests_done = false
 	
 	if current_day == 6:
@@ -115,14 +121,24 @@ func get_completed_count() -> int:
 func get_total_quests_today() -> int:
 	return QuestManager.get_total_quests_for_day(current_day)
 
+# ฟังก์ชันใหม่: ตรวจสอบว่าวันนั้นๆ ปลดล็อกแล้วหรือยัง
+func is_day_unlocked(day: int) -> bool:
+	return day <= max_day_reached
+
 func get_save_data() -> Dictionary:
 	return {
 		"current_day": current_day,
+		"max_day_reached": max_day_reached,  # เพิ่มตัวแปรนี้
 		"all_quests_done": all_quests_done
 	}
 
 func load_save_data(data: Dictionary):
 	if "current_day" in data:
 		current_day = data.current_day
+	if "max_day_reached" in data:
+		max_day_reached = data.max_day_reached
+	else:
+		# ถ้าไม่มีข้อมูล max_day_reached (เซฟเก่า) ให้ใช้ current_day แทน
+		max_day_reached = current_day
 	if "all_quests_done" in data:
 		all_quests_done = data.all_quests_done

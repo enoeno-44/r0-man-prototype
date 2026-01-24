@@ -4,6 +4,8 @@ extends Node
 signal bgm_changed(bgm_name: String)
 signal sfx_played(sfx_name: String)
 
+const SETTINGS_FILE_PATH = "user://audio_settings.save"
+
 # Audio players
 var bgm_player: AudioStreamPlayer
 var sfx_players: Array[AudioStreamPlayer] = []
@@ -25,6 +27,7 @@ var sfx_library: Dictionary = {}
 func _ready():
 	_create_audio_players()
 	_load_audio_library()
+	_load_audio_settings()  # โหลดการตั้งค่าเสียงแยกต่างหาก
 	_apply_volume_settings()
 
 func _create_audio_players():
@@ -104,7 +107,7 @@ func _fade_out_bgm(duration: float):
 
 func _fade_in_bgm(duration: float):
 	bgm_player.volume_db = -80.0
-	var target_volume = linear_to_db(bgm_volume * master_volume)
+	var target_volume = _calculate_volume_db(bgm_volume * master_volume)
 	var tween = create_tween()
 	tween.tween_property(bgm_player, "volume_db", target_volume, duration)
 
@@ -119,7 +122,7 @@ func play_sfx(sfx_name: String, volume_scale: float = 1.0):
 		return
 	
 	player.stream = sfx_library[sfx_name]
-	player.volume_db = linear_to_db(sfx_volume * master_volume * volume_scale)
+	player.volume_db = _calculate_volume_db(sfx_volume * master_volume * volume_scale)
 	player.play()
 	sfx_played.emit(sfx_name)
 
@@ -136,48 +139,81 @@ func stop_all_sfx():
 func set_master_volume(value: float):
 	master_volume = clamp(value, 0.0, 1.0)
 	_apply_volume_settings()
+	_save_audio_settings()
 
 func set_bgm_volume(value: float):
 	bgm_volume = clamp(value, 0.0, 1.0)
 	_apply_volume_settings()
+	_save_audio_settings()
 
 func set_sfx_volume(value: float):
 	sfx_volume = clamp(value, 0.0, 1.0)
 	_apply_volume_settings()
+	_save_audio_settings()
 
-# Apply logarithmic volume scaling for natural perception
+# Apply volume settings to all audio players
 func _apply_volume_settings():
 	if bgm_player:
-		var linear_volume = _volume_slider_to_linear(bgm_volume * master_volume)
-		bgm_player.volume_db = linear_to_db(linear_volume)
+		bgm_player.volume_db = _calculate_volume_db(bgm_volume * master_volume)
 	
 	for player in sfx_players:
-		var linear_volume = _volume_slider_to_linear(sfx_volume * master_volume)
-		player.volume_db = linear_to_db(linear_volume)
+		if not player.playing:  # ไม่ปรับเสียงที่กำลังเล่นอยู่
+			player.volume_db = _calculate_volume_db(sfx_volume * master_volume)
 
-# Convert linear slider value (0-1) to exponential curve for better perception
-func _volume_slider_to_linear(slider_value: float) -> float:
-	if slider_value <= 0.0:
-		return 0.0
-	return pow(slider_value, 3.0)
+# คำนวณ volume_db แบบเดียวกันทั้งหมด
+func _calculate_volume_db(linear_value: float) -> float:
+	if linear_value <= 0.0:
+		return -80.0
+	# ใช้ exponential curve สำหรับการรับรู้เสียงที่เป็นธรรมชาติ
+	var adjusted = pow(linear_value, 3.0)
+	return linear_to_db(adjusted)
 
-func get_save_data() -> Dictionary:
-	return {
+# บันทึกการตั้งค่าเสียงแยกจาก save game
+func _save_audio_settings():
+	var settings_data = {
 		"master_volume": master_volume,
 		"bgm_volume": bgm_volume,
-		"sfx_volume": sfx_volume,
+		"sfx_volume": sfx_volume
+	}
+	
+	var file = FileAccess.open(SETTINGS_FILE_PATH, FileAccess.WRITE)
+	if file:
+		file.store_var(settings_data)
+		file.close()
+		print("[AudioManager] บันทึกการตั้งค่าเสียง - BGM: %d%%, SFX: %d%%" % [int(bgm_volume * 100), int(sfx_volume * 100)])
+	else:
+		push_warning("[AudioManager] ไม่สามารถบันทึกการตั้งค่าเสียงได้!")
+
+# โหลดการตั้งค่าเสียงแยกจาก save game
+func _load_audio_settings():
+	if not FileAccess.file_exists(SETTINGS_FILE_PATH):
+		print("[AudioManager] ใช้ค่าเสียงเริ่มต้น")
+		return
+	
+	var file = FileAccess.open(SETTINGS_FILE_PATH, FileAccess.READ)
+	if file:
+		var settings_data = file.get_var()
+		file.close()
+		
+		if "master_volume" in settings_data:
+			master_volume = settings_data.master_volume
+		if "bgm_volume" in settings_data:
+			bgm_volume = settings_data.bgm_volume
+		if "sfx_volume" in settings_data:
+			sfx_volume = settings_data.sfx_volume
+		
+		print("[AudioManager] โหลดการตั้งค่าเสียง - BGM: %d%%, SFX: %d%%" % [int(bgm_volume * 100), int(sfx_volume * 100)])
+	else:
+		push_warning("[AudioManager] ไม่สามารถอ่านการตั้งค่าเสียงได้!")
+
+# สำหรับ save game (เก็บเฉพาะเพลงที่กำลังเล่น)
+func get_save_data() -> Dictionary:
+	return {
 		"current_bgm": current_bgm
 	}
 
+# สำหรับ load game (โหลดเฉพาะเพลงที่กำลังเล่น)
 func load_save_data(data: Dictionary):
-	if "master_volume" in data:
-		master_volume = data.master_volume
-	if "bgm_volume" in data:
-		bgm_volume = data.bgm_volume
-	if "sfx_volume" in data:
-		sfx_volume = data.sfx_volume
-	
-	_apply_volume_settings()
-	
+	# การตั้งค่าเสียงถูกโหลดแยกแล้วใน _ready()
 	if "current_bgm" in data and data.current_bgm != "":
 		play_bgm(data.current_bgm, 0.5)

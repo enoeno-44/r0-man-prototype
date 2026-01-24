@@ -128,7 +128,7 @@ horizontal_alignment = 1
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("1_t3st2")
-volume_db = -20.0
+volume_db = -5.0
 bus = &"BGM"
 
 [node name="NoteSpawner" type="Node2D" parent="."]

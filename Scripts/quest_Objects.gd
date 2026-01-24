@@ -61,7 +61,6 @@ func _try_interact():
 func _on_qte_success(completed_id: String, current: int, required: int):
 	if completed_id != quest_id:
 		return
-	
 	if current < required and player_in_range:
 		await get_tree().create_timer(0.5).timeout
 		if player_in_range and not QTEManager.is_fully_completed(quest_id) and not QTEManager.is_active():
@@ -70,7 +69,6 @@ func _on_qte_success(completed_id: String, current: int, required: int):
 func _on_qte_failed(failed_id: String, current: int, required: int):
 	if failed_id != quest_id:
 		return
-	
 	if player_in_range:
 		await get_tree().create_timer(0.5).timeout
 		if player_in_range and not QTEManager.is_fully_completed(quest_id) and not QTEManager.is_active():

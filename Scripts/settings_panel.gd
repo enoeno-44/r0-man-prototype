@@ -35,8 +35,16 @@ func _load_current_settings():
 		print("[SettingsPanel] ไม่พบ AudioManager!")
 		return
 	
+	# ป้องกันการ trigger signal ขณะตั้งค่าเริ่มต้น
+	bgm_slider.value_changed.disconnect(_on_bgm_volume_changed)
+	sfx_slider.value_changed.disconnect(_on_sfx_volume_changed)
+	
 	bgm_slider.value = AudioManager.bgm_volume
 	sfx_slider.value = AudioManager.sfx_volume
+	
+	# เชื่อม signal กลับ
+	bgm_slider.value_changed.connect(_on_bgm_volume_changed)
+	sfx_slider.value_changed.connect(_on_sfx_volume_changed)
 	
 	_update_labels()
 
@@ -44,6 +52,7 @@ func _on_bgm_volume_changed(value: float):
 	"""เมื่อปรับ BGM Volume"""
 	AudioManager.set_bgm_volume(value)
 	_update_labels()
+	print("[SettingsPanel] BGM Volume: %d%%" % int(value * 100))
 
 func _on_sfx_volume_changed(value: float):
 	"""เมื่อปรับ SFX Volume"""
@@ -52,6 +61,7 @@ func _on_sfx_volume_changed(value: float):
 	
 	# เล่นเสียงทดสอบ
 	AudioManager.play_sfx("ui_click", 0.5)
+	print("[SettingsPanel] SFX Volume: %d%%" % int(value * 100))
 
 func _update_labels():
 	"""อัปเดตตัวเลขที่แสดง"""
@@ -62,3 +72,8 @@ func _update_labels():
 func refresh_settings():
 	"""รีเฟรชค่าตั้งค่าเมื่อเปิด Panel"""
 	_load_current_settings()
+
+# เรียกเมื่อ Panel กลายเป็น visible
+func _on_visibility_changed():
+	if visible:
+		refresh_settings()

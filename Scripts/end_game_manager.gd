@@ -9,28 +9,29 @@ signal ending_finished
 @onready var credits_label: RichTextLabel
 @onready var exit_label: Label
 
+const CREDITS_FONT_REGULAR = preload("res://Resources/Fonts/GoogleSans-Regular.ttf")
+const CREDITS_FONT_BOLD = preload("res://Resources/Fonts/GoogleSans-Bold.ttf")
+
 @export var credits_scroll_speed: float = 35.0
 @export var credits_text: String = """
 [center][b]THE END[/b][/center]
 
-[center]--- CREDITS ---[/center]
-
-[center]Game Design & Programming[/center]
+[center]- Game Design & Programming -[/center]
 [center]นายจักรพรรดิ หงษ์ชากรณ์[/center]
 [center]นายรัฐภูมิ นามบัวน้อย[/center]
 
-[center]Art & Animation[/center]
+[center]- Art & Animation -[/center]
 [center]นายจักรพรรดิ หงษ์ชากรณ์[/center]
 [center]นายรัฐภูมิ นามบัวน้อย[/center]
 
-[center]Story & Dialogue[/center]
+[center]- Story & Dialogue -[/center]
 [center]นายจักรพรรดิ หงษ์ชากรณ์[/center]
 
-[center]Resources[/center]
+[center]- Resources -[/center]
 [center]Modern Exteriors - RPG Tileset By LimeZu[/center]
 [center]กีต้าดอกกระเจียวบาน - Tiktok @chanapat_jen[/center]
 
-[center]Special Thanks[/center]
+[center]- Special Thanks -[/center]
 [center]Godot Engine Community[/center]
 [center]Claude AI[/center]
 [center]GEMINI AI[/center]
@@ -67,7 +68,12 @@ func _create_ui():
 	credits_label.scroll_active = false
 	credits_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(credits_label)
+	if CREDITS_FONT_REGULAR:
+		credits_label.add_theme_font_override("normal_font", CREDITS_FONT_REGULAR)
 	
+	if CREDITS_FONT_BOLD:
+		credits_label.add_theme_font_override("bold_font", CREDITS_FONT_BOLD)
+		
 	credits_label.add_theme_font_size_override("normal_font_size", 24)
 	credits_label.add_theme_font_size_override("bold_font_size", 32)
 	credits_label.add_theme_color_override("default_color", Color.WHITE)
@@ -79,6 +85,8 @@ func _create_ui():
 	exit_label.text = "[ กด SPACE เพื่อออกจากเกม ]"
 	exit_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	exit_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	if CREDITS_FONT_REGULAR:
+		exit_label.add_theme_font_override("font", CREDITS_FONT_REGULAR)
 	exit_label.add_theme_font_size_override("font_size", 20)
 	exit_label.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
 	exit_label.add_theme_constant_override("outline_size", 4)

@@ -2175,7 +2175,7 @@ collision_mask = 4
 script = ExtResource("16_ahy42")
 waypoints = Array[Vector2]([Vector2(977, -55), Vector2(1162, -55), Vector2(1162, 40), Vector2(1700, 40)])
 wait_time_at_waypoint = 3.0
-initial_wait_time = 50.0
+initial_wait_time = 80.0
 label_text = "สวัสดี เจ้าหุ่น"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Y-sort/Enviroment Manager/Day_5/walkin_npc"]

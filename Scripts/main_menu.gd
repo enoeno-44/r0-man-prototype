@@ -12,6 +12,11 @@ extends Control
 @onready var main_vbox = $VBoxContainer
 
 @export var game_scene_path: String = "res://world_park.tscn"
+@export var day_selection_scene: PackedScene  # เพิ่มบรรทัดนี้
+
+const CONFIRMATION_DIALOG = preload("res://Scenes/confirmation_dialog.tscn")
+
+var day_selection_instance = null  # เพิ่มตัวแปรนี้
 
 func _ready():
 	_disable_game_managers()
@@ -54,6 +59,7 @@ func _check_continue_availability():
 func _update_save_info():
 	if SaveManager.has_save_file():
 		var info = SaveManager.get_save_info()
+		var max_day = info.get("max_day_reached", info.get("day", 1))
 		save_info_label.text = "(เซฟล่าสุด: วันที่ %d)" % [info.day]
 		save_info_label.show()
 	else:
@@ -68,27 +74,21 @@ func _on_new_game_pressed():
 		_start_new_game()
 
 func _show_confirmation_dialog():
-	var dialog = ConfirmationDialog.new()
-	dialog.dialog_text = "เริ่มเกมใหม่จะลบข้อมูลเซฟเดิม\nคุณแน่ใจหรือไม่?"
-	dialog.ok_button_text = "ใช่, เริ่มใหม่"
-	dialog.cancel_button_text = "ยกเลิก"
-	dialog.min_size = Vector2(400, 200)
-	
+	var dialog = CONFIRMATION_DIALOG.instantiate()
 	add_child(dialog)
-	dialog.popup_centered()
 	
-	if dialog.has_theme_stylebox("panel", "ConfirmationDialog"):
-		var style = StyleBoxFlat.new()
-		style.bg_color = Color(0.1, 0.1, 0.15, 0.95)
-		dialog.add_theme_stylebox_override("panel", style)
+	dialog.setup(
+		"เริ่มเกมใหม่จะลบข้อมูลเซฟเดิม\nคุณแน่ใจหรือไม่?",
+		"ใช่, เริ่มใหม่",
+		"ยกเลิก"
+	)
 	
 	dialog.confirmed.connect(func():
 		_start_new_game()
-		dialog.queue_free()
 	)
 	
-	dialog.canceled.connect(func():
-		dialog.queue_free()
+	dialog.cancelled.connect(func():
+		pass  # ไม่ต้องทำอะไร
 	)
 
 func _start_new_game():
@@ -98,7 +98,7 @@ func _start_new_game():
 	_enable_game_managers()
 	
 	if has_node("/root/TransitionManager"):
-		TransitionManager.transition_to_scene(game_scene_path)
+		TransitionManager.transition_to_new_game(game_scene_path)
 	else:
 		get_tree().change_scene_to_file(game_scene_path)
 
@@ -116,48 +116,36 @@ func _on_continue_pressed():
 
 func _on_load_day_pressed():
 	AudioManager.play_sfx("ui_click")
-	_show_day_selection_popup()
+	_show_day_selection_menu()
 
-func _show_day_selection_popup():
-	var popup = AcceptDialog.new()
-	popup.title = "เลือกวันที่ต้องการโหลด"
-	popup.dialog_text = "เลือกวันที่คุณต้องการกลับไปเล่น:"
+# ฟังก์ชันใหม่: แสดง Day Selection Menu แบบ Custom Scene
+func _show_day_selection_menu():
+	if not day_selection_scene:
+		_show_error_dialog("ไม่พบ Day Selection Scene!")
+		return
 	
-	var vbox = VBoxContainer.new()
-	popup.add_child(vbox)
+	# สร้าง instance ของ day selection menu
+	day_selection_instance = day_selection_scene.instantiate()
+	day_selection_instance.game_scene_path = game_scene_path
+	add_child(day_selection_instance)
 	
-	for day in range(1, 7):
-		var day_button = Button.new()
-		day_button.text = "วันที่ %d - %s (%s)" % [
-			day,
-			DayManager.day_chapters[day - 1],
-			DayManager.day_dates[day - 1]
-		]
-		day_button.pressed.connect(func():
-			_load_specific_day(day)
-			popup.queue_free()
-		)
-		vbox.add_child(day_button)
+	# ซ่อนเมนูหลัก
+	main_vbox.hide()
 	
-	add_child(popup)
-	popup.popup_centered()
+	# เชื่อมต่อ signal
+	day_selection_instance.back_pressed.connect(_on_day_selection_back)
+	day_selection_instance.day_selected.connect(_on_day_selected)
 
-func _load_specific_day(day: int):
-	# โหลดวันที่เลือกและตั้งค่า quest ก่อนหน้าให้เสร็จสมบูรณ์
-	SaveManager.reset_game()
-	DayManager.current_day = day
-	
-	for quest_id in QuestManager.quests.keys():
-		var quest = QuestManager.quests[quest_id]
-		if quest.day < day:
-			quest.done = true
-	
-	_enable_game_managers()
-	
-	if has_node("/root/TransitionManager"):
-		TransitionManager.transition_to_scene(game_scene_path)
-	else:
-		get_tree().change_scene_to_file(game_scene_path)
+func _on_day_selection_back():
+	# แสดงเมนูหลักกลับมา
+	main_vbox.show()
+	load_day_button.grab_focus()
+
+func _on_day_selected(day: int):
+	print("[MainMenu] เลือกวันที่: %d" % day)
+	# เกมจะเปลี่ยน scene ไปแล้วใน day_selection_menu.gd
+
+# ลบฟังก์ชันเก่า _show_day_selection_popup() และ _load_specific_day()
 
 func _on_settings_pressed():
 	AudioManager.play_sfx("ui_click")
