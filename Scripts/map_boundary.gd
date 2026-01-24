@@ -1,4 +1,4 @@
-# map_boundary_warning.gd
+# map_boundary.gd
 extends Area2D
 
 @export var warning_message: String = "คุณไม่สามารถออกนอกพื้นที่ได้"
@@ -14,6 +14,7 @@ func _ready():
 	_setup_warning_ui()
 
 func _setup_warning_ui():
+	# สร้าง UI แสดงข้อความเตือน
 	var canvas = CanvasLayer.new()
 	canvas.name = "BoundaryWarning"
 	canvas.layer = 100
@@ -43,10 +44,12 @@ func _show_warning():
 	warning_label.modulate.a = 0.0
 	warning_label.show()
 	
+	# Fade in
 	var tween = create_tween()
 	tween.tween_property(warning_label, "modulate:a", 1.0, 0.3)
 	await get_tree().create_timer(warning_duration).timeout
 	
+	# Fade out
 	tween = create_tween()
 	tween.tween_property(warning_label, "modulate:a", 0.0, 0.3)
 	await tween.finished

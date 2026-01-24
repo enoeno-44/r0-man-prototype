@@ -11,7 +11,7 @@ extends Area2D
 @onready var label = $Label
 @onready var object_sprite = $Sprite2D
 @onready var collision_shape = $CollisionShape2D
-@onready var static_body = $StaticBody2D  # เพิ่มบรรทัดนี้
+@onready var static_body = $StaticBody2D
 
 var player_in_range: bool = false
 var is_locked: bool = false
@@ -51,13 +51,7 @@ func _on_body_exited(body):
 		label.hide()
 
 func _try_interact():
-	if not _is_active():
-		return
-	
-	if QTEManager.is_fully_completed(quest_id):
-		return
-	
-	if is_locked or permanently_locked:
+	if not _is_active() or QTEManager.is_fully_completed(quest_id) or is_locked or permanently_locked:
 		return
 	
 	label.hide()
@@ -118,6 +112,7 @@ func _mark_as_completed():
 func _is_active() -> bool:
 	return quest_day == DayManager.get_current_day()
 
+# อัปเดตการมองเห็นและ collision ตามวันและสถานะ
 func _update_visibility():
 	var is_today = _is_active()
 	var is_completed = QuestManager.is_quest_done(quest_id)
@@ -135,14 +130,11 @@ func _update_visibility():
 	monitoring = is_today
 	monitorable = is_today
 	
-	# ปิด/เปิด collision shape ของ Area2D
 	if collision_shape:
 		collision_shape.set_deferred("disabled", not is_today)
 	
-	# ปิด/เปิด StaticBody2D และ collision shape ข้างใน
 	if static_body:
 		static_body.set_deferred("process_mode", Node.PROCESS_MODE_INHERIT if is_today else Node.PROCESS_MODE_DISABLED)
-		# ปิด collision ข้างใน StaticBody2D ด้วย
 		for child in static_body.get_children():
 			if child is CollisionShape2D or child is CollisionPolygon2D:
 				child.set_deferred("disabled", not is_today)
@@ -161,18 +153,16 @@ func _on_day_changed(_new_day: int, _date_text: String):
 	await get_tree().create_timer(0.1).timeout
 	_update_visibility()
 
+# ทำให้วัตถุหายไปแบบค่อยๆ หรือทันที
 func _disappear_object():
-	"""ทำให้วัตถุหายไปแบบค่อยๆ จางหรือทันที"""
 	visible = false
 	set_process(false)
 	monitoring = false
 	monitorable = false
 	
-	# ปิด collision shape ของ Area2D
 	if collision_shape:
 		collision_shape.set_deferred("disabled", true)
 	
-	# ปิด StaticBody2D และ collision ข้างใน
 	if static_body:
 		static_body.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 		for child in static_body.get_children():

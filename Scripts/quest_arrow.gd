@@ -5,23 +5,24 @@ extends Node2D
 @export var arrow_color: Color = Color(1, 0.8, 0, 1)
 @export var pulse_speed: float = 2.0
 @export var pulse_scale: float = 0.2
+@export var completion_text: String = "กลับสู่แท่นชาร์จ"
+@export var completion_label: Label = null
+@export var wasd_label: Label = null
 
 var player: CharacterBody2D
 var current_target: Area2D = null
 var quest_areas: Array[Area2D] = []
-
-@onready var arrow_sprite: Polygon2D = _get_or_create_arrow()
-@export var completion_text: String = "กลับสู่แท่นชาร์จ"
-@export var completion_label: Label = null
-@export var wasd_label: Label = null
+var time: float = 0.0
 var _blink_tween: Tween
 
-var time: float = 0.0
+@onready var arrow_sprite: Polygon2D = _get_or_create_arrow()
 
 func _ready():
 	z_index = 100
-	wasd_label.visible = true
-	_start_blink_effect()
+	
+	if wasd_label:
+		wasd_label.visible = true
+		_start_blink_effect()
 	
 	if not arrow_sprite:
 		return
@@ -51,6 +52,7 @@ func _process(delta):
 		visible = false
 		return
 	
+	# ซ่อนเมื่ผู้เล่นอยู่ใกล้เป้าหมาย
 	var hide_area = current_target.get_node_or_null("ArrowHideArea")
 	if hide_area and hide_area is Area2D:
 		if player in hide_area.get_overlapping_bodies():
@@ -70,12 +72,10 @@ func _process(delta):
 
 func _get_or_create_arrow() -> Polygon2D:
 	var arrow = get_node_or_null("Arrow")
-	
 	if not arrow:
 		arrow = Polygon2D.new()
 		arrow.name = "Arrow"
 		add_child(arrow)
-	
 	return arrow
 
 func _create_arrow_shape():
@@ -87,6 +87,7 @@ func _create_arrow_shape():
 	])
 	arrow_sprite.polygon = points
 
+# ลงทะเบียน quest areas ของวันปัจจุบัน
 func _register_quest_areas():
 	quest_areas.clear()
 	var all_areas = get_tree().get_nodes_in_group("quest_area")
@@ -96,6 +97,7 @@ func _register_quest_areas():
 		if area is Area2D and area.has_method("_is_active") and area.quest_day == current_day:
 			quest_areas.append(area)
 
+# อัปเดตเป้าหมายถัดไป
 func _update_target():
 	current_target = null
 	
@@ -142,13 +144,13 @@ func set_arrow_color(color: Color):
 func set_arrow_distance(distance: float):
 	arrow_distance = distance
 	_create_arrow_shape()
-	
+
+# สร้างเอฟเฟกต์กระพริบ
 func _start_blink_effect():
 	if _blink_tween:
 		_blink_tween.kill()
 	
 	_blink_tween = create_tween().set_loops()
-	
 	_blink_tween.tween_property(completion_label, "modulate:a", 0.0, 0.8)
 	_blink_tween.tween_property(completion_label, "modulate:a", 1.0, 0.8)
 	_blink_tween.tween_property(wasd_label, "modulate:a", 0.0, 0.8)

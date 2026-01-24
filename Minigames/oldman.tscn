@@ -65,7 +65,7 @@ text = "ความคืบหน้า: 0/3"
 horizontal_alignment = 1
 
 [node name="BoxSpawnPoint" type="Node2D" parent="."]
-position = Vector2(555, 350)
+position = Vector2(553.125, 274)
 
 [node name="Ground" type="StaticBody2D" parent="."]
 position = Vector2(0, 50)
@@ -73,19 +73,19 @@ collision_layer = 128
 collision_mask = 128
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
-position = Vector2(555, 627.135)
+position = Vector2(553.125, 551.135)
 scale = Vector2(40, 1)
 shape = SubResource("RectangleShape2D_fn7fh")
 debug_color = Color(0.951236, 0.175694, 0.349874, 0.42)
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Ground"]
-position = Vector2(1063.61, 488.678)
+position = Vector2(900, 407)
 rotation = 0.663225
 scale = Vector2(1, 2)
 shape = SubResource("RectangleShape2D_x4el3")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Ground"]
-position = Vector2(43.875, 497.268)
+position = Vector2(214, 405)
 rotation = -0.663225
 scale = Vector2(1, 2)
 shape = SubResource("RectangleShape2D_x4el3")

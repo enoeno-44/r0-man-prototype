@@ -1,4 +1,4 @@
-# AutoLoad: time_manager
+# AutoLoad: ItemsManager
 # items_manager.gd
 extends Node
 
@@ -11,7 +11,6 @@ func add_item(item_name: String, icon: Texture2D = null):
 		"name": item_name,
 		"icon": icon
 	})
-	
 	item_added.emit(item_name, icon)
 
 func get_items() -> Array:

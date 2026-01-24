@@ -1,5 +1,4 @@
 # AutoLoad: QTEManager
-# qte_manager.gd
 extends Node
 
 signal qte_success(object_id: String, current_count: int, required_count: int)
@@ -12,6 +11,7 @@ var qte_progress: Dictionary = {}
 var is_qte_active: bool = false
 var current_object_id: String = ""
 
+# UI Elements
 var qte_ui: CanvasLayer
 var timing_bar: ProgressBar
 var hit_zone: ColorRect
@@ -19,6 +19,7 @@ var indicator: ColorRect
 var instruction_label: Label
 var progress_label: Label
 
+# Game Variables
 var qte_speed: float = 150.0
 var indicator_position: float = 0.0
 var is_playing: bool = false
@@ -100,6 +101,7 @@ func _create_ui():
 	
 	qte_ui.hide()
 
+# ลงทะเบียน QTE สำหรับวัตถุ
 func register_qte(object_id: String, required_count: int):
 	if object_id not in qte_progress:
 		qte_progress[object_id] = {
@@ -121,6 +123,7 @@ func get_progress(object_id: String) -> Dictionary:
 		return qte_progress[object_id]
 	return {"current": 0, "required": 0}
 
+# เริ่ม QTE สำหรับวัตถุที่ระบุ
 func start_qte(object_id: String):
 	if object_id not in qte_progress:
 		return
@@ -141,6 +144,7 @@ func start_qte(object_id: String):
 	progress_label.text = "สำเร็จ: %d/%d" % [progress.current, progress.required]
 	_start_qte_round()
 
+# เริ่มรอบใหม่ของ QTE
 func _start_qte_round():
 	qte_ui.show()
 	indicator_position = 0.0
@@ -157,6 +161,7 @@ func _start_qte_round():
 func _randomize_speed():
 	qte_speed = randf_range(min_speed, max_speed)
 
+# สุ่มตำแหน่งและขนาด hit zone
 func _randomize_hit_zone():
 	var zone_size = randf_range(min_hit_zone_size, max_hit_zone_size)
 	var max_start = 90.0 - zone_size
@@ -176,28 +181,29 @@ func _update_indicator_position():
 	if bar_width > 0:
 		indicator.position.x = timing_bar.position.x + (bar_width * indicator_position / 100.0)
 
+# ตรวจสอบว่ากดถูกต้องหรือไม่
 func _check_success():
 	is_playing = false
 	var success = (indicator_position >= hit_zone_start and indicator_position <= hit_zone_end)
 	
 	if success:
-		AudioManager.play_sfx("qte_success",0.2)
+		AudioManager.play_sfx("qte_success", 0.2)
 		instruction_label.text = "Success!"
 		instruction_label.modulate = Color.GREEN
 	else:
-		AudioManager.play_sfx("qte_fail",0.2)
+		AudioManager.play_sfx("qte_fail", 0.2)
 		instruction_label.text = "Failed!"
 		instruction_label.modulate = Color.RED
 	
 	await get_tree().create_timer(0.5).timeout
 	_handle_qte_result(success)
 
+# จัดการผลลัพธ์ของ QTE
 func _handle_qte_result(success: bool):
 	var progress = get_progress(current_object_id)
 	var saved_object_id = current_object_id
 	
 	if success:
-		# ✅ FIX: Use bracket notation for dictionary access
 		qte_progress[current_object_id]["current"] += 1
 		progress = get_progress(current_object_id)
 		qte_success.emit(current_object_id, progress["current"], progress["required"])
@@ -220,7 +226,8 @@ func _handle_qte_result(success: bool):
 		qte_ended.emit(saved_object_id, false)
 		is_qte_active = false
 		current_object_id = ""
-		
+
+# บังคับจบ QTE ทันที
 func force_end_qte():
 	if not is_qte_active:
 		return
@@ -249,6 +256,7 @@ func load_save_data(data: Dictionary):
 	if "qte_progress" in data:
 		qte_progress = data.qte_progress
 
+# หยุดหรือปลดล็อคผู้เล่น
 func freeze_player(freeze: bool):
 	var player = get_tree().get_first_node_in_group("player")
 	if player:
