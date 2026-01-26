@@ -1,12 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://bp224ojsd8v3g"]
 
 [ext_resource type="Script" path="res://Scripts/breakable_box.gd" id="1_spy8i"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_f5bp4"]
-size = Vector2(64, 64)
+[ext_resource type="Texture2D" uid="uid://27pbvfvhjyug" path="res://Sprites/hetrash.png" id="2_fyrsr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8nkbo"]
-size = Vector2(64, 64)
+size = Vector2(62.3699, 37.8548)
 
 [node name="BreakableBox" type="RigidBody2D"]
 collision_layer = 128
@@ -17,9 +15,13 @@ angular_damp = 0.5
 script = ExtResource("1_spy8i")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = SubResource("PlaceholderTexture2D_f5bp4")
+scale = Vector2(0.08, 0.08)
+texture = ExtResource("2_fyrsr")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.23179, -2.23817)
+rotation = 0.20944
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_8nkbo")
 
 [node name="ProgressBar" type="ProgressBar" parent="."]

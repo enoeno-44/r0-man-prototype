@@ -137,7 +137,6 @@ func _create_ui():
 	
 	qte_ui.hide()
 
-# ลงทะเบียน QTE สำหรับวัตถุ
 func register_qte(object_id: String, required_count: int):
 	if object_id not in qte_progress:
 		qte_progress[object_id] = {
@@ -159,7 +158,6 @@ func get_progress(object_id: String) -> Dictionary:
 		return qte_progress[object_id]
 	return {"current": 0, "required": 0}
 
-# เริ่ม QTE สำหรับวัตถุที่ระบุ
 func start_qte(object_id: String):
 	if object_id not in qte_progress:
 		return
@@ -180,7 +178,6 @@ func start_qte(object_id: String):
 	progress_label.text = "สำเร็จ: %d/%d" % [progress.current, progress.required]
 	_start_qte_round()
 
-# เริ่มรอบใหม่ของ QTE
 func _start_qte_round():
 	qte_ui.show()
 	indicator_position = 0.0
@@ -188,7 +185,7 @@ func _start_qte_round():
 	has_pressed = false
 	direction = 1
 	timing_bar.value = 0
-	instruction_label.text = "กด SPACEBAR!"
+	instruction_label.text = "Press SPACE!"
 	instruction_label.modulate = Color.WHITE
 	
 	_randomize_speed()
@@ -197,7 +194,6 @@ func _start_qte_round():
 func _randomize_speed():
 	qte_speed = randf_range(min_speed, max_speed)
 
-# สุ่มตำแหน่งและขนาด hit zone
 func _randomize_hit_zone():
 	var zone_size = randf_range(min_hit_zone_size, max_hit_zone_size)
 	var max_start = 90.0 - zone_size
@@ -217,65 +213,91 @@ func _update_indicator_position():
 	if bar_width > 0:
 		indicator.position.x = timing_bar.position.x + (bar_width * indicator_position / 100.0)
 
-# ตรวจสอบว่ากดถูกต้องหรือไม่
 func _check_success():
 	is_playing = false
 	var success = (indicator_position >= hit_zone_start and indicator_position <= hit_zone_end)
 	
 	if success:
 		AudioManager.play_sfx("qte_success")
-		instruction_label.text = "สำเร็จ!"
+		instruction_label.text = "Success!"
 		instruction_label.modulate = Color.GREEN
 	else:
 		AudioManager.play_sfx("qte_fail")
-		instruction_label.text = "ล้มเหลว!"
+		instruction_label.text = "Failed!"
 		instruction_label.modulate = Color.RED
 	
 	await get_tree().create_timer(0.5).timeout
 	_handle_qte_result(success)
 
-# จัดการผลลัพธ์ของ QTE
 func _handle_qte_result(success: bool):
-	var progress = get_progress(current_object_id)
+	# FIX: เก็บ object_id ไว้ก่อนที่จะรีเซ็ต เพื่อป้องกัน race condition
 	var saved_object_id = current_object_id
 	
+	# ตรวจสอบว่า object_id ยังอยู่ใน qte_progress หรือไม่
+	if saved_object_id not in qte_progress:
+		# ถ้าไม่มีแล้ว แสดงว่าถูก force_end_qte() ไปแล้ว
+		_cleanup_qte_state()
+		return
+	
+	var progress = get_progress(saved_object_id)
+	
 	if success:
-		qte_progress[current_object_id]["current"] += 1
-		progress = get_progress(current_object_id)
-		qte_success.emit(current_object_id, progress["current"], progress["required"])
+		qte_progress[saved_object_id]["current"] += 1
+		progress = get_progress(saved_object_id)
+		qte_success.emit(saved_object_id, progress["current"], progress["required"])
 		
-		if is_fully_completed(current_object_id):
+		if is_fully_completed(saved_object_id):
 			qte_ui.hide()
 			is_qte_active = false
-			freeze_player(false)
-			qte_fully_completed.emit(current_object_id)
-			qte_ended.emit(saved_object_id, true)
 			current_object_id = ""
+			freeze_player(false)
+			qte_fully_completed.emit(saved_object_id)
+			qte_ended.emit(saved_object_id, true)
 		else:
 			is_qte_active = false
 			await get_tree().create_timer(0.3).timeout
-			start_qte(current_object_id)
+			# ตรวจสอบอีกครั้งว่ายังไม่ถูก interrupt
+			if not is_qte_active:
+				start_qte(saved_object_id)
 	else:
 		qte_ui.hide()
+		current_object_id = ""
 		freeze_player(false)
-		qte_failed.emit(current_object_id, progress["current"], progress["required"])
+		qte_failed.emit(saved_object_id, progress["current"], progress["required"])
 		qte_ended.emit(saved_object_id, false)
 		is_qte_active = false
-		current_object_id = ""
 
-# บังคับจบ QTE ทันที
 func force_end_qte():
 	if not is_qte_active:
 		return
 	
+	# FIX: เก็บ object_id ก่อนรีเซ็ต
 	var saved_object_id = current_object_id
 	
+	# หยุดการทำงานของ QTE ทันที
 	is_playing = false
 	is_qte_active = false
+	has_pressed = true  # ป้องกันการกด space ค้าง
+	
+	# ซ่อน UI
+	qte_ui.hide()
+	
+	# รีเซ็ต state
+	current_object_id = ""
+	
+	# ปลดล็อคผู้เล่น
+	freeze_player(false)
+	
+	# Emit signal ด้วย saved_object_id
+	if saved_object_id != "":
+		qte_ended.emit(saved_object_id, false)
+
+func _cleanup_qte_state():
+	is_playing = false
+	is_qte_active = false
+	current_object_id = ""
 	qte_ui.hide()
 	freeze_player(false)
-	qte_ended.emit(saved_object_id, false)
-	current_object_id = ""
 
 func reset_progress(object_id: String):
 	if object_id in qte_progress:
@@ -292,7 +314,6 @@ func load_save_data(data: Dictionary):
 	if "qte_progress" in data:
 		qte_progress = data.qte_progress
 
-# หยุดหรือปลดล็อคผู้เล่น
 func freeze_player(freeze: bool):
 	var player = get_tree().get_first_node_in_group("player")
 	if player:

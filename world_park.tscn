@@ -1,4 +1,4 @@
-[gd_scene load_steps=172 format=4 uid="uid://cqgbie6savpmh"]
+[gd_scene load_steps=173 format=4 uid="uid://cqgbie6savpmh"]
 
 [ext_resource type="Script" path="res://Scripts/daynight_manager.gd" id="1_7hc8a"]
 [ext_resource type="TileSet" uid="uid://dwjv1k2o1gmr2" path="res://world_1.tres" id="1_x5tmx"]
@@ -12,7 +12,6 @@
 [ext_resource type="Script" path="res://Scripts/settings_panel.gd" id="4_1y1mh"]
 [ext_resource type="PackedScene" uid="uid://bagbrbx1xqfam" path="res://Scenes/hud.tscn" id="5_27i6d"]
 [ext_resource type="Script" path="res://Scripts/hud_manager.gd" id="6_rqhi5"]
-[ext_resource type="Texture2D" uid="uid://dcrnedf3ic72l" path="res://icon.svg" id="8_44b7a"]
 [ext_resource type="Script" path="res://Scripts/quest_Objects.gd" id="8_c0skq"]
 [ext_resource type="LabelSettings" uid="uid://j4maqoqe5dl5" path="res://Resources/fonts_styles/sty1.tres" id="9_14a1c"]
 [ext_resource type="PackedScene" uid="uid://df5coc2dhkjsd" path="res://Minigames/musician_minigame.tscn" id="9_str8g"]
@@ -49,6 +48,8 @@
 [ext_resource type="Texture2D" uid="uid://bwvfarypnkb0h" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Small_Trash_Pile_1.png" id="30_r0bl7"]
 [ext_resource type="Texture2D" uid="uid://bl7re0dotb1xw" path="res://Sprites/quests/ME_Singles_City_Props_16x16_Trashbin_12.png" id="31_r58al"]
 [ext_resource type="Texture2D" uid="uid://bwyq6dpc3qwcp" path="res://Sprites/NPC/Oldman-01-Sheet.png" id="32_jrkih"]
+[ext_resource type="Texture2D" uid="uid://mj677x6v1uj7" path="res://Sprites/Y.png" id="34_nic7n"]
+[ext_resource type="Texture2D" uid="uid://bdu3317304yfh" path="res://Sprites/KU.png" id="40_d05dd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb6l5"]
 size = Vector2(20.375, 993)
@@ -1967,7 +1968,7 @@ dialogue_resource = "res://Dialogues/KID_SECRET.dialogue"
 minigame_scene = ExtResource("11_bdg8k")
 has_minigame = false
 reward_item_name = "item1"
-reward_item_icon = ExtResource("8_44b7a")
+reward_item_icon = ExtResource("34_nic7n")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="Y-sort/Enviroment Manager/Day_4/NPC5"]
 position = Vector2(0, 8)
@@ -2174,8 +2175,8 @@ collision_layer = 4
 collision_mask = 4
 script = ExtResource("16_ahy42")
 waypoints = Array[Vector2]([Vector2(977, -55), Vector2(1162, -55), Vector2(1162, 40), Vector2(1700, 40)])
-wait_time_at_waypoint = 10.0
-initial_wait_time = 120.0
+wait_time_at_waypoint = 20.0
+initial_wait_time = 60.0
 label_text = "สวัสดี เจ้าหุ่น"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Y-sort/Enviroment Manager/Day_5/walkin_npc"]
@@ -2319,7 +2320,7 @@ dialogue_resource = "res://Dialogues/KID_GIFT.dialogue"
 minigame_scene = ExtResource("11_bdg8k")
 has_minigame = false
 reward_item_name = "item2"
-reward_item_icon = ExtResource("8_44b7a")
+reward_item_icon = ExtResource("40_d05dd")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="Y-sort/Enviroment Manager/Day_5/NPC8"]
 position = Vector2(0, 8)

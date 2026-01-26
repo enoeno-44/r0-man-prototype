@@ -126,7 +126,8 @@ func start_ending():
 	show()
 	
 	ending_started.emit()
-	
+	SaveManager.save_game()
+
 	_freeze_everything()
 	_show_black_screen()
 	_hide_hud()
@@ -200,20 +201,29 @@ func _enable_exit():
 	ending_finished.emit()
 
 func _return_to_main_menu():
+	print("[DEBUG] === Starting return to main menu ===")
+	
+	# รีเซ็ต TransitionManager
+	if has_node("/root/TransitionManager"):
+		print("[DEBUG] Resetting TransitionManager")
+		TransitionManager.should_start_black = false
+		if TransitionManager.fade_rect:
+			TransitionManager.fade_rect.modulate.a = 0.0
+	
 	# หยุด BGM
 	AudioManager.stop_bgm()
-	
-	# เล่นเสียงคลิก
 	AudioManager.play_sfx("ui_click")
 	
-	# รีเซ็ต pause state
+	# รีเซ็ต pause
 	get_tree().paused = false
 	
-	# ใช้ TransitionManager ถ้ามี
-	if has_node("/root/TransitionManager"):
-		TransitionManager.transition_to_scene(main_menu_path)
-	else:
-		get_tree().change_scene_to_file(main_menu_path)
+	print("[DEBUG] Changing scene...")
+	
+	# *** ลบตัวเองออกก่อน ***
+	queue_free()
+	
+	# เปลี่ยน scene
+	get_tree().change_scene_to_file(main_menu_path)
 	
 	print("[EndGameManager] กลับไปเมนูหลัก")
 

@@ -1,4 +1,4 @@
-# Walking NPC with dialogue and end game trigger
+# walkin_npc.gd
 extends CharacterBody2D
 
 @export var waypoints: Array[Vector2] = []
@@ -20,8 +20,8 @@ extends CharacterBody2D
 @export_group("End Game")
 @export var is_ending_npc: bool = false
 @export var ending_delay: float = 0.5
+@export var force_player_proximity: bool = true  # NEW: บังคับให้ผู้เล่นอยู่ใกล้เมื่อจะจบเกม
 
-#@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
 
 var current_waypoint_index: int = 0
 var is_waiting: bool = false
@@ -32,8 +32,8 @@ var is_talking: bool = false
 var waiting_for_quest: bool = false
 var qte_has_ended: bool = false
 var last_direction: Vector2 = Vector2.DOWN
-
 var detection_area: Area2D
+var is_forcing_ending: bool = false  # NEW: flag สำหรับป้องกัน race condition
 
 func _ready():
 	if wait_for_quest_start and trigger_quest_id != "":
@@ -45,7 +45,6 @@ func _ready():
 		if has_node("/root/QTEManager"):
 			QTEManager.qte_started.connect(_on_qte_started)
 			QTEManager.qte_ended.connect(_on_qte_ended)
-		
 		return
 	
 	_setup()
@@ -71,22 +70,20 @@ func _on_qte_ended(quest_id: String, was_successful: bool):
 		QTEManager.qte_ended.disconnect(_on_qte_ended)
 	
 	qte_has_ended = true
-	_try_start_dialogue()
+	
+	# FIX: ถ้าเป็น ending NPC และกำลังจะบังคับจบเกม ให้ trigger dialogue ทันที
+	if is_ending_npc and is_forcing_ending:
+		call_deferred("_trigger_dialogue")
+	else:
+		_try_start_dialogue()
 
 func _try_start_dialogue():
-	if is_moving:
+	# FIX: ถ้ากำลังบังคับจบเกมอยู่ ให้ข้ามการเช็คเงื่อนไข
+	if is_forcing_ending:
+		call_deferred("_trigger_dialogue")
 		return
 	
-	if not qte_has_ended:
-		return
-	
-	if has_talked:
-		return
-	
-	if not has_dialogue:
-		return
-	
-	if not player_in_range:
+	if is_moving or not qte_has_ended or has_talked or not has_dialogue or not player_in_range:
 		return
 	
 	call_deferred("_start_dialogue_delayed")
@@ -123,7 +120,6 @@ func _create_detection_area():
 func _physics_process(delta):
 	if waypoints.size() == 0 or not is_moving or is_waiting:
 		velocity = Vector2.ZERO
-		#_play_idle_animation()
 		move_and_slide()
 		return
 	
@@ -136,13 +132,11 @@ func _physics_process(delta):
 	
 	velocity = direction * move_speed
 	last_direction = direction
-	#_play_walk_animation(direction)
 	move_and_slide()
 
 func _reach_waypoint():
 	is_waiting = true
 	velocity = Vector2.ZERO
-	#_play_idle_animation()
 	
 	current_waypoint_index += 1
 	
@@ -150,10 +144,13 @@ func _reach_waypoint():
 		if stop_at_end:
 			is_moving = false
 			is_waiting = false
-			#_play_idle_animation()
 			
-			await _force_close_qte()
-			_try_start_dialogue()
+			# FIX: ถ้าเป็น ending NPC ให้บังคับจบเกม
+			if is_ending_npc:
+				await _force_ending_sequence()
+			else:
+				await _force_close_qte()
+				_try_start_dialogue()
 			return
 		else:
 			current_waypoint_index = 0
@@ -161,9 +158,62 @@ func _reach_waypoint():
 	await get_tree().create_timer(wait_time_at_waypoint).timeout
 	is_waiting = false
 
+# NEW: ฟังก์ชันสำหรับบังคับจบเกมอย่างปลอดภัย
+func _force_ending_sequence():
+	if is_forcing_ending:
+		return
+	
+	is_forcing_ending = true
+	
+	# 1. Freeze ผู้เล่นทันทีเพื่อไม่ให้หนี
+	_freeze_player(true)
+	
+	# 2. ล็อควัตถุ quest ทั้งหมด
+	_lock_all_quest_objects()
+	
+	# 3. บังคับปิด QTE ถ้ากำลังเล่นอยู่
+	if has_node("/root/QTEManager") and QTEManager.is_active():
+		QTEManager.force_end_qte()
+		# รอให้ QTE cleanup เสร็จ
+		await get_tree().create_timer(0.3).timeout
+	
+	qte_has_ended = true
+	
+	# 4. บังคับให้ผู้เล่นเข้ามาใกล้ถ้าจำเป็น
+	if force_player_proximity:
+		await _pull_player_close()
+	
+	# 5. รอสักครู่ก่อน trigger dialogue
+	await get_tree().create_timer(0.5).timeout
+	
+	# 6. บังคับ trigger dialogue (ไม่สนใจว่าผู้เล่นอยู่ใน range หรือไม่)
+	player_in_range = true
+	_trigger_dialogue()
+
+# NEW: ดึงผู้เล่นเข้ามาใกล้ NPC (optional smooth movement)
+func _pull_player_close():
+	var player = get_tree().get_first_node_in_group("player")
+	if not player:
+		return
+	
+	var distance = global_position.distance_to(player.global_position)
+	
+	# ถ้าผู้เล่นอยู่ไกลเกิน detection_radius ให้ดึงเข้ามา
+	if distance > detection_radius * 0.8:
+		var target_pos = global_position + (player.global_position - global_position).normalized() * (detection_radius * 0.6)
+		
+		# Teleport แบบนุ่มนวล
+		var tween = create_tween()
+		tween.tween_property(player, "global_position", target_pos, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+		await tween.finished
+
 func _force_close_qte():
 	if not has_node("/root/QTEManager"):
 		return
+	
+	# FIX: Freeze ผู้เล่นก่อน เพื่อไม่ให้หนีระหว่างที่ปิด QTE
+	if is_ending_npc:
+		_freeze_player(true)
 	
 	_lock_all_quest_objects()
 	
@@ -188,23 +238,22 @@ func _on_body_entered(body):
 
 func _on_body_exited(body):
 	if body.is_in_group("player") or body.name == "Player":
-		player_in_range = false
+		# FIX: ถ้ากำลังบังคับจบเกม ไม่ให้ออกจาก range
+		if not is_forcing_ending:
+			player_in_range = false
 
 func _trigger_dialogue():
-	if is_talking or has_talked:
-		return
-	
-	if dialogue_resource == "":
+	if is_talking or has_talked or dialogue_resource == "":
 		return
 	
 	is_talking = true
 	has_talked = true
-	
 	is_moving = false
 	velocity = Vector2.ZERO
-	#_play_idle_animation()
 	
-	_freeze_player(true)
+	# FIX: ถ้ายัง freeze อยู่แล้วไม่ต้อง freeze ซ้ำ
+	if not is_forcing_ending:
+		_freeze_player(true)
 	
 	var dialogue_resource_loaded = load(dialogue_resource)
 	if dialogue_resource_loaded:
@@ -232,37 +281,3 @@ func _freeze_player(freeze: bool):
 			player.set_can_move(not freeze)
 		if freeze and player.has_method("force_idle"):
 			player.force_idle()
-
-#func _play_walk_animation(dir: Vector2):
-	#if not sprite or not sprite.sprite_frames:
-		#return
-	#
-	#var frames = sprite.sprite_frames
-	#
-	#if abs(dir.x) > abs(dir.y):
-		#if dir.x > 0 and frames.has_animation("walk_right"):
-			#sprite.play("walk_right")
-		#elif dir.x < 0 and frames.has_animation("walk_left"):
-			#sprite.play("walk_left")
-	#else:
-		#if dir.y > 0 and frames.has_animation("walk_down"):
-			#sprite.play("walk_down")
-		#elif dir.y < 0 and frames.has_animation("walk_up"):
-			#sprite.play("walk_up")
-#
-#func _play_idle_animation():
-	#if not sprite or not sprite.sprite_frames:
-		#return
-	#
-	#var frames = sprite.sprite_frames
-	#
-	#if abs(last_direction.x) > abs(last_direction.y):
-		#if last_direction.x > 0 and frames.has_animation("idle_right"):
-			#sprite.play("idle_right")
-		#elif last_direction.x < 0 and frames.has_animation("idle_left"):
-			#sprite.play("idle_left")
-	#else:
-		#if last_direction.y > 0 and frames.has_animation("idle_down"):
-			#sprite.play("idle_down")
-		#elif last_direction.y < 0 and frames.has_animation("idle_up"):
-			#sprite.play("idle_up")

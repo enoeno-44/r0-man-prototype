@@ -20,14 +20,12 @@ func _ready():
 	sfx_slider.max_value = 1.0
 	sfx_slider.step = 0.05
 	
-	# โหลดค่าปัจจุบัน
-	_load_current_settings()
-	
-	# เชื่อม Signals
+	# เชื่อม Signals ก่อน
 	bgm_slider.value_changed.connect(_on_bgm_volume_changed)
 	sfx_slider.value_changed.connect(_on_sfx_volume_changed)
 	
-	# หมายเหตุ: Back button จะถูกเชื่อมโดย parent (MainMenu หรือ PauseMenu)
+	# โหลดค่าปัจจุบัน (จะ disconnect/connect ใหม่ภายใน)
+	_load_current_settings()
 
 func _load_current_settings():
 	"""โหลดค่าเสียงปัจจุบัน"""
@@ -36,15 +34,20 @@ func _load_current_settings():
 		return
 	
 	# ป้องกันการ trigger signal ขณะตั้งค่าเริ่มต้น
-	bgm_slider.value_changed.disconnect(_on_bgm_volume_changed)
-	sfx_slider.value_changed.disconnect(_on_sfx_volume_changed)
+	# เช็คก่อน disconnect
+	if bgm_slider.value_changed.is_connected(_on_bgm_volume_changed):
+		bgm_slider.value_changed.disconnect(_on_bgm_volume_changed)
+	if sfx_slider.value_changed.is_connected(_on_sfx_volume_changed):
+		sfx_slider.value_changed.disconnect(_on_sfx_volume_changed)
 	
 	bgm_slider.value = AudioManager.bgm_volume
 	sfx_slider.value = AudioManager.sfx_volume
 	
-	# เชื่อม signal กลับ
-	bgm_slider.value_changed.connect(_on_bgm_volume_changed)
-	sfx_slider.value_changed.connect(_on_sfx_volume_changed)
+	# เชื่อม signal กลับ (เช็คก่อน connect)
+	if not bgm_slider.value_changed.is_connected(_on_bgm_volume_changed):
+		bgm_slider.value_changed.connect(_on_bgm_volume_changed)
+	if not sfx_slider.value_changed.is_connected(_on_sfx_volume_changed):
+		sfx_slider.value_changed.connect(_on_sfx_volume_changed)
 	
 	_update_labels()
 
