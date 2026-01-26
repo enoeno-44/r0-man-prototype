@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://lb27ot3sexda"]
+[gd_scene load_steps=6 format=3 uid="uid://lb27ot3sexda"]
 
 [ext_resource type="Script" path="res://Scripts/grandma_minigame.gd" id="1_6ruq4"]
+[ext_resource type="LabelSettings" uid="uid://dpfy28ohntv0v" path="res://Resources/fonts_styles/sty2.tres" id="2_rwgel"]
+[ext_resource type="FontFile" uid="uid://cdbqakhodao41" path="res://Resources/Fonts/GoogleSans-Bold.ttf" id="3_4o5ek"]
+[ext_resource type="FontFile" uid="uid://b3dwecgmj1owb" path="res://Resources/Fonts/GoogleSans-Regular.ttf" id="4_ltdlg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcwbk"]
-bg_color = Color(0.133378, 0.164643, 0.210589, 0.784314)
+bg_color = Color(0.123788, 0.177709, 0.141201, 0.784314)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -54,16 +57,19 @@ size_flags_horizontal = 4
 [node name="TitleLabel" type="Label" parent="Panel/GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "หาคำผิดในจดหมาย"
+label_settings = ExtResource("2_rwgel")
 horizontal_alignment = 1
 
 [node name="InstructionLabel" type="Label" parent="Panel/GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "คลิกที่คำที่คิดว่าผิด แล้วพิมพ์คำที่ถูกต้อง"
+label_settings = ExtResource("2_rwgel")
 horizontal_alignment = 1
 
 [node name="ProgressLabel" type="Label" parent="Panel/GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "ความคืบหน้า: 0/3"
+label_settings = ExtResource("2_rwgel")
 horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
@@ -97,7 +103,6 @@ alignment = 1
 layout_mode = 2
 
 [node name="CorrectionPanel" type="Panel" parent="Panel"]
-visible = false
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 1
 anchors_preset = 8
@@ -131,12 +136,16 @@ theme_override_constants/separation = 10
 [node name="QuestionLabel" type="Label" parent="Panel/CorrectionPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("3_4o5ek")
+theme_override_font_sizes/font_size = 24
 text = "คำที่เลือก: [...]"
 horizontal_alignment = 1
 
 [node name="AnswerEdit" type="LineEdit" parent="Panel/CorrectionPanel/VBoxContainer"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ltdlg")
+theme_override_font_sizes/font_size = 16
 placeholder_text = "พิมพ์คำที่ถูกต้อง..."
 alignment = 1
 caret_blink = true
@@ -148,8 +157,12 @@ alignment = 1
 
 [node name="SubmitButton" type="Button" parent="Panel/CorrectionPanel/VBoxContainer/ButtonContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ltdlg")
+theme_override_font_sizes/font_size = 16
 text = "แก้ไข"
 
 [node name="CancelButton" type="Button" parent="Panel/CorrectionPanel/VBoxContainer/ButtonContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ltdlg")
+theme_override_font_sizes/font_size = 16
 text = "ยกเลิก"

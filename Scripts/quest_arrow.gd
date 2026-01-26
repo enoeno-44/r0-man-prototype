@@ -23,7 +23,8 @@ func _ready():
 	if wasd_label:
 		wasd_label.visible = true
 		_start_blink_effect()
-	
+	if completion_label:
+		completion_label.visible = false
 	if not arrow_sprite:
 		return
 	
@@ -124,16 +125,16 @@ func _on_all_quests_completed():
 	visible = false
 	current_target = null
 	if completion_label:
+		completion_label.visible = true  # visible ก่อน
 		completion_label.text = completion_text
-		completion_label.visible = true
-		_start_blink_effect()
+		await get_tree().process_frame  # รอ 1 frame
+		_start_blink_effect()  
 
 func _on_day_changed(_new_day: int, _date_text: String):
 	await get_tree().create_timer(0.3).timeout
 	_register_quest_areas()
 	_update_target()
 	if completion_label:
-		_stop_blink_effect()
 		completion_label.visible = false
 
 func set_arrow_color(color: Color):
@@ -151,10 +152,16 @@ func _start_blink_effect():
 		_blink_tween.kill()
 	
 	_blink_tween = create_tween().set_loops()
-	_blink_tween.tween_property(completion_label, "modulate:a", 0.0, 0.8)
-	_blink_tween.tween_property(completion_label, "modulate:a", 1.0, 0.8)
-	_blink_tween.tween_property(wasd_label, "modulate:a", 0.0, 0.8)
-	_blink_tween.tween_property(wasd_label, "modulate:a", 1.0, 0.8)
+	
+	if completion_label and completion_label.visible:
+		completion_label.modulate.a = 1.0  # รีเซ็ตก่อนเริ่ม Tween
+		_blink_tween.tween_property(completion_label, "modulate:a", 0.0, 0.8)
+		_blink_tween.tween_property(completion_label, "modulate:a", 1.0, 0.8)
+	
+	if wasd_label and wasd_label.visible:
+		wasd_label.modulate.a = 1.0  # รีเซ็ตก่อนเริ่ม Tween
+		_blink_tween.tween_property(wasd_label, "modulate:a", 0.0, 0.8)
+		_blink_tween.tween_property(wasd_label, "modulate:a", 1.0, 0.8)
 
 func _stop_blink_effect():
 	if _blink_tween:

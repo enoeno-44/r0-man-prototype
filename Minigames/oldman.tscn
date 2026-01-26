@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://u2kcgqargaka"]
+[gd_scene load_steps=6 format=3 uid="uid://u2kcgqargaka"]
 
 [ext_resource type="Script" path="res://Scripts/oldman_minigame.gd" id="1_8xi6r"]
 [ext_resource type="Texture2D" uid="uid://dajnbc6w1u2v7" path="res://Resources/Gemini_Generated_pipedog_kq08sskq08sskq08.png" id="2_6nnbv"]
+[ext_resource type="LabelSettings" uid="uid://dpfy28ohntv0v" path="res://Resources/fonts_styles/sty2.tres" id="3_xgq3x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fn7fh"]
 
@@ -51,17 +52,20 @@ size_flags_horizontal = 4
 
 [node name="TitleLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "หาคำผิดในจดหมาย"
+text = "ทำลายขยะ"
+label_settings = ExtResource("3_xgq3x")
 horizontal_alignment = 1
 
 [node name="InstructionLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "คลิกที่คำที่คิดว่าผิด แล้วพิมพ์คำที่ถูกต้อง"
+text = "กดค้างเพื่อทำลายขยะ"
+label_settings = ExtResource("3_xgq3x")
 horizontal_alignment = 1
 
 [node name="ProgressLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "ความคืบหน้า: 0/3"
+text = "0/3"
+label_settings = ExtResource("3_xgq3x")
 horizontal_alignment = 1
 
 [node name="BoxSpawnPoint" type="Node2D" parent="."]

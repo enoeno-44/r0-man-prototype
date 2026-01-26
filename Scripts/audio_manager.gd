@@ -21,20 +21,33 @@ var current_bgm: String = ""
 var bgm_library: Dictionary = {}
 var is_bgm_paused: bool = false
 
+# BGM Playlist
+var bgm_playlist: Array[String] = []
+var played_bgm_history: Array[String] = []
+var max_history: int = 3  # จำเพลงที่เล่นไปแล้ว 3 เพลง เพื่อไม่ให้ซ้ำเร็วเกินไป
+
 # SFX library
 var sfx_library: Dictionary = {}
 
 func _ready():
 	_create_audio_players()
 	_load_audio_library()
-	_load_audio_settings()  # โหลดการตั้งค่าเสียงแยกต่างหาก
+	_load_audio_settings()
 	_apply_volume_settings()
+	_setup_bgm_playlist()
+	
+	# เชื่อมต่อกับ DayManager เพื่อหยุดเพลงในวันที่ 6
+	if has_node("/root/DayManager"):
+		DayManager.day_changed.connect(_on_day_changed)
 
 func _create_audio_players():
 	bgm_player = AudioStreamPlayer.new()
 	bgm_player.name = "BGMPlayer"
 	bgm_player.bus = "BGM"
 	add_child(bgm_player)
+	
+	# เชื่อมต่อ signal เมื่อเพลงจบ
+	bgm_player.finished.connect(_on_bgm_finished)
 	
 	for i in range(max_sfx_players):
 		var sfx_player = AudioStreamPlayer.new()
@@ -45,6 +58,9 @@ func _create_audio_players():
 
 func _load_audio_library():
 	_register_bgm("main_theme", "res://Resources/Music/Hidden Notes [ZDeahsrmtIA].mp3")
+	# เพิ่มเพลงอื่นๆ ตามที่มี
+	# _register_bgm("theme_2", "res://Resources/Music/song2.mp3")
+	# _register_bgm("theme_3", "res://Resources/Music/song3.mp3")
 	
 	_register_sfx("ui_click", "res://Resources/SFX/select_1.wav")
 	_register_sfx("quest_complete", "res://Resources/SFX/coin_4.wav")
@@ -65,6 +81,54 @@ func _register_sfx(sfx_name: String, path: String):
 		sfx_library[sfx_name] = load(path)
 	else:
 		push_warning("[AudioManager] SFX not found: %s" % path)
+
+func _setup_bgm_playlist():
+	"""สร้าง playlist จาก BGM ทั้งหมด"""
+	bgm_playlist.clear()
+	for bgm_name in bgm_library.keys():
+		bgm_playlist.append(bgm_name)
+	print("[AudioManager] Playlist มีเพลง %d เพลง: %s" % [bgm_playlist.size(), bgm_playlist])
+
+func _on_bgm_finished():
+	"""เมื่อเพลง BGM จบ ให้เล่นเพลงถัดไปแบบสุ่ม"""
+	# ตรวจสอบว่าไม่ใช่วันที่ 6
+	if has_node("/root/DayManager") and DayManager.current_day == 6:
+		print("[AudioManager] วันที่ 6 - ไม่เล่นเพลงต่อ")
+		return
+	
+	play_random_bgm(1.0)
+
+func play_random_bgm(fade_duration: float = 1.0):
+	"""เล่นเพลง BGM แบบสุ่ม (ไม่ซ้ำกับที่เล่นไปล่าสุด)"""
+	# ป้องกันการเล่นในวันที่ 6
+	if has_node("/root/DayManager") and DayManager.current_day == 6:
+		print("[AudioManager] วันที่ 6 - ไม่เล่นเพลง")
+		return
+	
+	if bgm_playlist.is_empty():
+		push_warning("[AudioManager] Playlist ว่างเปล่า!")
+		return
+	
+	# หาเพลงที่สามารถเล่นได้ (ไม่อยู่ใน history)
+	var available_bgm = bgm_playlist.duplicate()
+	for played in played_bgm_history:
+		available_bgm.erase(played)
+	
+	# ถ้าเพลงหมดทั้งหมด (playlist เล็กมาก) ให้ล้าง history
+	if available_bgm.is_empty():
+		played_bgm_history.clear()
+		available_bgm = bgm_playlist.duplicate()
+	
+	# สุ่มเพลง
+	var random_bgm = available_bgm[randi() % available_bgm.size()]
+	
+	# บันทึก history
+	played_bgm_history.append(random_bgm)
+	if played_bgm_history.size() > max_history:
+		played_bgm_history.pop_front()
+	
+	print("[AudioManager] สุ่มเพลง: %s (History: %s)" % [random_bgm, played_bgm_history])
+	play_bgm(random_bgm, fade_duration)
 
 # Play BGM with fade in/out transition
 func play_bgm(bgm_name: String, fade_duration: float = 1.0):
@@ -96,9 +160,18 @@ func pause_bgm():
 		is_bgm_paused = true
 
 func resume_bgm():
+	# ตรวจสอบว่าไม่ใช่วันที่ 6
+	if has_node("/root/DayManager") and DayManager.current_day == 6:
+		print("[AudioManager] วันที่ 6 - ไม่สามารถเล่นเพลงได้")
+		return
+	
 	if is_bgm_paused:
 		bgm_player.stream_paused = false
 		is_bgm_paused = false
+		
+		# ถ้าไม่มีเพลงเล่นอยู่ ให้เล่นเพลงสุ่ม
+		if not bgm_player.playing:
+			play_random_bgm(0.5)
 
 func _fade_out_bgm(duration: float):
 	var tween = create_tween()
@@ -151,24 +224,20 @@ func set_sfx_volume(value: float):
 	_apply_volume_settings()
 	_save_audio_settings()
 
-# Apply volume settings to all audio players
 func _apply_volume_settings():
 	if bgm_player:
 		bgm_player.volume_db = _calculate_volume_db(bgm_volume * master_volume)
 	
 	for player in sfx_players:
-		if not player.playing:  # ไม่ปรับเสียงที่กำลังเล่นอยู่
+		if not player.playing:
 			player.volume_db = _calculate_volume_db(sfx_volume * master_volume)
 
-# คำนวณ volume_db แบบเดียวกันทั้งหมด
 func _calculate_volume_db(linear_value: float) -> float:
 	if linear_value <= 0.0:
 		return -80.0
-	# ใช้ exponential curve สำหรับการรับรู้เสียงที่เป็นธรรมชาติ
 	var adjusted = pow(linear_value, 3.0)
 	return linear_to_db(adjusted)
 
-# บันทึกการตั้งค่าเสียงแยกจาก save game
 func _save_audio_settings():
 	var settings_data = {
 		"master_volume": master_volume,
@@ -184,7 +253,6 @@ func _save_audio_settings():
 	else:
 		push_warning("[AudioManager] ไม่สามารถบันทึกการตั้งค่าเสียงได้!")
 
-# โหลดการตั้งค่าเสียงแยกจาก save game
 func _load_audio_settings():
 	if not FileAccess.file_exists(SETTINGS_FILE_PATH):
 		print("[AudioManager] ใช้ค่าเสียงเริ่มต้น")
@@ -206,14 +274,31 @@ func _load_audio_settings():
 	else:
 		push_warning("[AudioManager] ไม่สามารถอ่านการตั้งค่าเสียงได้!")
 
-# สำหรับ save game (เก็บเฉพาะเพลงที่กำลังเล่น)
+func _on_day_changed(new_day: int, date_text: String):
+	"""เรียกเมื่อเปลี่ยนวัน"""
+	if new_day == 6:
+		print("[AudioManager] วันที่ 6 - หยุดเพลงถาวร")
+		stop_bgm(2.0)
+	else:
+		# วันอื่นๆ ให้เล่นเพลงสุ่มหลัง dialogue จบ
+		# (ไม่เล่นทันที เพราะ SystemDialogueManager จะ pause BGM อยู่แล้ว)
+		pass
+
 func get_save_data() -> Dictionary:
 	return {
-		"current_bgm": current_bgm
+		"current_bgm": current_bgm,
+		"played_history": played_bgm_history
 	}
 
-# สำหรับ load game (โหลดเฉพาะเพลงที่กำลังเล่น)
 func load_save_data(data: Dictionary):
-	# การตั้งค่าเสียงถูกโหลดแยกแล้วใน _ready()
-	if "current_bgm" in data and data.current_bgm != "":
-		play_bgm(data.current_bgm, 0.5)
+	if "played_history" in data:
+		played_bgm_history = data.played_history
+	
+	# เล่นเพลงเฉพาะเมื่อไม่ใช่วันที่ 6
+	if has_node("/root/DayManager") and DayManager.current_day != 6:
+		if "current_bgm" in data and data.current_bgm != "":
+			play_bgm(data.current_bgm, 0.5)
+		else:
+			play_random_bgm(0.5)
+	else:
+		print("[AudioManager] วันที่ 6 - ไม่โหลดเพลง")

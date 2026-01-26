@@ -13,6 +13,7 @@ const CREDITS_FONT_REGULAR = preload("res://Resources/Fonts/GoogleSans-Regular.t
 const CREDITS_FONT_BOLD = preload("res://Resources/Fonts/GoogleSans-Bold.ttf")
 
 @export var credits_scroll_speed: float = 35.0
+@export var main_menu_path: String = "res://main_menu.tscn"
 @export var credits_text: String = """
 [center][b]THE END[/b][/center]
 
@@ -52,7 +53,7 @@ func _ready():
 
 func _process(_delta):
 	if can_exit and Input.is_action_just_pressed("ui_accept"):
-		get_tree().quit()
+		_return_to_main_menu()
 
 func _create_ui():
 	black_screen = ColorRect.new()
@@ -82,9 +83,9 @@ func _create_ui():
 	
 	exit_label = Label.new()
 	exit_label.name = "ExitLabel"
-	exit_label.text = "[ กด SPACE เพื่อออกจากเกม ]"
+	exit_label.text = "[ กด SPACE เพื่อกลับไปเมนูหลัก ]"
 	exit_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	exit_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	exit_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	if CREDITS_FONT_REGULAR:
 		exit_label.add_theme_font_override("font", CREDITS_FONT_REGULAR)
 	exit_label.add_theme_font_size_override("font_size", 20)
@@ -113,8 +114,9 @@ func _update_ui_positions():
 		credits_label.position = Vector2(0, viewport_size.y)
 	
 	if exit_label:
-		exit_label.size = viewport_size
-		exit_label.position = Vector2(0, 0)
+		exit_label.size = Vector2(viewport_size.x, 60)
+		# วางไว้ที่ด้านล่างสุด แต่ยังไม่แสดง (จะเลื่อนขึ้นมาทีหลัง)
+		exit_label.position = Vector2(0, viewport_size.y)
 
 func start_ending():
 	if is_ending:
@@ -181,12 +183,39 @@ func _enable_exit():
 	can_exit = true
 	exit_label.show()
 	
-	var tween = create_tween()
-	tween.set_loops()
-	tween.tween_property(exit_label, "modulate:a", 0.4, 0.8)
-	tween.tween_property(exit_label, "modulate:a", 1.0, 0.8)
+	var viewport_size = get_viewport().get_visible_rect().size
+	var final_y = viewport_size.y - 100  # ตำแหน่งสุดท้าย (100 pixels จากด้านล่าง)
+	
+	# เลื่อนขึ้นจากด้านล่าง
+	var slide_tween = create_tween()
+	slide_tween.tween_property(exit_label, "position:y", final_y, 0.8).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	await slide_tween.finished
+	
+	# กระพริบ
+	var blink_tween = create_tween()
+	blink_tween.set_loops()
+	blink_tween.tween_property(exit_label, "modulate:a", 0.4, 0.8)
+	blink_tween.tween_property(exit_label, "modulate:a", 1.0, 0.8)
 	
 	ending_finished.emit()
+
+func _return_to_main_menu():
+	# หยุด BGM
+	AudioManager.stop_bgm()
+	
+	# เล่นเสียงคลิก
+	AudioManager.play_sfx("ui_click")
+	
+	# รีเซ็ต pause state
+	get_tree().paused = false
+	
+	# ใช้ TransitionManager ถ้ามี
+	if has_node("/root/TransitionManager"):
+		TransitionManager.transition_to_scene(main_menu_path)
+	else:
+		get_tree().change_scene_to_file(main_menu_path)
+	
+	print("[EndGameManager] กลับไปเมนูหลัก")
 
 func set_credits_text(text: String):
 	credits_text = text

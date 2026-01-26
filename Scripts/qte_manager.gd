@@ -60,44 +60,80 @@ func _create_ui():
 	qte_ui = CanvasLayer.new()
 	add_child(qte_ui)
 	
+	# โหลดฟอนต์
+	var custom_font = load("res://Resources/Fonts/2005_iannnnnCPU.ttf")
+	
+	# Container หลักที่จะอยู่กลางจอ
+	var center_container = CenterContainer.new()
+	center_container.set_anchors_preset(Control.PRESET_FULL_RECT)
+	qte_ui.add_child(center_container)
+	
+	# Panel
 	var panel = Panel.new()
-	panel.custom_minimum_size = Vector2(400, 150)
-	panel.position = Vector2(460, 275)
-	qte_ui.add_child(panel)
+	panel.custom_minimum_size = Vector2(400, 200)
+	center_container.add_child(panel)
+	
+	# VBoxContainer สำหรับจัดเรียงแนวตั้ง
+	var vbox = VBoxContainer.new()
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.add_theme_constant_override("separation", 15)
+	panel.add_child(vbox)
+	
+	# Spacer บน
+	var top_spacer = Control.new()
+	top_spacer.custom_minimum_size = Vector2(0, 20)
+	vbox.add_child(top_spacer)
+	
+	# Instruction Label
+	instruction_label = Label.new()
+	instruction_label.text = "กด SPACEBAR!"
+	instruction_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	instruction_label.add_theme_font_size_override("font_size", 28)
+	instruction_label.add_theme_font_override("font", custom_font)
+	vbox.add_child(instruction_label)
+	
+	# Container สำหรับ Timing Bar
+	var bar_container = CenterContainer.new()
+	bar_container.custom_minimum_size = Vector2(0, 40)
+	vbox.add_child(bar_container)
+	
+	# Control สำหรับ Timing Bar และ Indicator
+	var bar_control = Control.new()
+	bar_control.custom_minimum_size = Vector2(350, 30)
+	bar_container.add_child(bar_control)
 	
 	timing_bar = ProgressBar.new()
-	timing_bar.position = Vector2(50, 50)
-	timing_bar.size = Vector2(300, 20)
+	timing_bar.size = Vector2(350, 25)
+	timing_bar.position = Vector2(0, 2.5)
 	timing_bar.max_value = 100
 	timing_bar.value = 0
 	timing_bar.show_percentage = false
 	timing_bar.add_theme_stylebox_override("fill", StyleBoxEmpty.new())
-	panel.add_child(timing_bar)
+	bar_control.add_child(timing_bar)
 	
 	hit_zone = ColorRect.new()
-	hit_zone.color = Color(0.2, 0.6, 0)
-	hit_zone.size = Vector2(30, 20)
-	hit_zone.position.y = 40
-	panel.add_child(hit_zone)
+	hit_zone.color = Color(0.2, 0.8, 0.2, 0.6)
+	hit_zone.size = Vector2(30, 25)
+	hit_zone.position.y = 2.5
+	bar_control.add_child(hit_zone)
 	
 	indicator = ColorRect.new()
-	indicator.color = Color(1, 0, 0, 0.8)
-	indicator.size = Vector2(5, 25)
-	indicator.position.y = timing_bar.position.y - 2.5
-	panel.add_child(indicator)
+	indicator.color = Color(1, 0.2, 0.2, 0.9)
+	indicator.size = Vector2(6, 30)
+	indicator.position.y = 0
+	bar_control.add_child(indicator)
 	
-	instruction_label = Label.new()
-	instruction_label.text = "Press SPACE!"
-	instruction_label.custom_minimum_size.x = 400
-	instruction_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	instruction_label.position.y = 15
-	panel.add_child(instruction_label)
-	
+	# Progress Label
 	progress_label = Label.new()
-	progress_label.custom_minimum_size.x = 400
 	progress_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	progress_label.position.y = 95
-	panel.add_child(progress_label)
+	progress_label.add_theme_font_override("font", custom_font)
+	progress_label.add_theme_font_size_override("font_size", 22)
+	vbox.add_child(progress_label)
+	
+	# Spacer ล่าง
+	var bottom_spacer = Control.new()
+	bottom_spacer.custom_minimum_size = Vector2(0, 10)
+	vbox.add_child(bottom_spacer)
 	
 	qte_ui.hide()
 
@@ -152,7 +188,7 @@ func _start_qte_round():
 	has_pressed = false
 	direction = 1
 	timing_bar.value = 0
-	instruction_label.text = "Press SPACE!"
+	instruction_label.text = "กด SPACEBAR!"
 	instruction_label.modulate = Color.WHITE
 	
 	_randomize_speed()
@@ -188,11 +224,11 @@ func _check_success():
 	
 	if success:
 		AudioManager.play_sfx("qte_success")
-		instruction_label.text = "Success!"
+		instruction_label.text = "สำเร็จ!"
 		instruction_label.modulate = Color.GREEN
 	else:
 		AudioManager.play_sfx("qte_fail")
-		instruction_label.text = "Failed!"
+		instruction_label.text = "ล้มเหลว!"
 		instruction_label.modulate = Color.RED
 	
 	await get_tree().create_timer(0.5).timeout

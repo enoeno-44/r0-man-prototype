@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://lmpdatskd40f"]
+[gd_scene load_steps=4 format=3 uid="uid://lmpdatskd40f"]
 
 [ext_resource type="Script" path="res://Scripts/daydreamer_minigame.gd" id="1_dunno"]
+[ext_resource type="LabelSettings" uid="uid://dpfy28ohntv0v" path="res://Resources/fonts_styles/sty2.tres" id="2_5uvve"]
 [ext_resource type="Texture2D" uid="uid://cciihaqp8e3md" path="res://Resources/Gemini_Generated_Cloud_9zqp789zqp789zqp.png" id="2_rwrkp"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
@@ -40,14 +41,17 @@ size_flags_horizontal = 4
 [node name="TitleLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "จินตนาการ"
+label_settings = ExtResource("2_5uvve")
 horizontal_alignment = 1
 
 [node name="InstructionLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+label_settings = ExtResource("2_5uvve")
 horizontal_alignment = 1
 
 [node name="StrokeCountLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+label_settings = ExtResource("2_5uvve")
 horizontal_alignment = 1
 
 [node name="Panel" type="Panel" parent="."]

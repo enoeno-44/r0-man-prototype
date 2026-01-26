@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://df5coc2dhkjsd"]
+[gd_scene load_steps=5 format=3 uid="uid://df5coc2dhkjsd"]
 
 [ext_resource type="Script" path="res://Scripts/musician_minigame.gd" id="1_bv4sn"]
 [ext_resource type="AudioStream" uid="uid://dcokrgjcecahk" path="res://Resources/dokrajeawbarn.mp3" id="1_t3st2"]
+[ext_resource type="LabelSettings" uid="uid://dpfy28ohntv0v" path="res://Resources/fonts_styles/sty2.tres" id="2_k0gsj"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_tmslv"]
 font_size = 96
@@ -53,6 +54,7 @@ theme_override_constants/separation = 20
 layout_mode = 2
 size_flags_horizontal = 4
 text = "เล่นกีตาร์ตามจังหวะ"
+label_settings = ExtResource("2_k0gsj")
 horizontal_alignment = 1
 
 [node name="StartLabel" type="Label" parent="StartPanel/VBoxContainer"]
@@ -61,6 +63,7 @@ size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.818438, 0.750097, 0.0225837, 1)
 text = "กด SPACE เพื่อเริ่มเกม
 "
+label_settings = ExtResource("2_k0gsj")
 horizontal_alignment = 1
 
 [node name="CountdownLabel" type="Label" parent="."]
@@ -114,16 +117,19 @@ size_flags_horizontal = 4
 [node name="TitleLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "กด spacebar เพื่อเคาะจังหวะให้ถูก!"
+label_settings = ExtResource("2_k0gsj")
 horizontal_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "คะแนน: 0"
+label_settings = ExtResource("2_k0gsj")
 horizontal_alignment = 1
 
 [node name="ComboLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Combo: 0"
+label_settings = ExtResource("2_k0gsj")
 horizontal_alignment = 1
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

@@ -1,9 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://xikh38b6u7t2"]
 
 [ext_resource type="Script" path="res://Scripts/engineer_minigame.gd" id="1_6ybis"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_xa8mu"]
-font_size = 18
+[ext_resource type="LabelSettings" uid="uid://dpfy28ohntv0v" path="res://Resources/fonts_styles/sty2.tres" id="2_t2eub"]
 
 [node name="ChipExtractionMinigame" type="CanvasLayer"]
 script = ExtResource("1_6ybis")
@@ -41,28 +39,31 @@ size_flags_horizontal = 4
 [node name="TitleLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "ดึงชิปประมวลผล"
+label_settings = ExtResource("2_t2eub")
 horizontal_alignment = 1
 
 [node name="InstructionLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "กดคลิ๊กเมาส์หรือ spacebar ค้างเพื่อดึงชิป"
+label_settings = ExtResource("2_t2eub")
 horizontal_alignment = 1
 
 [node name="StatsContainer" type="HBoxContainer" parent="GamePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="ForceLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer/StatsContainer"]
 layout_mode = 2
 text = "แรงดึง: 0%"
-label_settings = SubResource("LabelSettings_xa8mu")
+label_settings = ExtResource("2_t2eub")
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="DamageLabel" type="Label" parent="GamePanel/MarginContainer/VBoxContainer/StatsContainer"]
 layout_mode = 2
 text = "ความเสียหาย: 0%"
-label_settings = SubResource("LabelSettings_xa8mu")
+label_settings = ExtResource("2_t2eub")
 horizontal_alignment = 1
 vertical_alignment = 1
 

@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://dpfy28ohntv0v"]
+
+[ext_resource type="FontFile" uid="uid://ngxarfbccvdp" path="res://Resources/Fonts/2005_iannnnnCPU.ttf" id="1_w2k0t"]
+
+[resource]
+font = ExtResource("1_w2k0t")
+font_size = 32

@@ -21,6 +21,10 @@ func _ready():
 	call_deferred("_connect_signals")
 
 func _create_ui():
+	
+	var chapter_font = load("res://Resources/Fonts/GoogleSans_17pt-Bold.ttf")
+	var date_font = load("res://Resources/Fonts/GoogleSans_17pt-Medium.ttf")
+	
 	fade_rect = ColorRect.new()
 	fade_rect.name = "FadeRect"
 	fade_rect.color = Color.BLACK
@@ -31,15 +35,18 @@ func _create_ui():
 	chapter_label.name = "ChapterLabel"
 	chapter_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	chapter_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	if chapter_font:
+		chapter_label.add_theme_font_override("font", chapter_font)
 	add_child(chapter_label)
 	
 	date_label = Label.new()
 	date_label.name = "DateLabel"
 	date_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	date_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	if date_font:
+		date_label.add_theme_font_override("font", date_font)
 	add_child(date_label)
 	
-	# ✅ แก้ตรงนี้: เช็คว่าควรเริ่มดำหรือไม่
 	if should_start_black:
 		fade_rect.modulate.a = 1.0
 		chapter_label.modulate.a = 0.0
@@ -76,7 +83,6 @@ func _on_viewport_size_changed():
 		date_label.add_theme_font_size_override("font_size", date_font_size)
 
 func opening_fade_in():
-	# ✅ บอกให้ _create_ui() รู้ว่าต้องเริ่มดำ (กรณี _create_ui ยังไม่ทำงาน)
 	should_start_black = true
 	
 	# ถ้า fade_rect สร้างแล้ว ให้ตั้งค่าทันที
@@ -102,7 +108,6 @@ func opening_fade_in():
 	_freeze_player(false)
 	_show_hud()
 	
-	# ✅ reset flag
 	should_start_black = false
 	
 	if has_meta("should_show_opening"):
@@ -138,7 +143,7 @@ func _show_hud():
 	var hud_nodes = get_tree().get_nodes_in_group("hud")
 	for hud in hud_nodes:
 		hud.show()
-	AudioManager.play_bgm("main_theme",4.0)
+	AudioManager.play_random_bgm(4.0)
 
 func _freeze_player(freeze: bool):
 	var player = get_tree().get_first_node_in_group("player")

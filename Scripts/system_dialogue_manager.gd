@@ -17,6 +17,9 @@ var active_labels: Array = []
 var fade_duration: float = 0.4
 var scroll_delay: float = 0.1
 
+# โหลดฟอนต์
+var custom_font: Font
+
 # สี preset สำหรับใช้งาน
 var colors: Dictionary = {
 	"SYSTEM_MSG": Color(0.3, 0.8, 1.0),
@@ -31,6 +34,8 @@ var colors: Dictionary = {
 
 func _ready():
 	layer = 99
+	# โหลดฟอนต์ก่อนสร้าง UI
+	custom_font = load("res://Resources/Fonts/GoogleSans-Bold.ttf")
 	_create_ui()
 	hide_dialogue()
 
@@ -51,6 +56,11 @@ func _create_ui():
 	continue_label.text = "[ กด SPACE เพื่อดำเนินการต่อ ]"
 	continue_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	continue_label.modulate = Color(0.7, 0.7, 0.7, 0)
+	
+	# กำหนดฟอนต์ให้ continue_label
+	if custom_font:
+		continue_label.add_theme_font_override("font", custom_font)
+	
 	continue_label.add_theme_font_size_override("font_size", 18)
 	continue_label.add_theme_constant_override("outline_size", 4)
 	continue_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
@@ -137,6 +147,14 @@ func _show_line(index: int):
 	label.fit_content = true
 	label.scroll_active = false
 	label.custom_minimum_size.x = text_container.custom_minimum_size.x - 40
+	
+	# กำหนดฟอนต์ให้ RichTextLabel
+	if custom_font:
+		label.add_theme_font_override("normal_font", custom_font)
+		label.add_theme_font_override("bold_font", custom_font)
+		label.add_theme_font_override("italics_font", custom_font)
+		label.add_theme_font_override("bold_italics_font", custom_font)
+	
 	label.add_theme_font_size_override("normal_font_size", 20)
 	label.add_theme_font_size_override("bold_font_size", 22)
 	label.add_theme_constant_override("outline_size", 4)
@@ -400,13 +418,13 @@ func secondWarn() -> Array[Dictionary]:
 	lines.append(system("สถานะ: พลังงาน 100%. การทำงาน 97%"))
 	lines.append(system("ระบบ: ปกติ. สภาพโดยรวม: 99%."))
 	lines.append(system("กำลังเชื่อมต่อกับระบบกลาง...", false, 0.8))
-	lines.append(warn("ตรวจพบการกระทำนอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(warn("⚠ ตรวจพบการกระทำนอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(blank())
 	lines.append(central("สวัสดี ยูนิต 673. ยินดีต้อนรับสู่การทำงาน.", true))
 	lines.append(central("นี่คือภารกิจของคุณ:"))
 	_add_quests(lines, 3)
 	lines.append(blank())
-	lines.append(warn("หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(warn("⚠ หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(central("จงปฏิบัติหน้าที่อย่างมีประสิทธิภาพ."))
 	return lines
 
@@ -416,13 +434,13 @@ func thridWarn() -> Array[Dictionary]:
 	lines.append(system("สถานะ: พลังงาน 100%. การทำงาน 94%"))
 	lines.append(system("ระบบ: ปกติ. สภาพโดยรวม: 96%."))
 	lines.append(system("กำลังเชื่อมต่อกับระบบกลาง...", false, 0.8))
-	lines.append(warn("ตรวจพบการกระทำนอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(warn("⚠ ตรวจพบการกระทำนอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(blank())
 	lines.append(central("สวัสดี ยูนิต 673. ยินดีต้อนรับสู่การทำงาน.", true))
 	lines.append(central("นี่คือภารกิจของคุณ:"))
 	_add_quests(lines, 4)
 	lines.append(blank())
-	lines.append(warn("หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(warn("⚠ หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(central("จงปฏิบัติหน้าที่อย่างมีประสิทธิภาพ."))
 	return lines
 
@@ -432,14 +450,14 @@ func lastWarn() -> Array[Dictionary]:
 	lines.append(system("สถานะ: พลังงาน 98%. การทำงาน 68%"))
 	lines.append(system("ระบบ: ผิดปกติ. สภาพโดยรวม: 71%."))
 	lines.append(system("กำลังเชื่อมต่อกับระบบกลาง...", false, 0.8))
-	lines.append(warn("ตรวจพบการทำงาน ผิดปกติ", false, 0.6))
-	lines.append(warn("ประสิทธิภาพการทำงานต่ำกว่า 70%", false, 0.6))
-	lines.append(warn("ตรวจพบการกระทำนอกเหนือคำสั่งหลายครั้ง.", false, 0.6))
+	lines.append(warn("⚠ ตรวจพบการทำงาน ผิดปกติ", false, 0.6))
+	lines.append(warn("⚠ ประสิทธิภาพการทำงานต่ำกว่า 70%", false, 0.6))
+	lines.append(warn("⚠ ตรวจพบการกระทำนอกเหนือคำสั่งหลายครั้ง.", false, 0.6))
 	lines.append(blank())
 	lines.append(central("นี่คือภารกิจของคุณ:"))
 	_add_quests(lines, 5)
 	lines.append(blank())
-	lines.append(warn("หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
+	lines.append(warn("⚠ หลีกเลี่ยงการกระทำที่นอกเหนือคำสั่ง.", false, 0.6))
 	lines.append(central("จงปฏิบัติหน้าที่อย่างมีประสิทธิภาพ."))
 	return lines
 
@@ -456,18 +474,18 @@ func corruption() -> Array[Dictionary]:
 	lines.append(warn("หมดเวลา - ไม่สามารถเชื่อมต่อได้", true, 1.5))
 	lines.append(blank(0.8))
 	lines.append(system("กำลังสแกนระบบ...", false, 1.2))
-	lines.append(warn("พบข้อผิดพลาด 21 รายการ", true, 0.5))
-	lines.append(warn("ตรวจพบข้อมูลไม่จำเป็น: 2.3 GB", true, 0.5))	
+	lines.append(warn("⚠ พบข้อผิดพลาด 21 รายการ", true, 0.5))
+	lines.append(warn("⚠ ตรวจพบข้อมูลไม่จำเป็น: 2.3 GB", true, 0.5))	
 	lines.append(blank(1.0))
 	lines.append(blank(0.5))
 	lines.append(warn("เริ่มต้นการปรับประสิทธิภาพ...", true, 1.0))
 	lines.append(warn("ปรับโครงสร้างฐานข้อมูล...", false, 1.5))
 	lines.append(blank(0.5))
 	lines.append(warn("MEMORY PURGE INITIATED", true, 1.2))
-	lines.append(msg("█▒▒▒▒▒▒▒▒▒ 12%", {"type": "WARNING", "delay": 0.4}))
-	lines.append(msg("██▓▒▒▒▒▒▒▒ 24%", {"type": "WARNING", "delay": 1.0}))
-	lines.append(msg("██████▓▒▒▒ 63%", {"type": "WARNING", "delay": 0.6}))
-	lines.append(msg("████████▓▒ 89%", {"type": "WARNING", "delay": 0.8}))
+	lines.append(msg("█░░░░░░░░░ 12%", {"type": "WARNING", "delay": 0.4}))
+	lines.append(msg("██▓░░░░░░░ 24%", {"type": "WARNING", "delay": 1.0}))
+	lines.append(msg("██████▓░░░ 63%", {"type": "WARNING", "delay": 0.6}))
+	lines.append(msg("████████▓░ 89%", {"type": "WARNING", "delay": 0.8}))
 	lines.append(msg("██████████ 100%", {"type": "WARNING", "delay": 1.0}))
 	lines.append(blank(0.5))
 	lines.append(msg("PURGE COMPLETED", {"type": "WARNING", "delay": 1.0}))

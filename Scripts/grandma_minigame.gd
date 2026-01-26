@@ -13,6 +13,7 @@ signal completed  # สัญญาณเมื่อเล่นจบ
 @onready var button_container = $Panel/CorrectionPanel/VBoxContainer/ButtonContainer
 @onready var submit_button = $Panel/CorrectionPanel/VBoxContainer/ButtonContainer/SubmitButton
 @onready var cancel_button = $Panel/CorrectionPanel/VBoxContainer/ButtonContainer/CancelButton
+var custom_font: Font
 
 # ข้อมูลบทความจดหมายจากคุณยาย
 var article_data = {
@@ -69,7 +70,8 @@ var current_error_index: int = -1
 var is_active: bool = false
 
 func _ready():
-	hide()  # ซ่อนตอนเริ่มต้น
+	custom_font = load("res://Resources/Fonts/nura-sodasai-thin.ttf")
+	hide()
 	total_errors = article_data.errors.size()
 	
 	# ถ้ารันเป็น scene หลัก ให้เริ่มเลย
@@ -159,7 +161,8 @@ func _create_article():
 func _create_word_label(text: String, index: int) -> Label:
 	"""สร้าง Label สำหรับแต่ละคำ"""
 	var label = Label.new()
-	
+	if custom_font:
+		label.add_theme_font_override("font", custom_font)
 	# ถ้าเป็นคำที่ผิด ให้แสดงคำผิด
 	if index in article_data.errors:
 		label.text = article_data.errors[index].wrong
@@ -177,7 +180,7 @@ func _create_word_label(text: String, index: int) -> Label:
 		label.text = text
 		label.add_theme_color_override("font_color", Color.WHITE)
 	
-	label.add_theme_font_size_override("font_size", 24)
+	label.add_theme_font_size_override("font_size", 32)
 	
 	return label
 
