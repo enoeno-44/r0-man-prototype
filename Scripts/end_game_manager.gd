@@ -12,7 +12,7 @@ signal ending_finished
 const CREDITS_FONT_REGULAR = preload("res://Resources/Fonts/GoogleSans-Regular.ttf")
 const CREDITS_FONT_BOLD = preload("res://Resources/Fonts/GoogleSans-Bold.ttf")
 
-@export var credits_scroll_speed: float = 35.0
+@export var credits_scroll_speed: float = 40.0
 @export var main_menu_path: String = "res://main_menu.tscn"
 @export var credits_text: String = """
 [center][b]THE END[/b][/center]

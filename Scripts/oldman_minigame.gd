@@ -12,7 +12,7 @@ signal completed  # สัญญาณเมื่อเล่นจบ
 # โหลด Box Scene
 var box_scene = preload("res://Minigames/breakable_box.tscn")
 
-var total_boxes: int = 10  # จำนวนกล่องที่จะสร้าง
+var total_boxes: int = 7  # จำนวนกล่องที่จะสร้าง
 var destroyed_boxes: int = 0
 var is_active: bool = false
 var spawned_boxes: Array = []
