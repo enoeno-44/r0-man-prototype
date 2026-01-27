@@ -48,6 +48,7 @@ func _process(delta):
 		
 		# เช็ควาทำลายหรือยัง
 		if current_progress >= break_time:
+			AudioManager.play_sfx("destroy")
 			_destroy_box()
 	else:
 		# ถ้าปล่อยปุ่ม ให้ progress ลดลง

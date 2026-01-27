@@ -109,6 +109,7 @@ func _process(delta):
 	# === เช็คเงื่อนไขเริ่มใหม่ ===
 	# 1. ความเสียหายเกิน 10%
 	if current_damage >= max_damage:
+		AudioManager.play_sfx("broken_chip")
 		_restart_minigame("ชิปเสียหายเกินไป!")
 		return
 	
@@ -169,7 +170,6 @@ func _restart_minigame(reason: String):
 	instruction_label.text = reason + " กำลังเริ่มใหม่..."
 	instruction_label.modulate = Color.ORANGE
 	
-	# รอ 1.5 วินาที แล้วเริ่มใหม่
 	await get_tree().create_timer(1.5).timeout
 	start_minigame()
 
@@ -181,7 +181,6 @@ func _win_minigame():
 	instruction_label.text = "สำเร็จ! ดึงชิปออกมาได้แล้ว"
 	instruction_label.modulate = Color.GREEN
 	
-	# แสดงข้อความ 2 วินาที
 	await get_tree().create_timer(2.0).timeout
 	
 	_unlock_player()

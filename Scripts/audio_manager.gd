@@ -66,8 +66,8 @@ func _load_audio_library():
 	_register_sfx("ui_click", "res://Resources/SFX/select_1.wav")
 	_register_sfx("quest_complete", "res://Resources/SFX/coin_4.wav")
 	_register_sfx("dialogue_beep", "")
-	_register_sfx("transition", "")
-	_register_sfx("error", "")
+	_register_sfx("broken_chip", "res://Resources/SFX/snap.wav")
+	_register_sfx("destroy", "res://Resources/SFX/cardboard_hit.wav")
 	_register_sfx("qte_success", "res://Resources/SFX/coin.wav")
 	_register_sfx("qte_fail", "res://Resources/SFX/hurt.wav")
 
