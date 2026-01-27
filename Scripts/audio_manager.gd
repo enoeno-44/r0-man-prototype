@@ -58,6 +58,7 @@ func _create_audio_players():
 
 func _load_audio_library():
 	_register_bgm("main_theme", "res://Resources/Music/Hidden Notes [ZDeahsrmtIA].mp3")
+	_register_bgm("main_theme", "res://Resources/Music/Sea Of Green [ImPo0p0Joew].mp3")
 	# เพิ่มเพลงอื่นๆ ตามที่มี
 	# _register_bgm("theme_2", "res://Resources/Music/song2.mp3")
 	# _register_bgm("theme_3", "res://Resources/Music/song3.mp3")
@@ -280,8 +281,6 @@ func _on_day_changed(new_day: int, date_text: String):
 		print("[AudioManager] วันที่ 6 - หยุดเพลงถาวร")
 		stop_bgm(2.0)
 	else:
-		# วันอื่นๆ ให้เล่นเพลงสุ่มหลัง dialogue จบ
-		# (ไม่เล่นทันที เพราะ SystemDialogueManager จะ pause BGM อยู่แล้ว)
 		pass
 
 func get_save_data() -> Dictionary:

@@ -23,6 +23,9 @@ func _ready():
 		# ถ้าเป็นการเล่นต่อ ให้โหลดตำแหน่งผู้เล่น
 		SaveManager.restore_player_position()
 		_show_hud()
+		
+		# *** FIX: จัดการ BGM และ Glitch หลังโหลดเกม ***
+		_handle_loaded_game_state()
 
 func _enable_all_managers():
 	# เปิด TransitionManager
@@ -57,3 +60,31 @@ func _show_hud():
 		var hud_nodes = get_tree().get_nodes_in_group("hud")
 		for hud in hud_nodes:
 			hud.show()
+
+# *** FIX: ฟังก์ชันใหม่สำหรับจัดการสถานะหลังโหลดเกม ***
+func _handle_loaded_game_state():
+	var current_day = DayManager.get_current_day()
+	
+	# ถ้าเป็นวันที่ 6
+	if current_day == 6:
+		print("[GameInitializer] โหลดวันที่ 6 - เปิด Glitch")
+		
+		# รอให้ scene โหลดเสร็จสมบูรณ์
+		await get_tree().process_frame
+		await get_tree().process_frame
+		
+		# เปิด Glitch
+		if has_node("/root/GlitchManager"):
+			GlitchManager.force_check_and_activate()
+		
+		# ไม่เล่น BGM (วันที่ 6 ไม่มีเพลง)
+		print("[GameInitializer] วันที่ 6 - ไม่เล่น BGM")
+	else:
+		# วันอื่นๆ เล่น BGM ปกติ
+		print("[GameInitializer] โหลดวันที่ %d - เล่น BGM" % current_day)
+		
+		# เล่นเพลงหลังโหลดเกม (ไม่ใช่วันที่ 6)
+		if has_node("/root/AudioManager"):
+			# ใช้ delay เล็กน้อยเพื่อให้ scene เริ่มต้นเสร็จ
+			await get_tree().create_timer(0.5).timeout
+			AudioManager.play_random_bgm(2.0)

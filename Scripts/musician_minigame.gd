@@ -350,7 +350,7 @@ func _complete_minigame():
 	
 	current_state = State.FINISHED
 	
-	await get_tree().create_timer(3.0).timeout
+	await get_tree().create_timer(2.0).timeout
 	
 	var player = get_tree().get_first_node_in_group("player")
 	if player:

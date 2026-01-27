@@ -12,11 +12,11 @@ extends Control
 @onready var main_vbox = $VBoxContainer
 
 @export var game_scene_path: String = "res://world_park.tscn"
-@export var day_selection_scene: PackedScene  # เพิ่มบรรทัดนี้
+@export var day_selection_scene: PackedScene
 
 const CONFIRMATION_DIALOG = preload("res://Scenes/confirmation_dialog.tscn")
 
-var day_selection_instance = null  # เพิ่มตัวแปรนี้
+var day_selection_instance = null
 
 func _ready():
 	_disable_game_managers()
@@ -53,14 +53,33 @@ func _setup_buttons():
 
 func _check_continue_availability():
 	var has_save = SaveManager.has_save_file()
-	continue_button.disabled = not has_save
+	
+	# *** FIX: ตรวจสอบว่าเกมจบแล้วหรือยัง ***
+	var game_completed = SaveManager.is_game_completed()
+	
+	# ปิดปุ่ม Continue ถ้าไม่มีเซฟ หรือ เกมจบแล้ว
+	continue_button.disabled = not has_save or game_completed
+	
+	# ปิดปุ่ม Load Day ถ้าไม่มีเซฟ
 	load_day_button.disabled = not has_save
+	
+	# *** เพิ่ม tooltip เพื่ออธิบาย ***
+	if game_completed:
+		continue_button.tooltip_text = "เกมจบแล้ว - กรุณาใช้ 'โหลดวัน' หรือเริ่มเกมใหม่"
+	else:
+		continue_button.tooltip_text = ""
 
 func _update_save_info():
 	if SaveManager.has_save_file():
 		var info = SaveManager.get_save_info()
 		var max_day = info.get("max_day_reached", info.get("day", 1))
-		save_info_label.text = "(เซฟล่าสุด: วันที่ %d)" % [info.day]
+		var game_completed = info.get("game_completed", false)
+		
+		if game_completed:
+			save_info_label.text = "(เกมจบแล้ว)"
+		else:
+			save_info_label.text = "(เซฟล่าสุด: วันที่ %d)" % [info.day]
+		
 		save_info_label.show()
 	else:
 		save_info_label.text = "ไม่พบข้อมูลเซฟ"
@@ -118,7 +137,6 @@ func _on_load_day_pressed():
 	AudioManager.play_sfx("ui_click")
 	_show_day_selection_menu()
 
-# ฟังก์ชันใหม่: แสดง Day Selection Menu แบบ Custom Scene
 func _show_day_selection_menu():
 	if not day_selection_scene:
 		_show_error_dialog("ไม่พบ Day Selection Scene!")
@@ -144,8 +162,6 @@ func _on_day_selection_back():
 func _on_day_selected(day: int):
 	print("[MainMenu] เลือกวันที่: %d" % day)
 	# เกมจะเปลี่ยน scene ไปแล้วใน day_selection_menu.gd
-
-# ลบฟังก์ชันเก่า _show_day_selection_popup() และ _load_specific_day()
 
 func _on_settings_pressed():
 	AudioManager.play_sfx("ui_click")

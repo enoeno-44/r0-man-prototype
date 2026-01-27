@@ -8,7 +8,8 @@ const SAVE_FILE_PATH = "user://savegame.save"
 func save_game():
 	var save_data = {
 		"current_day": DayManager.get_current_day(),
-		"max_day_reached": DayManager.max_day_reached,  # เพิ่มบรรทัดนี้
+		"max_day_reached": DayManager.max_day_reached,
+		"game_completed": false,  # จะถูกตั้งค่าเป็น true โดย EndGameManager
 		"quests": QuestManager.get_save_data(),
 		"time": {
 			"hour": TimeManager.hour,
@@ -18,6 +19,12 @@ func save_game():
 		"save_timestamp": Time.get_datetime_string_from_system(),
 		"audio": AudioManager.get_save_data()  # เก็บเฉพาะ BGM ที่กำลังเล่น
 	}
+	
+	# เช็คว่ามีการบันทึกเก่าที่จบเกมไปแล้วหรือไม่
+	if has_save_file():
+		var old_data = _read_save_file()
+		if old_data and "game_completed" in old_data:
+			save_data["game_completed"] = old_data["game_completed"]
 	
 	var file = FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)
 	if file:
@@ -29,47 +36,84 @@ func save_game():
 		print("[SaveManager] ไม่สามารถบันทึกเกมได้!")
 		return false
 
+# ฟังก์ชันใหม่: บันทึกว่าเกมจบแล้ว
+func mark_game_completed():
+	if not has_save_file():
+		return
+	
+	var save_data = _read_save_file()
+	if save_data:
+		save_data["game_completed"] = true
+		
+		var file = FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)
+		if file:
+			file.store_var(save_data)
+			file.close()
+			print("[SaveManager] ทำเครื่องหมายว่าเกมจบแล้ว")
+
+# ฟังก์ชันใหม่: ตรวจสอบว่าเกมจบแล้วหรือยัง
+func is_game_completed() -> bool:
+	if not has_save_file():
+		return false
+	
+	var save_data = _read_save_file()
+	if save_data and "game_completed" in save_data:
+		return save_data["game_completed"]
+	return false
+
+# ฟังก์ชันภายใน: อ่านไฟล์เซฟ
+func _read_save_file() -> Dictionary:
+	if not FileAccess.file_exists(SAVE_FILE_PATH):
+		return {}
+	
+	var file = FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)
+	if file:
+		var data = file.get_var()
+		file.close()
+		return data
+	return {}
+
 # โหลดข้อมูล
 func load_game() -> bool:
 	if not FileAccess.file_exists(SAVE_FILE_PATH):
 		print("[SaveManager] ไม่พบไฟล์เซฟ")
 		return false
 	
-	var file = FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)
-	if file:
-		var save_data = file.get_var()
-		file.close()
-		
-		# โหลดข้อมูลกลับเข้าระบบ
-		if "current_day" in save_data:
-			DayManager.current_day = save_data.current_day
-		
-		if "max_day_reached" in save_data:
-			DayManager.max_day_reached = save_data.max_day_reached
-		else:
-			# ถ้าไม่มีข้อมูล max_day_reached (เซฟเก่า) ให้ใช้ current_day แทน
-			DayManager.max_day_reached = DayManager.current_day
-		
-		if "quests" in save_data:
-			QuestManager.load_save_data(save_data.quests)
-		
-		if "time" in save_data:
-			TimeManager.hour = save_data.time.hour
-			TimeManager.minute = save_data.time.minute
-		
-		# เก็บตำแหน่งผู้เล่นไว้โหลดทีหลัง (ใน game scene)
-		if "player_position" in save_data:
-			set_meta("player_position", save_data.player_position)
-		
-		# โหลดเฉพาะ BGM ที่กำลังเล่น (การตั้งค่าเสียงโหลดแยกแล้ว)
-		if "audio" in save_data:
-			AudioManager.load_save_data(save_data.audio)
-		
-		print("[SaveManager] โหลดเกมสำเร็จ - วันที่ %d (ปลดล็อกถึงวันที่ %d)" % [save_data.current_day, DayManager.max_day_reached])
-		return true
-	else:
+	var save_data = _read_save_file()
+	if save_data.is_empty():
 		print("[SaveManager] ไม่สามารถอ่านไฟล์เซฟได้!")
 		return false
+	
+	# โหลดข้อมูลกลับเข้าระบบ
+	if "current_day" in save_data:
+		DayManager.current_day = save_data.current_day
+	
+	if "max_day_reached" in save_data:
+		DayManager.max_day_reached = save_data.max_day_reached
+	else:
+		# ถ้าไม่มีข้อมูล max_day_reached (เซฟเก่า) ให้ใช้ current_day แทน
+		DayManager.max_day_reached = DayManager.current_day
+	
+	if "quests" in save_data:
+		QuestManager.load_save_data(save_data.quests)
+	
+	if "time" in save_data:
+		TimeManager.hour = save_data.time.hour
+		TimeManager.minute = save_data.time.minute
+	
+	# เก็บตำแหน่งผู้เล่นไว้โหลดทีหลัง (ใน game scene)
+	if "player_position" in save_data:
+		set_meta("player_position", save_data.player_position)
+	
+	# โหลดเฉพาะ BGM ที่กำลังเล่น (การตั้งค่าเสียงโหลดแยกแล้ว)
+	if "audio" in save_data:
+		AudioManager.load_save_data(save_data.audio)
+	
+	# *** FIX: บังคับให้ DayManager เช็ค quest progress หลังโหลด ***
+	DayManager._check_daily_progress()
+	
+	print("[SaveManager] โหลดเกมสำเร็จ - วันที่ %d (ปลดล็อกถึงวันที่ %d)" % [save_data.current_day, DayManager.max_day_reached])
+	return true
 
 # ตรวจสอบว่ามีไฟล์เซฟหรือไม่
 func has_save_file() -> bool:
@@ -86,20 +130,19 @@ func get_save_info() -> Dictionary:
 	if not has_save_file():
 		return {}
 	
-	var file = FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)
-	if file:
-		var save_data = file.get_var()
-		file.close()
-		
-		var max_day = save_data.get("max_day_reached", save_data.get("current_day", 1))
-		
-		return {
-			"day": save_data.get("current_day", 1),
-			"max_day_reached": max_day,
-			"date": DayManager.day_dates[save_data.get("current_day", 1) - 1] if save_data.get("current_day", 1) <= 6 else "??/??/????",
-			"timestamp": save_data.get("save_timestamp", "Unknown")
-		}
-	return {}
+	var save_data = _read_save_file()
+	if save_data.is_empty():
+		return {}
+	
+	var max_day = save_data.get("max_day_reached", save_data.get("current_day", 1))
+	
+	return {
+		"day": save_data.get("current_day", 1),
+		"max_day_reached": max_day,
+		"game_completed": save_data.get("game_completed", false),  # เพิ่มข้อมูลนี้
+		"date": DayManager.day_dates[save_data.get("current_day", 1) - 1] if save_data.get("current_day", 1) <= 6 else "??/??/????",
+		"timestamp": save_data.get("save_timestamp", "Unknown")
+	}
 
 # ดึงตำแหน่งผู้เล่น
 func _get_player_position() -> Vector2:
@@ -119,7 +162,7 @@ func restore_player_position():
 # รีเซ็ตเกมทั้งหมด (เริ่มใหม่)
 func reset_game():
 	DayManager.current_day = 1
-	DayManager.max_day_reached = 1  # เพิ่มบรรทัดนี้
+	DayManager.max_day_reached = 1
 	DayManager.all_quests_done = false
 	
 	# รีเซ็ต quests ทั้งหมด
@@ -150,5 +193,8 @@ func load_specific_day(day: int):
 	# รีเซ็ตเวลา
 	TimeManager.hour = 6
 	TimeManager.minute = 0
+	
+	# *** FIX: เช็ค quest progress หลังโหลดวัน ***
+	DayManager._check_daily_progress()
 	
 	print("[SaveManager] โหลดวันที่ %d สำเร็จ" % day)

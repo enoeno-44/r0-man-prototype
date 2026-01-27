@@ -11,6 +11,8 @@ var affected_nodes: Array = []
 @export var pixel_size: float = 4.0
 @export var color_corruption: float = 0.3
 
+var is_activated: bool = false  # เพิ่มตัวแปรนี้เพื่อติดตามสถานะ
+
 func _ready():
 	glitch_shader = load("res://Resources/Shaders/glitch_effect.gdshader")
 	
@@ -24,8 +26,12 @@ func _ready():
 	if DayManager:
 		DayManager.day_changed.connect(_on_day_changed)
 		
+		# *** FIX: เช็คว่าตอนนี้เป็นวันที่ 6 หรือไม่ หลังจาก scene โหลดเสร็จ ***
 		await get_tree().process_frame
-		if DayManager.get_current_day() == 6:
+		await get_tree().process_frame  # รอให้ nodes ทั้งหมดโหลดเสร็จ
+		
+		if DayManager.get_current_day() == 6 and not is_activated:
+			print("[GlitchManager] ตรวจพบว่าเป็นวันที่ 6 - เปิด glitch")
 			activate_glitch()
 
 func _on_day_changed(new_day: int, _date_text: String):
@@ -35,10 +41,21 @@ func _on_day_changed(new_day: int, _date_text: String):
 		deactivate_glitch()
 
 func activate_glitch():
+	if is_activated:
+		return  # ป้องกันการเรียกซ้ำ
+	
+	is_activated = true
+	
+	# รอให้แน่ใจว่า nodes โหลดเสร็จแล้ว
+	await get_tree().process_frame
+	
 	_apply_shader_to_glitchable_nodes()
 	
 	if affected_nodes.is_empty():
+		print("[GlitchManager] ไม่พบ nodes ที่มี group 'glitchable'")
 		return
+	
+	print("[GlitchManager] เปิด glitch สำหรับ %d nodes" % affected_nodes.size())
 	
 	var tween = create_tween()
 	tween.tween_property(self, "glitch_intensity", 0.5, 2.0)
@@ -46,6 +63,11 @@ func activate_glitch():
 	tween.tween_callback(_update_shader_params)
 
 func deactivate_glitch():
+	if not is_activated:
+		return
+	
+	is_activated = false
+	
 	var tween = create_tween()
 	tween.tween_property(self, "glitch_intensity", 0.0, 1.5)
 	tween.set_ease(Tween.EASE_IN_OUT)
@@ -60,12 +82,14 @@ func _apply_shader_to_glitchable_nodes():
 	var glitchable_nodes = get_tree().get_nodes_in_group("glitchable")
 	
 	if glitchable_nodes.is_empty():
+		print("[GlitchManager] WARNING: ไม่มี nodes ในกลุ่ม 'glitchable'")
 		return
 	
 	for node in glitchable_nodes:
 		if _is_valid_glitch_node(node):
 			_apply_shader_to_node(node)
 			affected_nodes.append(node)
+			print("[GlitchManager] เพิ่ม glitch ให้กับ: %s" % node.name)
 
 func _is_valid_glitch_node(node) -> bool:
 	return node is Sprite2D or node is AnimatedSprite2D or node.is_class("TileMapLayer")
@@ -143,3 +167,10 @@ func remove_node_from_glitch(node: Node):
 		node.material = null
 	
 	affected_nodes.erase(node)
+
+# *** เพิ่มฟังก์ชันนี้เพื่อให้ game_initializer เรียกได้ ***
+func force_check_and_activate():
+	"""เรียกใช้ฟังก์ชันนี้จาก game_initializer หลังโหลดวันที่ 6"""
+	if DayManager.get_current_day() == 6 and not is_activated:
+		print("[GlitchManager] Force activate glitch for day 6")
+		activate_glitch()

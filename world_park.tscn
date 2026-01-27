@@ -2428,6 +2428,7 @@ position = Vector2(-238, 513)
 script = ExtResource("8_c0skq")
 quest_id = "trash_17"
 quest_day = 6
+required_qte_count = 4
 completed_texture = ExtResource("30_44wcw")
 disappear_when_completed = true
 

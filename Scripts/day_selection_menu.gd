@@ -37,10 +37,24 @@ func _create_day_button(day: int, max_day: int) -> Button:
 	var button = Button.new()
 	button.custom_minimum_size = Vector2(0, 60)
 	
+	# โหลดและตั้งค่าฟอนต์
+	var font = load("res://Resources/Fonts/GoogleSans-Regular.ttf")
+	if font:
+		button.add_theme_font_override("font", font)
+	
 	# ตั้งค่าข้อความ
 	var day_text = "วันที่ %d - %s" % [day, DayManager.day_chapters[day - 1]]
 	var date_text = DayManager.day_dates[day - 1]
 	button.text = "%s\n%s" % [day_text, date_text]
+	
+	# *** FIX: วันที่ 6 ห้ามโหลดตรงๆ ***
+	if day == 6:
+		button.visible = false
+		button.disabled = true
+		button.text = button.text + " (เล่นได้เฉพาะผ่านวันที่ 5)"
+		button.modulate = Color(0.5, 0.5, 0.5)
+		button.tooltip_text = "วันที่ 6 เป็นตอนจบ ไม่สามารถโหลดตรงได้\nกรุณาเล่นจากวันที่ 5"
+		return button
 	
 	# ตรวจสอบว่าวันนี้ปลดล็อกหรือยัง
 	var is_unlocked = day <= max_day
@@ -72,6 +86,9 @@ func _load_day(day: int):
 	# เปิด game managers
 	_enable_game_managers()
 	
+	# *** FIX: จัดการ BGM และ Glitch ก่อนเปลี่ยน scene ***
+	_prepare_managers_for_day(day)
+	
 	# เปลี่ยน scene
 	if has_node("/root/TransitionManager"):
 		TransitionManager.transition_to_scene(game_scene_path)
@@ -102,3 +119,11 @@ func _enable_game_managers():
 	
 	if has_node("/root/TimeManager"):
 		TimeManager.set_process(true)
+
+func _prepare_managers_for_day(day: int):
+	if day == 6:
+		print("[DaySelectionMenu] เลือกวันที่ 6 - ไม่เล่น BGM")
+		AudioManager.stop_bgm(1.0)
+	else:
+		# วันอื่นๆ ไม่ต้องทำอะไร เพราะ game_initializer จะจัดการให้
+		print("[DaySelectionMenu] เลือกวันที่ %d - รอ game_initializer จัดการ BGM" % day)
