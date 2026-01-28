@@ -6,6 +6,11 @@ signal item_added(item_name: String, icon: Texture2D)
 
 var items: Array = []
 
+# ฟังก์ชันใหม่: ล้างไอเท็มทั้งหมด
+func clear():
+	items.clear()
+	print("[ItemsManager] ล้างไอเท็มทั้งหมดแล้ว")
+
 func add_item(item_name: String, icon: Texture2D = null):
 	items.append({
 		"name": item_name,

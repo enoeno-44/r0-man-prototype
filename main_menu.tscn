@@ -2,20 +2,20 @@
 
 [ext_resource type="FontFile" uid="uid://ngxarfbccvdp" path="res://Resources/Fonts/2005_iannnnnCPU.ttf" id="1_p3d11"]
 [ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_sqrmm"]
-[ext_resource type="Texture2D" uid="uid://b2r50ghah1og5" path="res://Resources/R0-MAM-MainMenu.jpg" id="3_4jgwl"]
 [ext_resource type="Shader" path="res://Resources/Shaders/main_menu.gdshader" id="3_8fd03"]
 [ext_resource type="FontFile" uid="uid://b3dwecgmj1owb" path="res://Resources/Fonts/GoogleSans-Regular.ttf" id="3_nytrx"]
+[ext_resource type="Texture2D" uid="uid://b8upe53qodkun" path="res://Resources/R0-MAM-MainMenu.svg" id="4_6m6qx"]
 [ext_resource type="Shader" path="res://Resources/Shaders/glitch_effect.gdshader" id="4_puq87"]
 [ext_resource type="Script" path="res://Scripts/settings_panel.gd" id="4_qh5gy"]
 [ext_resource type="PackedScene" uid="uid://cxsogafckp7g" path="res://Scenes/day_selection_menu.tscn" id="5_72mex"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_o3pq3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_426bs"]
 shader = ExtResource("3_8fd03")
 shader_parameter/heartbeat_speed = 1.0
-shader_parameter/glow_radius = 0.8
+shader_parameter/glow_radius = 0.4
 shader_parameter/edge_softness = 0.3
-shader_parameter/min_brightness = 0.5
-shader_parameter/max_brightness = 2.5
+shader_parameter/min_brightness = 0.1
+shader_parameter/max_brightness = 0.9
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f2q2w"]
 shader = ExtResource("4_puq87")
@@ -43,27 +43,19 @@ grow_vertical = 2
 script = ExtResource("1_sqrmm")
 day_selection_scene = ExtResource("5_72mex")
 
-[node name="R0-mam-mainMenu" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_o3pq3")
-position = Vector2(574, 321)
-scale = Vector2(0.929861, 0.929861)
-texture = ExtResource("3_4jgwl")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.0392157, 0.0392157, 0.0705882, 0.898039)
+[node name="R0-mam-mainMenu3" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.960784)
+material = SubResource("ShaderMaterial_426bs")
+position = Vector2(575.315, 308)
+scale = Vector2(0.964583, 0.964583)
+texture = ExtResource("4_6m6qx")
 
 [node name="R0-mam-mainMenu2" type="Sprite2D" parent="."]
-modulate = Color(0.744933, 0.800081, 0.855384, 0.901961)
-position = Vector2(576, 311)
-scale = Vector2(0.958333, 0.958333)
-texture = ExtResource("3_4jgwl")
+modulate = Color(1, 1, 1, 0.745098)
+self_modulate = Color(1, 1, 1, 0.870588)
+position = Vector2(575.315, 308)
+scale = Vector2(0.964583, 0.964583)
+texture = ExtResource("4_6m6qx")
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -79,12 +71,26 @@ alignment = 1
 
 [node name="Label" type="Label" parent="VBoxContainer2"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.746585, 2.00946e-06, 8.66354e-07, 1)
+theme_override_colors/font_color = Color(0.772611, 0.0742695, 0.13935, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_nytrx")
 theme_override_font_sizes/font_size = 24
 text = "อาร์โอแมน"
 horizontal_alignment = 1
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -139.0
+offset_top = -74.0
+offset_right = 139.0
+offset_bottom = 286.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(400, 300)

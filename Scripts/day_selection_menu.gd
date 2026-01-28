@@ -22,11 +22,8 @@ func _populate_day_list():
 	for child in day_list_container.get_children():
 		child.queue_free()
 	
-	# ดึงข้อมูลวันที่ปลดล็อกแล้ว
-	var max_day = 1
-	if SaveManager.has_save_file():
-		var save_info = SaveManager.get_save_info()
-		max_day = save_info.get("max_day_reached", 1)
+	# *** FIX: ดึงข้อมูลวันที่ปลดล็อกจาก persistent data แทน ***
+	var max_day = SaveManager.load_persistent_data()
 	
 	# สร้างปุ่มสำหรับแต่ละวัน (1-6)
 	for day in range(1, 7):

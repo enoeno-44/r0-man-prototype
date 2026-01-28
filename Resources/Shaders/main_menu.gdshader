@@ -25,8 +25,8 @@ void fragment() {
     // ผสมกับจังหวะเต้น
     float brightness = mix(min_brightness, max_brightness, radial_gradient * heartbeat);
     
-    // สีขาว
-    vec3 color = vec3(brightness);
+    // สีแดงจางๆ
+    vec3 color = vec3(brightness * 0.5, brightness * 0.1, brightness * 0.1);
     
     COLOR = vec4(color, 1.0);
 }

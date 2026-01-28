@@ -3,6 +3,7 @@
 extends Node
 
 const SAVE_FILE_PATH = "user://savegame.save"
+const PERSISTENT_FILE_PATH = "user://persistent_data.save"  # เก็บข้อมูลที่ไม่ลบ
 
 # เซฟข้อมูลทั้งหมด
 func save_game():
@@ -25,6 +26,9 @@ func save_game():
 		var old_data = _read_save_file()
 		if old_data and "game_completed" in old_data:
 			save_data["game_completed"] = old_data["game_completed"]
+	
+	# *** FIX: บันทึก persistent data ทุกครั้งที่เซฟเกม ***
+	save_persistent_data()
 	
 	var file = FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)
 	if file:
@@ -160,21 +164,55 @@ func restore_player_position():
 			remove_meta("player_position")
 
 # รีเซ็ตเกมทั้งหมด (เริ่มใหม่)
+# ฟังก์ชันใหม่: บันทึก persistent data (ข้อมูลที่ไม่ถูกลบเมื่อเริ่มเกมใหม่)
+func save_persistent_data():
+	var persistent_data = {
+		"highest_day_reached": DayManager.max_day_reached
+	}
+	
+	var file = FileAccess.open(PERSISTENT_FILE_PATH, FileAccess.WRITE)
+	if file:
+		file.store_var(persistent_data)
+		file.close()
+		print("[SaveManager] บันทึก persistent data: highest_day = %d" % persistent_data.highest_day_reached)
+
+# ฟังก์ชันใหม่: โหลด persistent data
+func load_persistent_data() -> int:
+	if not FileAccess.file_exists(PERSISTENT_FILE_PATH):
+		return 1  # ค่าเริ่มต้น
+	
+	var file = FileAccess.open(PERSISTENT_FILE_PATH, FileAccess.READ)
+	if file:
+		var data = file.get_var()
+		file.close()
+		if data and "highest_day_reached" in data:
+			print("[SaveManager] โหลด persistent data: highest_day = %d" % data.highest_day_reached)
+			return data.highest_day_reached
+	
+	return 1
+
 func reset_game():
+	# *** FIX: บันทึก max_day_reached ก่อนรีเซ็ต ***
+	save_persistent_data()
+	
 	DayManager.current_day = 1
-	DayManager.max_day_reached = 1
+	# *** FIX: โหลด max_day จาก persistent file แทน ***
+	DayManager.max_day_reached = load_persistent_data()
 	DayManager.all_quests_done = false
 	
 	# รีเซ็ต quests ทั้งหมด
 	for quest_id in QuestManager.quests.keys():
 		QuestManager.quests[quest_id].done = false
 	
+	# *** FIX: รีเซ็ต ItemsManager ***
+	ItemManager.items.clear()
+	
 	TimeManager.hour = 6
 	TimeManager.minute = 0
 	
 	# หมายเหตุ: ไม่รีเซ็ตการตั้งค่าเสียง (เก็บค่าที่ผู้เล่นตั้งไว้)
 	
-	print("[SaveManager] รีเซ็ตเกมแล้ว")
+	print("[SaveManager] รีเซ็ตเกมแล้ว (เก็บ unlock ไว้ที่วัน %d)" % DayManager.max_day_reached)
 
 # ฟังก์ชันใหม่: โหลดวันที่เฉพาะเจาะจง
 func load_specific_day(day: int):
@@ -198,3 +236,26 @@ func load_specific_day(day: int):
 	DayManager._check_daily_progress()
 	
 	print("[SaveManager] โหลดวันที่ %d สำเร็จ" % day)
+
+# ฟังก์ชันใหม่: รีเซ็ตทุกอย่างรวมถึง unlock (สำหรับเริ่มเกมใหม่แบบเริ่มต้นจริงๆ)
+func reset_all_progress():
+	"""รีเซ็ตทุกอย่างกลับไปเป็นเหมือนเล่นครั้งแรก"""
+	# ลบ persistent data
+	if FileAccess.file_exists(PERSISTENT_FILE_PATH):
+		DirAccess.remove_absolute(PERSISTENT_FILE_PATH)
+		print("[SaveManager] ลบ persistent data แล้ว")
+	
+	# รีเซ็ตทุกอย่าง
+	DayManager.current_day = 1
+	DayManager.max_day_reached = 1
+	DayManager.all_quests_done = false
+	
+	for quest_id in QuestManager.quests.keys():
+		QuestManager.quests[quest_id].done = false
+	
+	ItemManager.items.clear()
+	
+	TimeManager.hour = 6
+	TimeManager.minute = 0
+	
+	print("[SaveManager] รีเซ็ตทุกอย่างแล้ว (รวม unlock)")

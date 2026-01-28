@@ -2588,3 +2588,5 @@ offset_bottom = -98.095
 scale = Vector2(0.8, 0.8)
 text = "TEXT"
 label_settings = ExtResource("9_14a1c")
+
+[editable path="HUD"]

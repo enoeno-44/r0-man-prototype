@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b2r50ghah1og5"
-path="res://.godot/imported/R0-MAM-MainMenu.jpg-b08ef335f709f2bd65688d73909442f7.ctex"
+uid="uid://c3pq4xkxk10ve"
+path="res://.godot/imported/โครงการใหม่.png-ef862cb5d1ceb9005fa1ff443bae8678.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/R0-MAM-MainMenu.jpg"
-dest_files=["res://.godot/imported/R0-MAM-MainMenu.jpg-b08ef335f709f2bd65688d73909442f7.ctex"]
+source_file="res://Resources/โครงการใหม่.png"
+dest_files=["res://.godot/imported/โครงการใหม่.png-ef862cb5d1ceb9005fa1ff443bae8678.ctex"]
 
 [params]
 
