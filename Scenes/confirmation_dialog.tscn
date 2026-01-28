@@ -4,6 +4,7 @@
 [ext_resource type="FontFile" uid="uid://ngxarfbccvdp" path="res://Resources/Fonts/2005_iannnnnCPU.ttf" id="2_cloq4"]
 
 [node name="ConfirmationDialog" type="CanvasLayer"]
+layer = 110
 script = ExtResource("1_xielj")
 
 [node name="ColorRect" type="ColorRect" parent="."]

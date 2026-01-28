@@ -127,7 +127,7 @@ func _on_continue_pressed():
 		_enable_game_managers()
 		if has_node("/root/TransitionManager"):
 			TransitionManager.transition_to_scene(game_scene_path)
-			AudioManager.play_bgm("main_theme", 4.0)
+			AudioManager.play_random_bgm(4.0)
 		else:
 			get_tree().change_scene_to_file(game_scene_path)
 	else:

@@ -1,7 +1,13 @@
-[gd_scene load_steps=53 format=3 uid="uid://brf0akufn2hbe"]
+[gd_scene load_steps=55 format=3 uid="uid://brf0akufn2hbe"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_83dst"]
 [ext_resource type="Texture2D" uid="uid://b06pkua40brlp" path="res://Sprites/Characters_R0_1_16x16-export.png" id="2_utrdg"]
+[ext_resource type="Shader" path="res://Resources/Shaders/silhouette.gdshader" id="3_27cfe"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bwf84"]
+shader = ExtResource("3_27cfe")
+shader_parameter/silhouette_color = Color(0, 0, 0, 0.5)
+shader_parameter/color_tolerance = 0.01
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_348ki"]
 atlas = ExtResource("2_utrdg")
@@ -390,6 +396,15 @@ height = 12.0
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_83dst")
+
+[node name="silhouetteSprite" type="AnimatedSprite2D" parent="."]
+z_index = 100
+material = SubResource("ShaderMaterial_bwf84")
+sprite_frames = SubResource("SpriteFrames_rlmro")
+animation = &"walk_right"
+autoplay = "idle_down"
+frame_progress = 0.26907
+offset = Vector2(0, -16)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_rlmro")

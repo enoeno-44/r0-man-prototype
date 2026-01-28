@@ -5,6 +5,7 @@ extends CharacterBody2D
 var can_move: bool = true
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var silhouetteSprite: AnimatedSprite2D = $silhouetteSprite
 
 var last_direction := Vector2.DOWN
 
@@ -34,25 +35,33 @@ func play_walk_animation(dir: Vector2):
 	if abs(dir.x) > abs(dir.y):
 		if dir.x > 0:
 			sprite.play("walk_right")
+			silhouetteSprite.play("walk_right")
 		else:
 			sprite.play("walk_left")
+			silhouetteSprite.play("walk_left")
 	else:
 		if dir.y > 0:
 			sprite.play("walk_down")
+			silhouetteSprite.play("walk_down")
 		else:
 			sprite.play("walk_up")
+			silhouetteSprite.play("walk_up")
 			
 func play_idle_animation():
 	if abs(last_direction.x) > abs(last_direction.y):
 		if last_direction.x > 0:
 			sprite.play("idle_right")
+			silhouetteSprite.play("idle_right")
 		else:
 			sprite.play("idle_left")
+			silhouetteSprite.play("idle_left")
 	else:
 		if last_direction.y > 0:
 			sprite.play("idle_down")
+			silhouetteSprite.play("idle_down")
 		else:
 			sprite.play("idle_up")
+			silhouetteSprite.play("idle_up")
 			
 func set_can_move(value: bool):
 	can_move = value
