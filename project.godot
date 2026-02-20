@@ -32,6 +32,7 @@ FullscreenToggle="*res://Scripts/fullscreen_toggle.gd"
 DebugManager="*res://Scripts/debug_manager.gd"
 SaveManager="*res://Scripts/save_manager.gd"
 AudioManager="*res://Scripts/audio_manager.gd"
+StatisticsManager="*res://Scripts/statistics_manager.gd"
 
 [display]
 

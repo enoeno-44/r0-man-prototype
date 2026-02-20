@@ -17,6 +17,7 @@ var time_scale_multiplier: float = 1.0
 @onready var day_label: Label
 @onready var quest_label: Label
 @onready var time_label: Label
+@onready var stats_label: Label  # เพิ่มสำหรับแสดงสถิติ
 
 var debug_menu: Panel
 var is_menu_open: bool = false
@@ -63,13 +64,13 @@ func _input(event):
 func _create_debug_ui():
 	debug_panel = Panel.new()
 	debug_panel.name = "DebugPanel"
-	debug_panel.custom_minimum_size = Vector2(300, 150)
+	debug_panel.custom_minimum_size = Vector2(300, 200)  # เพิ่มความสูง
 	debug_panel.position = Vector2(10, 10)
 	add_child(debug_panel)
 	
 	var vbox = VBoxContainer.new()
 	vbox.position = Vector2(10, 10)
-	vbox.custom_minimum_size = Vector2(280, 130)
+	vbox.custom_minimum_size = Vector2(280, 180)  # เพิ่มความสูง
 	debug_panel.add_child(vbox)
 	
 	var title = Label.new()
@@ -97,6 +98,11 @@ func _create_debug_ui():
 	quest_label = Label.new()
 	quest_label.text = "Quests: 0/0"
 	vbox.add_child(quest_label)
+	
+	stats_label = Label.new()
+	stats_label.text = "Stats: Loading..."
+	stats_label.add_theme_font_size_override("font_size", 11)
+	vbox.add_child(stats_label)
 	
 	var hint = Label.new()
 	hint.text = "F2: Open Menu"
@@ -181,6 +187,11 @@ func _create_debug_menu():
 	_add_button(vbox, "Slow Down Time x0.5", func(): _debug_time_scale(0.5))
 	
 	_add_separator(vbox)
+	_add_header(vbox, "STATISTICS")
+	_add_button(vbox, "View Detailed Stats", _debug_show_stats)
+	_add_button(vbox, "Reset All Statistics", _debug_reset_stats)
+	
+	_add_separator(vbox)
 	_add_header(vbox, "SYSTEM CONTROLS")
 	_add_toggle(vbox, "Show FPS: ", show_fps, func(val): show_fps = val)
 	_add_toggle(vbox, "Show Position: ", show_position, func(val): show_position = val)
@@ -247,6 +258,13 @@ func _update_debug_info():
 		var completed = DayManager.get_completed_count()
 		var total = DayManager.get_total_quests_today()
 		quest_label.text = "Quests: %d/%d" % [completed, total]
+	
+	# อัพเดทสถิติ
+	if has_node("/root/StatisticsManager"):
+		var playtime = StatisticsManager.get_playtime_formatted()
+		var qte_success = StatisticsManager.total_qte_success
+		var qte_failed = StatisticsManager.total_qte_failed
+		stats_label.text = "Time: %s | QTE: %d✓ %d✗" % [playtime, qte_success, qte_failed]
 
 func _update_visibility():
 	debug_panel.visible = debug_enabled
@@ -386,6 +404,26 @@ func _debug_time_scale(scale: float):
 	time_scale_multiplier = scale
 	if has_node("/root/TimeManager"):
 		TimeManager.time_scale = 1.2 * time_scale_multiplier
+
+func _debug_show_stats():
+	"""แสดงสถิติแบบละเอียด"""
+	if not has_node("/root/StatisticsManager"):
+		print("[Debug] StatisticsManager ไม่พบ!")
+		return
+	
+	var stats_text = StatisticsManager.get_stats_summary()
+	print("\n" + stats_text)
+	
+	# แสดงใน console และสร้าง popup (ถ้าต้องการ)
+	# TODO: สามารถสร้าง popup dialog แสดงสถิติได้
+
+func _debug_reset_stats():
+	"""รีเซ็ตสถิติทั้งหมด"""
+	if not has_node("/root/StatisticsManager"):
+		return
+	
+	StatisticsManager.reset_all_stats()
+	print("[Debug] รีเซ็ตสถิติทั้งหมดแล้ว")
 
 func _debug_reload_scene():
 	get_tree().reload_current_scene()

@@ -100,6 +100,8 @@ func show_dialogue(lines: Array[Dictionary]):
 		return
 	
 	AudioManager.pause_bgm()
+	if has_node("/root/StatisticsManager"):
+		StatisticsManager.pause_time_counting()
 	is_showing = true
 	current_lines = lines
 	current_line_index = 0
@@ -116,6 +118,8 @@ func hide_dialogue():
 	hide()
 	_show_hud(true)
 	AudioManager.resume_bgm()
+	if has_node("/root/StatisticsManager"):
+		StatisticsManager.resume_time_counting()
 	dialogue_finished.emit()
 
 func _clear_text_container():

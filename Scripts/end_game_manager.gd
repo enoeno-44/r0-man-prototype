@@ -125,6 +125,10 @@ func start_ending():
 	is_ending = true
 	show()
 	
+	# หยุดนับเวลาสถิติ
+	if has_node("/root/StatisticsManager"):
+		StatisticsManager.pause_time_counting()
+	
 	ending_started.emit()
 	
 	# *** FIX: บันทึกเกมและทำเครื่องหมายว่าจบแล้ว ***
@@ -165,7 +169,9 @@ func _show_black_screen():
 	black_screen.show()
 
 func _show_credits():
-	credits_label.text = credits_text
+	# สร้าง credits text พร้อมสถิติ
+	var final_credits = _build_credits_with_stats()
+	credits_label.text = final_credits
 	credits_label.show()
 	
 	var viewport_size = get_viewport().get_visible_rect().size
@@ -235,3 +241,38 @@ func set_credits_text(text: String):
 
 func set_scroll_speed(speed: float):
 	credits_scroll_speed = speed
+
+func _build_credits_with_stats() -> String:
+	"""สร้าง credits text พร้อมสถิติการเล่น"""
+	var final_text = credits_text
+	
+	# เพิ่มสถิติก่อน Thank You for Playing
+	if has_node("/root/StatisticsManager"):
+		var stats = StatisticsManager.get_all_stats()
+		
+		var stats_section = "\n\n"
+		stats_section += "[center][b]--- YOUR STATISTICS ---[/b][/center]\n\n"
+		
+		# เวลาเล่น
+		stats_section += "[center]Total Playtime: %s[/center]\n" % stats.time.formatted
+		
+		# Quest
+		stats_section += "[center]Quests Completed: %d[/center]\n\n" % stats.quests.completed
+		
+		# QTE Stats
+		stats_section += "[center][b]QTE Performance[/b][/center]\n"
+		stats_section += "[center]Total Attempts: %d[/center]\n" % stats.qte.total_attempts
+		stats_section += "[center]Success: %d | Failed: %d[/center]\n" % [stats.qte.success, stats.qte.failed]
+		
+		if stats.qte.total_attempts > 0:
+			stats_section += "[center]Success Rate: %.1f%%[/center]\n" % stats.qte.success_rate
+		
+		stats_section += "\n"
+		
+		# แทรกสถิติก่อน Thank You for Playing
+		final_text = final_text.replace(
+			"[center]--- Thank You for Playing ---[/center]",
+			stats_section + "[center]--- Thank You for Playing ---[/center]"
+		)
+	
+	return final_text

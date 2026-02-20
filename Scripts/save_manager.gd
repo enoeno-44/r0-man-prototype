@@ -18,7 +18,8 @@ func save_game():
 		},
 		"player_position": _get_player_position(),
 		"save_timestamp": Time.get_datetime_string_from_system(),
-		"audio": AudioManager.get_save_data()  # เก็บเฉพาะ BGM ที่กำลังเล่น
+		"audio": AudioManager.get_save_data(),  # เก็บเฉพาะ BGM ที่กำลังเล่น
+		"statistics": StatisticsManager.get_save_data()  # เพิ่มการเซฟสถิติ
 	}
 	
 	# เช็คว่ามีการบันทึกเก่าที่จบเกมไปแล้วหรือไม่
@@ -112,6 +113,10 @@ func load_game() -> bool:
 	# โหลดเฉพาะ BGM ที่กำลังเล่น (การตั้งค่าเสียงโหลดแยกแล้ว)
 	if "audio" in save_data:
 		AudioManager.load_save_data(save_data.audio)
+	
+	# โหลดสถิติ
+	if "statistics" in save_data:
+		StatisticsManager.load_save_data(save_data.statistics)
 	
 	# *** FIX: บังคับให้ DayManager เช็ค quest progress หลังโหลด ***
 	DayManager._check_daily_progress()
@@ -210,6 +215,9 @@ func reset_game():
 	TimeManager.hour = 6
 	TimeManager.minute = 0
 	
+	# *** FIX: รีเซ็ตสถิติ ***
+	StatisticsManager.reset_all_stats()
+	
 	# หมายเหตุ: ไม่รีเซ็ตการตั้งค่าเสียง (เก็บค่าที่ผู้เล่นตั้งไว้)
 	
 	print("[SaveManager] รีเซ็ตเกมแล้ว (เก็บ unlock ไว้ที่วัน %d)" % DayManager.max_day_reached)
@@ -257,5 +265,8 @@ func reset_all_progress():
 	
 	TimeManager.hour = 6
 	TimeManager.minute = 0
+	
+	# *** FIX: รีเซ็ตสถิติ ***
+	StatisticsManager.reset_all_stats()
 	
 	print("[SaveManager] รีเซ็ตทุกอย่างแล้ว (รวม unlock)")

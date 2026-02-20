@@ -9,9 +9,10 @@ extends CanvasLayer
 @onready var quit_to_menu_button = $ColorRect/CenterContainer/Panel/VBoxContainer/QuitToMenuButton
 
 # Settings Panel
-@onready var settings_panel = $ColorRect/CenterContainer/Panel/SettingsPanel
+@onready var settings_panel = $ColorRect/SettingsPanel
 
 @export var main_menu_path: String = "res://main_menu.tscn"
+const CONFIRMATION_DIALOG = preload("res://Scenes/confirmation_dialog.tscn")
 
 var is_paused: bool = false
 
@@ -57,6 +58,10 @@ func pause_game():
 	get_tree().paused = true
 	show()
 	
+	# หยุดนับเวลาสถิติ
+	if has_node("/root/StatisticsManager"):
+		StatisticsManager.pause_time_counting()
+	
 	# แสดงเมนูหลัก ซ่อน Settings
 	panel.show()
 	if settings_panel:
@@ -71,6 +76,10 @@ func resume_game():
 	is_paused = false
 	get_tree().paused = false
 	hide()
+	
+	# เริ่มนับเวลาต่อ
+	if has_node("/root/StatisticsManager"):
+		StatisticsManager.resume_time_counting()
 	
 	print("[PauseMenu] เกมดำเนินต่อ")
 
@@ -101,34 +110,29 @@ func _on_settings_back_pressed():
 
 func _on_quit_to_menu_pressed():
 	# แสดง Confirmation Dialog ก่อนออกไปเมนูหลัก
-	AudioManager.play_sfx("ui_click")
 	_show_quit_confirmation()
 
 func _show_quit_confirmation():
-	var dialog = ConfirmationDialog.new()
-	dialog.dialog_text = "คุณต้องการบันทึกเกมก่อนกลับไปเมนูหลักหรือไม่?"
-	dialog.ok_button_text = "บันทึกและออก"
-	dialog.cancel_button_text = "ยกเลิก"
-	
-	# เพิ่มปุ่ม "ออกโดยไม่บันทึก"
-	dialog.add_button("ออกโดยไม่บันทึก", false, "quit_without_save")
-	
+	var dialog = CONFIRMATION_DIALOG.instantiate()
 	add_child(dialog)
-	dialog.popup_centered()
+	
+	dialog.setup(
+		"คุณต้องการบันทึกเกมก่อนกลับ\nไปเมนูหลักหรือไม่?",
+		"บันทึกและออก",
+		"ยกเลิก",
+		"ออกโดยไม่บันทึก"  # ปุ่มที่ 3
+	)
 	
 	dialog.confirmed.connect(func():
 		_quit_with_save()
-		dialog.queue_free()
 	)
 	
-	dialog.canceled.connect(func():
-		dialog.queue_free()
+	dialog.cancelled.connect(func():
+		pass  # ไม่ทำอะไร
 	)
 	
-	dialog.custom_action.connect(func(action):
-		if action == "quit_without_save":
-			_quit_without_save()
-		dialog.queue_free()
+	dialog.extra_action.connect(func(action):
+		_quit_without_save()
 	)
 
 func _quit_with_save():
